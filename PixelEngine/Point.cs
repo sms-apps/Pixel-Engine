@@ -1,9 +1,6 @@
-namespace PixelEngine
-{
-	public struct Point
-	{
-		public Point(int x, int y) : this()
-		{
+namespace PixelEngine {
+	public struct Point {
+		public Point(int x, int y) : this() {
 			this.X = x;
 			this.Y = y;
 		}

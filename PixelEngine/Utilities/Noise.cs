@@ -1,9 +1,7 @@
-﻿using System;
+using System;
 
-namespace PixelEngine.Utilities
-{
-	public static class Noise
-	{
+namespace PixelEngine.Utilities {
+	public static class Noise {
 		static Noise() => Seed();
 
 		private static float xOff, yOff, zOff;
@@ -14,12 +12,10 @@ namespace PixelEngine.Utilities
 		public static float Persistence { get; set; } = 1;
 
 		public static void Seed() => Seed(Randoms.RandomInt(int.MinValue, int.MaxValue));
-		public static void Seed(int seed)
-		{
+		public static void Seed(int seed) {
 			rnd = new Random(seed);
 
-			for (int i = 0; i < perm.Length; i++)
-			{
+			for (int i = 0; i < perm.Length; i++) {
 				int r = rnd.Next(i, perm.Length);
 				int temp = perm[i];
 				perm[i] = perm[r];
@@ -29,15 +25,13 @@ namespace PixelEngine.Utilities
 			CreateOffset();
 		}
 
-		private static float Perlin(float x)
-		{
+		private static float Perlin(float x) {
 			int X = (int)Math.Floor(x) & 0xff;
 			x -= (float)Math.Floor(x);
 			float u = Fade(x);
 			return Lerp(u, Grad(perm[X], x), Grad(perm[X + 1], x - 1)) * 2;
 		}
-		private static float Perlin(float x, float y)
-		{
+		private static float Perlin(float x, float y) {
 			int X = (int)Math.Floor(x) & 0xff;
 			int Y = (int)Math.Floor(y) & 0xff;
 			x -= (float)Math.Floor(x);
@@ -49,8 +43,7 @@ namespace PixelEngine.Utilities
 			return Lerp(v, Lerp(u, Grad(perm[A], x, y), Grad(perm[B], x - 1, y)),
 						   Lerp(u, Grad(perm[A + 1], x, y - 1), Grad(perm[B + 1], x - 1, y - 1)));
 		}
-		private static float Perlin(float x, float y, float z)
-		{
+		private static float Perlin(float x, float y, float z) {
 			int X = (int)Math.Floor(x) & 0xff;
 			int Y = (int)Math.Floor(y) & 0xff;
 			int Z = (int)Math.Floor(z) & 0xff;
@@ -72,8 +65,7 @@ namespace PixelEngine.Utilities
 								   Lerp(u, Grad(perm[AB + 1], x, y - 1, z - 1), Grad(perm[BB + 1], x - 1, y - 1, z - 1))));
 		}
 
-		public static float Calculate(float x)
-		{
+		public static float Calculate(float x) {
 			x += xOff;
 
 			float total = 0.0f;
@@ -81,8 +73,7 @@ namespace PixelEngine.Utilities
 			float totalAmp = 0;
 			int frequency = 1;
 
-			for (int i = 0; i < Octaves; i++)
-			{
+			for (int i = 0; i < Octaves; i++) {
 				total += amplitude * Perlin(x * frequency);
 				frequency = 1 << i;
 				totalAmp += amplitude;
@@ -91,8 +82,7 @@ namespace PixelEngine.Utilities
 
 			return total / totalAmp;
 		}
-		public static float Calculate(float x, float y)
-		{
+		public static float Calculate(float x, float y) {
 			x += xOff;
 			y += yOff;
 
@@ -101,8 +91,7 @@ namespace PixelEngine.Utilities
 			float totalAmp = 0;
 			int frequency = 1;
 
-			for (int i = 0; i < Octaves; i++)
-			{
+			for (int i = 0; i < Octaves; i++) {
 				total += amplitude * Perlin(x * frequency, y * frequency);
 				frequency = 1 << i;
 				totalAmp += amplitude;
@@ -111,8 +100,7 @@ namespace PixelEngine.Utilities
 
 			return total / totalAmp;
 		}
-		public static float Calculate(float x, float y, float z)
-		{
+		public static float Calculate(float x, float y, float z) {
 			x += xOff;
 			y += yOff;
 			z += zOff;
@@ -122,8 +110,7 @@ namespace PixelEngine.Utilities
 			float totalAmp = 0;
 			int frequency = 1;
 
-			for (int i = 0; i < Octaves; i++)
-			{
+			for (int i = 0; i < Octaves; i++) {
 				total += amplitude * Perlin(x * frequency, y * frequency, z * frequency);
 				frequency = 1 << i;
 				totalAmp += amplitude;
@@ -134,28 +121,25 @@ namespace PixelEngine.Utilities
 		}
 
 		#region Helpers
-		private static void CreateOffset()
-		{
+		private static void CreateOffset() {
 			xOff = (float)rnd.NextDouble() * 100;
 			yOff = (float)rnd.NextDouble() * 100;
 			zOff = (float)rnd.NextDouble() * 100;
 		}
 
-		private static float Fade(float t) => t * t * t * (t * (t * 6 - 15) + 10);
-		private static float Lerp(float t, float a, float b) => a + t * (b - a);
+		private static float Fade(float t) { return t * t * t * (t * (t * 6 - 15) + 10); }
+		private static float Lerp(float t, float a, float b) { return a + t * (b - a); }
 
-		private static float Grad(int hash, float x) => (hash & 1) == 0 ? x : -x;
-		private static float Grad(int hash, float x, float y) => ((hash & 1) == 0 ? x : -x) + ((hash & 2) == 0 ? y : -y);
-		private static float Grad(int hash, float x, float y, float z)
-		{
+		private static float Grad(int hash, float x) { return (hash & 1) == 0 ? x : -x; }
+		private static float Grad(int hash, float x, float y) { return ((hash & 1) == 0 ? x : -x) + ((hash & 2) == 0 ? y : -y); }
+		private static float Grad(int hash, float x, float y, float z) {
 			int h = hash & 15;
 			float u = h < 8 ? x : y;
 			float v = h < 4 ? y : (h == 12 || h == 14 ? x : z);
 			return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
 		}
 
-		private static readonly int[] perm =
-		{
+		private static readonly int[] perm = {
 			151,160,137,91,90,15,
 			131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,
 			190, 6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,

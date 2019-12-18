@@ -1,17 +1,14 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 
-namespace PixelEngine
-{
-	internal static unsafe class Windows
-	{
+namespace PixelEngine {
+	internal static unsafe class Windows {
 		public static readonly string TempPath;
 
-		static Windows()
-		{
+		static Windows() {
 			TempPath = Path.Combine(Path.GetTempPath(), $"{nameof(PixelEngine)}.{Assembly.GetExecutingAssembly().GetName().Version}");
 
 			if (!Directory.Exists(TempPath))
@@ -20,15 +17,12 @@ namespace PixelEngine
 			ResxHelper.LoadDll();
 		}
 
-		public static void DestroyTempPath()
-		{
+		public static void DestroyTempPath() {
 			ResxHelper.DestroyDll();
 
-			if (Directory.Exists(TempPath))
-			{
-				foreach (string file in Directory.EnumerateFiles(TempPath))
-				{
-					if(!file.EndsWith(".dll"))
+			if (Directory.Exists(TempPath)) {
+				foreach (string file in Directory.EnumerateFiles(TempPath)) {
+					if (!file.EndsWith(".dll"))
 						File.Delete(file);
 				}
 			}
@@ -70,8 +64,7 @@ namespace PixelEngine
 
 		#region Enums
 		[Flags]
-		public enum WindowStyles : uint
-		{
+		public enum WindowStyles : uint {
 			Border = 0x800000,
 			Caption = 0xC00000,
 			Child = 0x40000000,
@@ -96,8 +89,7 @@ namespace PixelEngine
 			VScroll = 0x200000
 		}
 
-		public enum WindowLongs
-		{
+		public enum WindowLongs {
 			EXSTYLE = -20,
 			HINSTANCE = -6,
 			HWNDPARENT = -8,
@@ -110,8 +102,7 @@ namespace PixelEngine
 			DLGPROC = 0x4
 		}
 
-		public enum PFD
-		{
+		public enum PFD {
 			TypeRGBA = 0,
 			MainPlane = 0,
 			DoubleBuffer = 1,
@@ -120,15 +111,13 @@ namespace PixelEngine
 		}
 
 		[Flags]
-		public enum WindowStylesEx : uint
-		{
+		public enum WindowStylesEx : uint {
 			AppWindow = 0x40000,
 			WindowEdge = 0x00100
 		}
 
 		[Flags]
-		public enum SWP : uint
-		{
+		public enum SWP : uint {
 			FrameChanged = 0x0020,
 			HideWindow = 0x0080,
 			NoActivate = 0x0010,
@@ -143,8 +132,7 @@ namespace PixelEngine
 			ShowWindow = 0x0040,
 		}
 
-		public enum GL
-		{
+		public enum GL {
 			Texture2D = 0x0DE1,
 			TextureMagFilter = 0x2800,
 			TextureMinFilter = 0x2801,
@@ -162,8 +150,7 @@ namespace PixelEngine
 			DepthBufferBit = 0x00000100
 		}
 
-		public enum WM
-		{
+		public enum WM {
 			NULL = 0x0000,
 			CREATE = 0x0001,
 			DESTROY = 0x0002,
@@ -395,8 +382,7 @@ namespace PixelEngine
 			REFLECT = USER + 0x1C00,
 		}
 
-		public enum VK
-		{
+		public enum VK {
 			LBUTTON = 1,
 			RBUTTON = 2,
 			CANCEL = 3,
@@ -792,8 +778,7 @@ namespace PixelEngine
 
 		#region Structs
 		[StructLayout(LayoutKind.Sequential)]
-		public struct Rect
-		{
+		public struct Rect {
 			public int Left;
 			public int Top;
 			public int Right;
@@ -801,8 +786,7 @@ namespace PixelEngine
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		public struct Message
-		{
+		public struct Message {
 			public IntPtr Handle;
 			public uint Msg;
 			public IntPtr WParam;
@@ -812,15 +796,13 @@ namespace PixelEngine
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		public struct Point
-		{
+		public struct Point {
 			public int X;
 			public int Y;
 		}
 
 		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-		public struct MonitorInfo
-		{
+		public struct MonitorInfo {
 			public int Size;
 			public Rect Monitor;
 			public Rect WorkArea;
@@ -828,8 +810,7 @@ namespace PixelEngine
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		public struct WaveHdr
-		{
+		public struct WaveHdr {
 			public IntPtr Data;
 			public int BufferLength;
 			public int BytesRecorded;
@@ -841,8 +822,7 @@ namespace PixelEngine
 		}
 
 		[StructLayout(LayoutKind.Sequential)]
-		public class WaveFormatEx
-		{
+		public class WaveFormatEx {
 			public short FormatTag;
 			public short Channels;
 			public int SamplesPerSec;
@@ -853,8 +833,7 @@ namespace PixelEngine
 		}
 
 		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-		public struct WindowClassEx
-		{
+		public struct WindowClassEx {
 			[MarshalAs(UnmanagedType.U4)]
 			public uint Size;
 			[MarshalAs(UnmanagedType.U4)]
@@ -872,10 +851,9 @@ namespace PixelEngine
 			public string ClassName;
 			public IntPtr IconSm;
 		}
-		
+
 		[StructLayout(LayoutKind.Explicit)]
-		public struct PixelFormatDesc
-		{
+		public struct PixelFormatDesc {
 			[FieldOffset(0)]
 			public ushort Size;
 			[FieldOffset(2)]
@@ -930,11 +908,10 @@ namespace PixelEngine
 			public uint DamageMask;
 
 			public PixelFormatDesc(ushort version, uint flags, byte pixelType, byte colorBits,
-				byte redBits, byte redShift, byte greenBits, byte greenShift, byte blueBits, byte blueShift, byte alphaBits, byte alphaShift,
-				byte accumBits, byte accumRedBits, byte accumGreenBits, byte accumBlueBits, byte accumAlphaBits,
-				byte depthBits, byte stencilBits, byte auxBuffers, sbyte layerType, byte reserved,
-				uint layerMask, uint visibleMask, uint damageMask) : this()
-			{
+					byte redBits, byte redShift, byte greenBits, byte greenShift, byte blueBits, byte blueShift, byte alphaBits, byte alphaShift,
+					byte accumBits, byte accumRedBits, byte accumGreenBits, byte accumBlueBits, byte accumAlphaBits,
+					byte depthBits, byte stencilBits, byte auxBuffers, sbyte layerType, byte reserved,
+					uint layerMask, uint visibleMask, uint damageMask) : this() {
 				Size = (ushort)Marshal.SizeOf(this);
 				Version = version;
 				Flags = flags;

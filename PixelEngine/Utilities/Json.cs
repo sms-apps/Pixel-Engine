@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,111 +8,81 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace PixelEngine.Utilities
-{
-	public static class Json
-	{
-		public static string Stringify<T>(T item)
-		{
-			if (item == null)
-				return null;
+namespace PixelEngine.Utilities {
+	public static class Json {
+		public static string Stringify<T>(T item) {
+			if (item == null) { return null; }
 
 			Type type = typeof(T);
 
-			if (type == typeof(IJsonType))
-			{
+			if (type == typeof(IJsonType)) {
 				return JsonHelper.Stringify((IJsonType)item);
-			}
-			else
-			{
-				if (item is IDictionary dict)
-				{
+			} else {
+				if (item is IDictionary dict) {
 					JsonObject obj = new JsonObject();
-					foreach (DictionaryEntry entry in dict)
-						obj[entry.Key.ToString()] = entry.Value;
+					foreach (DictionaryEntry entry in dict) { obj[entry.Key.ToString()] = entry.Value; }
 					return JsonHelper.Stringify(obj);
-				}
-				else if (item is IEnumerable en)
-				{
+				} else if (item is IEnumerable en) {
 					JsonArray arr = new JsonArray();
-					foreach (object o in en)
-						arr.Add(o);
+					foreach (object o in en) { arr.Add(o); }
 					return JsonHelper.Stringify(arr);
-				}
-				else if (item is JsonArray arr)
-				{
+				} else if (item is JsonArray arr) {
 					return JsonHelper.Stringify(arr);
-				}
-				else if (item is JsonObject j)
-				{
+				} else if (item is JsonObject j) {
 					return JsonHelper.Stringify(j);
-				}
-				else
-				{
+				} else {
 					JsonObject obj = new JsonObject();
 
-					IEnumerable<FieldInfo> fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
+					IEnumerable<FieldInfo> fields = type
+						.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
 						.Where(f => !f.IsDefined(typeof(CompilerGeneratedAttribute)));
 
-					foreach (FieldInfo field in fields)
-						obj[field.Name] = field.GetValue(item);
+					foreach (FieldInfo field in fields) { obj[field.Name] = field.GetValue(item); }
 
-					IEnumerable<PropertyInfo> props = type.GetProperties(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
+					IEnumerable<PropertyInfo> props = type
+						.GetProperties(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
 						.Where(f => f.CanRead && f.CanWrite);
 
-					foreach (PropertyInfo prop in props)
-						obj[prop.Name] = prop.GetValue(item);
+					foreach (PropertyInfo prop in props) { obj[prop.Name] = prop.GetValue(item); }
 
 					return JsonHelper.Stringify(obj);
 				}
 			}
 		}
 
-		public static T Parse<T>(string json)
-		{
-			if (string.IsNullOrWhiteSpace(json))
-				return default;
+		public static T Parse<T>(string json) {
+			if (string.IsNullOrWhiteSpace(json)) { return default; }
 
 			IJsonType item = JsonHelper.Parse(json);
 
-			if (typeof(T) == typeof(IJsonType))
-			{
-				return (T)item;
-			}
-			else
-			{
-				if (item is JsonArray arr)
-				{
+			if (typeof(T) == typeof(IJsonType)) { return (T)item; }
+			else {
+				if (item is JsonArray arr) {
 					List<object> list = new List<object>();
-					for (int i = 0; i < arr.Count; i++)
-						list.Add(arr[i]);
-				}
-				else if (item is JsonObject obj)
-				{
+					for (int i = 0; i < arr.Count; i++) { list.Add(arr[i]); }
+				} else if (item is JsonObject obj) {
 					Type type = typeof(T);
 					T t = (T)FormatterServices.GetUninitializedObject(type);
 
-					IEnumerable<FieldInfo> fields = type.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
+					IEnumerable<FieldInfo> fields = type
+						.GetFields(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
 						.Where(f => !f.IsDefined(typeof(CompilerGeneratedAttribute)));
 
-					foreach (FieldInfo field in fields)
-					{
+					foreach (FieldInfo field in fields) {
 						object data = obj[field.Name];
-						if (data != null)
-						{
+						if (data != null) {
 							object val = Convert.ChangeType(data, field.FieldType);
 							field.SetValue(t, val);
 						}
 					}
 
-					IEnumerable<PropertyInfo> props = type.GetProperties(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
+					IEnumerable<PropertyInfo> props = type
+						.GetProperties(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance)
 						.Where(f => f.CanRead && f.CanWrite);
 
-					foreach (PropertyInfo prop in props)
-					{
+					foreach (PropertyInfo prop in props) {
 						object data = obj[prop.Name];
-						if (data != null)
-						{
+						if (data != null) {
 							object val = Convert.ChangeType(data, prop.PropertyType);
 							prop.SetValue(t, val);
 						}
@@ -125,14 +95,10 @@ namespace PixelEngine.Utilities
 			return default;
 		}
 
-		private static class JsonHelper
-		{
-			public static string Stringify(IJsonType json)
-			{
-				void Convert(object o, StringBuilder text)
-				{
-					switch (o)
-					{
+		private static class JsonHelper {
+			public static string Stringify(IJsonType json) {
+				void Convert(object o, StringBuilder text) {
+					switch (o) {
 						case null:
 							text.Append("null");
 							return;
@@ -170,57 +136,45 @@ namespace PixelEngine.Utilities
 
 						case string s:
 							text.Append('"');
-							foreach (char c in s)
-							{
-								if (char.IsControl(c))
-									text.Append('\\');
+							foreach (char c in s) {
+								if (char.IsControl(c)) { text.Append('\\'); }
 								text.Append(c);
 							}
 							text.Append('"');
 							return;
 
-						case Dictionary<string, object> dict:
-							{
+						case Dictionary<string, object> dict: {
 								JsonObject jo = new JsonObject();
-								foreach (KeyValuePair<string, object> item in dict)
-									jo[item.Key] = item.Value;
+								foreach (KeyValuePair<string, object> item in dict) { jo[item.Key] = item.Value; }
 								Convert(jo, text);
 							}
 							return;
 
-						case IEnumerable list:
-							{
+						case IEnumerable list: {
 								JsonArray ja = new JsonArray();
-								foreach (object item in list)
-									ja.Add(item);
+								foreach (object item in list) { ja.Add(item); }
 								Convert(ja, text);
 							}
 							return;
 
-						case JsonObject jo:
-							{
+						case JsonObject jo: {
 								text.Append("{");
 								int index = 0;
-								foreach (DictionaryEntry item in jo.Data)
-								{
+								foreach (DictionaryEntry item in jo.Data) {
 									text.AppendFormat("\"{0}\" : ", item.Key);
 									Convert(item.Value, text);
-									if (index++ < jo.Data.Count - 1)
-										text.Append(',');
+									if (index++ < jo.Data.Count - 1) { text.Append(','); }
 								}
 								text.Append("}");
 							}
 							return;
 
-						case JsonArray ja:
-							{
+						case JsonArray ja: {
 								text.Append('[');
 								int index = 0;
-								foreach (object item in ja.Data)
-								{
+								foreach (object item in ja.Data) {
 									Convert(item, text);
-									if (index++ < ja.Data.Count - 1)
-										text.Append(", ");
+									if (index++ < ja.Data.Count - 1) { text.Append(", "); }
 								}
 								text.Append(']');
 							}
@@ -233,20 +187,16 @@ namespace PixelEngine.Utilities
 				return res.ToString();
 			}
 
-			public static IJsonType Parse(string json)
-			{
-				string[] GetSubObjects(string text)
-				{
+			public static IJsonType Parse(string json) {
+				string[] GetSubObjects(string text) {
 					StringBuilder sb = new StringBuilder();
 
 					List<string> parts = new List<string>();
 
 					int level = 0;
 
-					for (int i = 0; i < text.Length; i++)
-					{
-						switch (text[i])
-						{
+					for (int i = 0; i < text.Length; i++) {
+						switch (text[i]) {
 							case '[':
 							case '{':
 								level++;
@@ -254,8 +204,7 @@ namespace PixelEngine.Utilities
 
 							case ',':
 							case ':':
-								if (level == 0)
-								{
+								if (level == 0) {
 									parts.Add(sb.ToString());
 									sb.Clear();
 									continue;
@@ -264,8 +213,7 @@ namespace PixelEngine.Utilities
 
 							case '"':
 								sb.Append('"');
-								while (text[++i] != '"')
-									sb.Append(text[i]);
+								while (text[++i] != '"') { sb.Append(text[i]); }
 								sb.Append('"');
 								continue;
 
@@ -283,24 +231,20 @@ namespace PixelEngine.Utilities
 					return parts.ToArray();
 				}
 
-				string RemoveMarkers(string text, char first, char second)
-				{
+				string RemoveMarkers(string text, char first, char second) {
 					text = text.Remove(text.IndexOf(first), 1);
 					text = text.Remove(text.LastIndexOf(second), 1);
 					return text;
 				}
 
-				object Convert(string text)
-				{
-					if (text.StartsWith("{") && text.EndsWith("}"))
-					{
+				object Convert(string text) {
+					if (text.StartsWith("{") && text.EndsWith("}")) {
 						JsonObject obj = new JsonObject();
 
 						text = RemoveMarkers(text, '{', '}');
 
 						string[] parts = GetSubObjects(text);
-						for (int i = 0; i < parts.Length; i += 2)
-						{
+						for (int i = 0; i < parts.Length; i += 2) {
 							string id = RemoveMarkers(parts[i], '"', '"');
 							string val = parts[i + 1];
 
@@ -308,51 +252,33 @@ namespace PixelEngine.Utilities
 						}
 
 						return obj;
-					}
-					else if (text.StartsWith("[") && text.EndsWith("]"))
-					{
+					} else if (text.StartsWith("[") && text.EndsWith("]")) {
 						JsonArray arr = new JsonArray();
 
 						text = RemoveMarkers(text, '[', ']');
 
 						string[] parts = GetSubObjects(text);
-						foreach (string item in parts)
-							arr.Add(Convert(item));
+						foreach (string item in parts) { arr.Add(Convert(item)); }
 
 						return arr;
-					}
-					else
-					{
-						if (text == "\"true\"")
-						{
+					} else {
+						if (text == "\"true\"") {
 							// bool
 							return true;
-						}
-						else if (text == "\"false\"")
-						{
+						} else if (text == "\"false\"") {
 							// bool
 							return false;
-						}
-						else if (text.StartsWith("\""))
-						{
+						} else if (text.StartsWith("\"")) {
 							// string
 							text = RemoveMarkers(text, '"', '"');
 							return text;
-						}
-						else if (text.IndexOf('.') != -1)
-						{
+						} else if (text.IndexOf('.') != -1) {
 							// decimal
-							if (double.TryParse(text, out double d))
-								return d;
-						}
-						else
-						{
+							if (double.TryParse(text, out double d)) { return d; }
+						} else {
 							// integral
-							if (long.TryParse(text, out long l))
-								return l;
-
-							if (ulong.TryParse(text, out ulong ul))
-								return ul;
+							if (long.TryParse(text, out long l)) { return l; }
+							if (ulong.TryParse(text, out ulong ul)) { return ul; }
 						}
 					}
 
@@ -360,22 +286,15 @@ namespace PixelEngine.Utilities
 					return null;
 				}
 
-				string RemoveWhitespaces(string text)
-				{
+				string RemoveWhitespaces(string text) {
 					StringBuilder sb = new StringBuilder(text);
 
-					for (int i = sb.Length - 1; i >= 0; i--)
-					{
-						if (sb[i] == '"')
-							while (sb[--i] != '"') ;
-
-						if (char.IsWhiteSpace(sb[i]))
-							sb.Remove(i, 1);
+					for (int i = sb.Length - 1; i >= 0; i--) {
+						if (sb[i] == '"') { while (sb[--i] != '"') ; }
+						if (char.IsWhiteSpace(sb[i])) { sb.Remove(i, 1); }
 					}
-
 					return sb.ToString();
 				}
-
 				json = RemoveWhitespaces(json);
 				return (IJsonType)Convert(json);
 			}
@@ -384,42 +303,36 @@ namespace PixelEngine.Utilities
 
 	public interface IJsonType { }
 
-	public class JsonObject : IJsonType
-	{
+	public class JsonObject : IJsonType {
 		internal Hashtable Data = new Hashtable();
 
 		public int Count => Data.Count;
 
-		public object this[string key]
-		{
-			get => Data[key];
-			set => Data[key] = value;
+		public object this[string key] {
+			get { return Data[key]; }
+			set { Data[key] = value; }
 		}
 
-		public void Add(string key, object o) => Data.Add(key, o);
-		public void Remove(string key) => Data.Remove(key);
+		public void Add(string key, object o) { Data.Add(key, o); }
+		public void Remove(string key) { Data.Remove(key); }
 	}
 
-	public class JsonArray : IJsonType
-	{
+	public class JsonArray : IJsonType {
 		internal ArrayList Data = new ArrayList();
 
-		public int Count => Data.Count;
+		public int Count { get { return Data.Count; } }
 
 		public JsonArray() { }
-		public JsonArray(IList entries)
-		{
-			foreach (object o in entries)
-				Add(o);
+		public JsonArray(IList entries) {
+			foreach (object o in entries) { Add(o); }
 		}
 
-		public object this[int index]
-		{
-			get => Data[index];
-			set => Data[index] = value;
+		public object this[int index] {
+			get { return Data[index]; }
+			set { Data[index] = value; }
 		}
 
-		public void Add(object o) => Data.Add(o);
-		public void Remove(object o) => Data.Remove(o);
+		public void Add(object o) { Data.Add(o); }
+		public void Remove(object o) { Data.Remove(o); }
 	}
 }

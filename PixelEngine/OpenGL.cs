@@ -1,12 +1,10 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 using static PixelEngine.Windows;
 
-namespace PixelEngine
-{
-	internal class OpenGL
-	{
+namespace PixelEngine {
+	internal class OpenGL {
 		private Game game;
 
 		private IntPtr deviceContext;
@@ -15,8 +13,7 @@ namespace PixelEngine
 		private float pw, ph;
 		private float ww, wh;
 
-		public void Create(Game game)
-		{
+		public void Create(Game game) {
 			this.game = game;
 
 			deviceContext = GetDC(game.Handle);
@@ -28,14 +25,13 @@ namespace PixelEngine
 
 			int pf = ChoosePixelFormat(deviceContext, ref pfd);
 
-			if (pf == 0)
-				return;
+			if (pf == 0) { return; }
 
 			SetPixelFormat(deviceContext, pf, ref pfd);
 
 			renderContext = WglCreateContext(deviceContext);
-			if (renderContext == IntPtr.Zero)
-				return;
+			if (renderContext == IntPtr.Zero) { return; }
+
 
 			WglMakeCurrent(deviceContext, renderContext);
 
@@ -49,8 +45,7 @@ namespace PixelEngine
 			GlTexEnvf((uint)GL.TextureEnv, (uint)GL.TextureEnvMode, (float)GL.Decal);
 		}
 
-		public unsafe void Initialize(Sprite drawTarget, Sprite textTarget)
-		{
+		public unsafe void Initialize(Sprite drawTarget, Sprite textTarget) {
 			GlTexImage2D((uint)GL.Texture2D, 0, (uint)GL.RGBA,
 				game.ScreenWidth, game.ScreenHeight,
 				0, (uint)GL.RGBA, (uint)GL.UnsignedByte, null);
@@ -65,8 +60,7 @@ namespace PixelEngine
 			CreateCoords(game.PixWidth, game.PixHeight, game.ScreenWidth, game.ScreenHeight);
 
 			IntPtr vsyncPtr = WglGetProcAddress("wglSwapIntervalEXT");
-			if (vsyncPtr != IntPtr.Zero)
-			{
+			if (vsyncPtr != IntPtr.Zero) {
 				SwapInterval swap = Marshal.GetDelegateForFunctionPointer<SwapInterval>(vsyncPtr);
 				swap(0);
 			}
@@ -75,25 +69,22 @@ namespace PixelEngine
 			deviceContext = GetDC(game.Handle);
 		}
 
-		public unsafe void Draw(Sprite drawTarget, Sprite textTarget)
-		{
-			fixed (Pixel* ptr = drawTarget.GetData())
-			{
-				if (game.PixWidth == 1 && game.PixHeight == 1)
+		public unsafe void Draw(Sprite drawTarget, Sprite textTarget) {
+			fixed (Pixel* ptr = drawTarget.GetData()) {
+				if (game.PixWidth == 1 && game.PixHeight == 1) { 
 					RenderUnitPixels(drawTarget.Width, drawTarget.Height, ptr);
-				else
-					RenderPixels(drawTarget.Width, drawTarget.Height, ptr);
+				} else { RenderPixels(drawTarget.Width, drawTarget.Height, ptr); }
 			}
 
-			if (textTarget != null)
-				fixed (Pixel* ptr = textTarget.GetData())
+			if (textTarget != null) {
+				fixed (Pixel* ptr = textTarget.GetData()) {
 					RenderText(game.windowWidth, game.windowHeight, textTarget.Width, textTarget.Height, ptr);
-
+				}
+			}
 			SwapBuffers(deviceContext);
 		}
 
-		public void Destroy()
-		{
+		public void Destroy() {
 			ReleaseDC(game.Handle, deviceContext);
 			WglDeleteContext(renderContext);
 			DestroyCoords();

@@ -1,9 +1,7 @@
-﻿using System;
+using System;
 
-namespace PixelEngine.Utilities
-{
-	public struct Vector : IEquatable<Vector>
-	{
+namespace PixelEngine.Utilities {
+	public struct Vector : IEquatable<Vector> {
 		public float X { get; private set; }
 		public float Y { get; private set; }
 		public float Z { get; private set; }
@@ -16,8 +14,7 @@ namespace PixelEngine.Utilities
 
 		public Vector(float a) : this(a, a, a) { }
 		public Vector(float x, float y) : this(x, y, 0) { }
-		public Vector(float x, float y, float z)
-		{
+		public Vector(float x, float y, float z) {
 			X = x;
 			Y = y;
 			Z = z;
@@ -27,8 +24,7 @@ namespace PixelEngine.Utilities
 		public float Magnitude() => Magnitude(this);
 		public Vector Normalize() => Normalize(this);
 
-		public static float Distance(Vector a, Vector b)
-		{
+		public static float Distance(Vector a, Vector b) {
 			float dx = a.X - b.X;
 			float dy = a.Y - b.Y;
 			float dz = a.Z - b.Z;
@@ -38,23 +34,20 @@ namespace PixelEngine.Utilities
 			return (float)Math.Sqrt(length);
 		}
 
-		public static Vector Normalize(Vector v)
-		{
+		public static Vector Normalize(Vector v) {
 			float length = v.X * v.X + v.Y * v.Y + v.Z * v.Z;
 			float invDiv = (float)(1 / Math.Sqrt(length));
 
 			return new Vector(v.X * invDiv, v.Y * invDiv, v.Z * invDiv);
 		}
 
-		public static Vector Reflect(Vector v, Vector normal)
-		{
+		public static Vector Reflect(Vector v, Vector normal) {
 			float dot = v.X * normal.X + v.Y * normal.Y + normal.Z * normal.Z;
 			dot *= 2;
 			return new Vector(v.X - dot * normal.X, v.Y - dot * normal.Y, v.Z - dot * normal.Z);
 		}
 
-		public static Vector Constrain(Vector v, Vector min, Vector max)
-		{
+		public static Vector Constrain(Vector v, Vector min, Vector max) {
 			float x = v.X;
 			x = (x > max.X) ? max.X : x;
 			x = (x < min.X) ? min.X : x;
@@ -70,15 +63,13 @@ namespace PixelEngine.Utilities
 			return new Vector(x, y, z);
 		}
 
-		public static Vector Lerp(Vector a, Vector b, float amount)
-		{
+		public static Vector Lerp(Vector a, Vector b, float amount) {
 			return new Vector(a.X + (b.X - a.X) * amount,
 				a.Y + (b.Y - a.Y) * amount,
 				a.Z + (b.Z - a.Z) * amount);
 		}
 
-		public static Vector Cross(Vector a, Vector b)
-		{
+		public static Vector Cross(Vector a, Vector b) {
 			float x = a.Y * b.Z - b.Y * a.Z;
 			float y = a.X * b.Z - b.X * a.Z;
 			float z = a.X * b.Y - b.X * a.Y;
@@ -86,8 +77,7 @@ namespace PixelEngine.Utilities
 			return new Vector(x, y, z);
 		}
 
-		public static float Magnitude(Vector v)
-		{
+		public static float Magnitude(Vector v) {
 			float length = v.X * v.X + v.Y * v.Y + v.Z * v.Z;
 			return (float)Math.Sqrt(length);
 		}
@@ -96,16 +86,13 @@ namespace PixelEngine.Utilities
 
 		public static float Angle(Vector a, Vector b) => (float)Math.Acos(Dot(a, b) / (Magnitude(a) * Magnitude(b)));
 
-		public static bool Intersect(Vector s1, Vector e1, Vector s2, Vector e2)
-		{
-			bool OnSegment(Vector p, Vector q, Vector r)
-			{
+		public static bool Intersect(Vector s1, Vector e1, Vector s2, Vector e2) {
+			bool OnSegment(Vector p, Vector q, Vector r) {
 				return (q.X <= Math.Max(p.X, r.X) && q.X >= Math.Min(p.X, r.X) &&
 						q.Y <= Math.Max(p.Y, r.Y) && q.Y >= Math.Min(p.Y, r.Y));
 			}
 
-			int Orientation(Vector p, Vector q, Vector r)
-			{
+			int Orientation(Vector p, Vector q, Vector r) {
 				float val = (q.Y - p.Y) * (r.X - q.X) - (q.X - p.X) * (r.Y - q.Y);
 
 				return (val != 0) ? 0 :
@@ -148,8 +135,7 @@ namespace PixelEngine.Utilities
 		public static Vector operator *(float f, Vector v) => v * f;
 
 		public static Vector operator /(Vector a, Vector b) => new Vector(a.X / b.X, a.Y / b.Y, a.Z / b.Z);
-		public static Vector operator /(Vector v, float f)
-		{
+		public static Vector operator /(Vector v, float f) {
 			float invDiv = 1 / f;
 			return new Vector(v.X * invDiv, v.Y * invDiv, v.Z * invDiv);
 		}
@@ -166,8 +152,7 @@ namespace PixelEngine.Utilities
 
 		public override bool Equals(object obj) => obj is Vector v ? Equals(v) : false;
 
-		public override int GetHashCode()
-		{
+		public override int GetHashCode() {
 			int hashCode = 1861411795;
 			hashCode = hashCode * -1521134295 + X.GetHashCode();
 			hashCode = hashCode * -1521134295 + Y.GetHashCode();
@@ -175,7 +160,7 @@ namespace PixelEngine.Utilities
 			return hashCode;
 		}
 
-		public override string ToString() => $"({X}, {Y}, {Z})"; 
+		public override string ToString() => $"({X}, {Y}, {Z})";
 		#endregion
 	}
 }
