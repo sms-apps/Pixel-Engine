@@ -40,6 +40,19 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Examples\Beeping.cs" />
+    <Compile Include="Examples\ChaosGame.cs" />
+    <Compile Include="Examples\Dodger.cs" />
+    <Compile Include="Examples\GameOfLife.cs" />
+    <Compile Include="Examples\Matrix.cs" />
+    <Compile Include="Examples\Mazes.cs" />
+    <Compile Include="Examples\PerlinNoise.cs" />
+    <Compile Include="Examples\RandomPixels.cs" />
+    <Compile Include="Examples\Snake.cs" />
+    <Compile Include="Examples\Transformations.cs" />
+    <Compile Include="Examples\Tron.cs" />
+    <Compile Include="Examples\Mode7.cs" />
+    <Compile Include="Examples\WireWorld.cs" />
     <Compile Include="Font.cs" />
     <Compile Include="Utilities\Animation.cs" />
     <Compile Include="Extensions\Extension.cs" />
@@ -90,5 +103,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Properties\Handwritten.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

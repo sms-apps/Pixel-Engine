@@ -38,7 +38,7 @@ namespace PixelEngine {
 		private protected string ClassName => GetType().FullName;
 
 		// Client area of window
-		internal Rect ClientRect { get; set; }
+		internal WRect ClientRect { get; set; }
 
 		// Handle of the window
 		internal IntPtr Handle { get; set; }
@@ -71,7 +71,7 @@ namespace PixelEngine {
 			Handle = CreateWindowEx(0, ClassName, AppName, (uint)(WindowStyles.OverlappedWindow | WindowStyles.Visible),
 					0, 0, windowWidth, windowHeight, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
 
-			GetClientRect(Handle, out Rect r);
+			GetClientRect(Handle, out WRect r);
 			ClientRect = r;
 
 			init = true;

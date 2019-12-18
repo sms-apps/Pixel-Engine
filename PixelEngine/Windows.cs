@@ -602,7 +602,7 @@ namespace PixelEngine {
 
 		[DllImport(User)]
 		[return: MarshalAs(UnmanagedType.I1)]
-		public static extern bool GetClientRect(IntPtr hWnd, out Rect lpRect);
+		public static extern bool GetClientRect(IntPtr hWnd, out WRect lpRect);
 
 		[DllImport(User)]
 		public static extern IntPtr LoadCursorA(IntPtr handle, IntPtr cursor);
@@ -616,7 +616,7 @@ namespace PixelEngine {
 
 		[DllImport(User)]
 		[return: MarshalAs(UnmanagedType.I1)]
-		public static extern bool AdjustWindowRectEx(ref Rect lpRect, uint dwStyle, bool bMenu, uint dwExStyle);
+		public static extern bool AdjustWindowRectEx(ref WRect lpRect, uint dwStyle, bool bMenu, uint dwExStyle);
 
 		[DllImport(User, SetLastError = true)]
 		[return: MarshalAs(UnmanagedType.I1)]
@@ -778,7 +778,7 @@ namespace PixelEngine {
 
 		#region Structs
 		[StructLayout(LayoutKind.Sequential)]
-		public struct Rect {
+		public struct WRect {
 			public int Left;
 			public int Top;
 			public int Right;
@@ -804,8 +804,8 @@ namespace PixelEngine {
 		[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
 		public struct MonitorInfo {
 			public int Size;
-			public Rect Monitor;
-			public Rect WorkArea;
+			public WRect Monitor;
+			public WRect WorkArea;
 			public uint Flags;
 		}
 

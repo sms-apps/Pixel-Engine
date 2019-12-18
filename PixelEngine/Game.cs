@@ -443,7 +443,7 @@ namespace PixelEngine {
 		private protected override void CreateWindow() {
 			uint styleEx = (uint)(WindowStylesEx.AppWindow | WindowStylesEx.WindowEdge);
 			uint style = (uint)(WindowStyles.Caption | WindowStyles.SysMenu | WindowStyles.Visible);
-			Rect winRect = new Rect() { Left = 0, Top = 0, Right = windowWidth, Bottom = windowHeight };
+			WRect winRect = new WRect() { Left = 0, Top = 0, Right = windowWidth, Bottom = windowHeight };
 
 			AdjustWindowRectEx(ref winRect, style, false, styleEx);
 
@@ -456,7 +456,7 @@ namespace PixelEngine {
 			Handle = CreateWindowEx(0, ClassName, AppName, (uint)winStyle,
 					0, 0, width, height, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
 
-			GetClientRect(Handle, out Rect r);
+			GetClientRect(Handle, out WRect r);
 			ClientRect = r;
 
 			MapKeyboard();
@@ -954,7 +954,7 @@ namespace PixelEngine {
 									 (uint)(SWP.NoOwnerZOrder | SWP.FrameChanged));
 					}
 
-					GetClientRect(Handle, out Rect r);
+					GetClientRect(Handle, out WRect r);
 					ClientRect = r;
 
 					windowWidth = r.Right - r.Left;
