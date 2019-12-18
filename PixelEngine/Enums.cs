@@ -1,4 +1,5 @@
 ﻿namespace PixelEngine {
+	/// <summary> Enum for possible keyboard keys </summary>
 	public enum Key {
 		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
 		K0, K1, K2, K3, K4, K5, K6, K7, K8, K9,
@@ -8,17 +9,9 @@
 		Back, Escape, Enter, Pause, Scroll, Any, None
 	}
 
-	public enum Mouse {
-		Left,
-		Middle,
-		Right,
-		Any,
-		None
-	}
+	/// <summary> Enum for possible mouse buttons </summary>
+	public enum Mouse { Left, Middle, Right, Any, None }
 
-	public enum Scroll {
-		Up = -1,
-		None = 0,
-		Down = 1
-	}
+	/// <summary> Enum for possible scroll directions </summary>
+	public enum Scroll { Up = -1, None = 0, Down = 1 }
 }

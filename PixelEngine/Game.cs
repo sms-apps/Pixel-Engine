@@ -16,7 +16,7 @@ namespace PixelEngine {
 		public int MouseY { get; private set; }
 		public Pixel.Mode PixelMode { get; set; } = Pixel.Mode.Normal;
 		public Font Font { get; set; }
-		public float PixelBlend { get { return pixBlend; } set { pixBlend = Constrain(value, 0, 1); } }
+		public float PixelBlend { get { return pixBlend; } set { pixBlend = Clamp(value, 0, 1); } }
 		public long FrameCount { get; private set; }
 		public bool Focus { get; private set; }
 		public bool ClampMouse { get; set; } = false;
@@ -25,7 +25,7 @@ namespace PixelEngine {
 		public Clock Clock { get; private set; }
 		public float Volume {
 			get { return audio != null ? audio.Volume : 0; }
-			set { if (audio != null) { audio.Volume = Constrain(value, 0, 1); } }
+			set { if (audio != null) { audio.Volume = Clamp(value, 0, 1); } }
 		}
 		public float AudioTime {
 			get {
@@ -133,10 +133,7 @@ namespace PixelEngine {
 			canvas.Create(this);
 			canvas.Initialize(defDrawTarget, textTarget);
 
-			DateTime t1, t2;
-			t1 = t2 = DateTime.Now;
-
-			if (frameTimer != null) { frameTimer.Init(t1); }
+			if (frameTimer != null) { frameTimer.Init(Clock.Start); }
 
 			timeProc = MouseTimer;
 			IntPtr timerProc = Marshal.GetFunctionPointerForDelegate<TimerProcess>(timeProc);
@@ -144,10 +141,7 @@ namespace PixelEngine {
 
 			while (active) {
 				while (active) {
-					t2 = DateTime.Now;
-					Clock.Elapsed = t2 - t1;
 					float elapsed = (float)Clock.Elapsed.TotalSeconds;
-					t1 = t2;
 
 					if (frameTimer != null && !frameTimer.Tick()) {
 						continue;
@@ -364,7 +358,7 @@ namespace PixelEngine {
 		public float Round(float val, int digits = 0) { return (float)Math.Round(val, digits); }
 
 		public float Map(float val, float oMin, float oMax, float nMin, float nMax) { return (val - oMin) / (oMax - oMin) * (nMax - nMin) + nMin; }
-		public float Constrain(float val, float min, float max) { return Math.Max(Math.Min(max, val), min); }
+		public float Clamp(float val, float min, float max) { return Math.Max(Math.Min(max, val), min); }
 		public float Lerp(float start, float end, float amt) { return Map(amt, 0, 1, start, end); }
 		public float Wrap(float val, float min, float max) {
 			if (val > max) { return val - min; }
@@ -420,8 +414,8 @@ namespace PixelEngine {
 		}
 		private void UpdateMouse(int x, int y) {
 			if (ClampMouse) {
-				MouseX = (int)(Constrain(x, 0, windowWidth - 1) / PixWidth);
-				MouseY = (int)(Constrain(y, 0, windowHeight - 1) / PixHeight);
+				MouseX = (int)(Clamp(x, 0, windowWidth - 1) / PixWidth);
+				MouseY = (int)(Clamp(y, 0, windowHeight - 1) / PixHeight);
 			} else {
 				MouseX = x / PixWidth;
 				MouseY = y / PixHeight;

@@ -5,29 +5,57 @@ namespace PixelEngine.Utilities {
 	#region Mathf
 	/// <summary> Like UnityEngine.Mathf, Wrap <see cref="System.Math"/> functions to deal with float/int, and some custom functions. </summary>
 	public struct Mathf {
+		/// <summary> PI constant (3.14159274f) </summary>
 		public const float PI = 3.14159274f;
+		/// <summary> PI constant (2.71828182f) </summary>
+		public const float E =  2.71828182f;
+		/// <summary> Epsilon constant for normalization (1E-05f) </summary>
 		public const float EPSILON = 1E-05f;
+		/// <summary> Epsilon constant for sqr comaprisons (1E-15f) </summary>
 		public const float SQR_EPSILON = 1E-15f;
+		/// <summary> Epsilon constant for equality comparisons (9.99999944E-11f) </summary>
 		public const float COMPARE_EPSILON = 9.99999944E-11f;
+		/// <summary> Infinity </summary>
 		public const float Infinity = float.PositiveInfinity;
+		/// <summary> Negative Infinity </summary>
 		public const float NegativeInfinity = float.NegativeInfinity;
+		/// <summary> Multiplicative constant for Degrees to Radians conversion ((2f * PI) / 360f) </summary>
 		public const float Deg2Rad = (2f * PI) / 360f;
+		/// <summary> Multiplicative constant for Radians to Degrees conversion (360f / (PI * 2f)) </summary>
 		public const float Rad2Deg = 360f / (PI * 2f);
+		/// <summary> Float wrapper for <see cref="Math.Sin(double)"/></summary> <param name="f"> Angle in radians </param> <returns> Sin Ratio of angle </returns>
 		public static float Sin(float f) { return (float)Math.Sin(f); }
+		/// <summary> Float wrapper for <see cref="Math.Cos(double)"/></summary> <param name="f"> Angle in radians </param> <returns> Cos Ratio of angle </returns>
 		public static float Cos(float f) { return (float)Math.Cos(f); }
+		/// <summary> Float wrapper for <see cref="Math.Tan(double)"/></summary> <param name="f"> Angle in radians </param> <returns> Tan Ratio of angle </returns>
 		public static float Tan(float f) { return (float)Math.Tan(f); }
+		/// <summary> Float wrapper for <see cref="Math.Asin(double)"/></summary> <param name="f"> Sin Ratio </param> <returns> Angle in radians that produces ratio </returns>
 		public static float Asin(float f) { return (float)Math.Asin(f); }
+		/// <summary> Float wrapper for <see cref="Math.Acos(double)"/></summary> <param name="f"> Cos Ratio </param> <returns> Angle in radians that produces ratio </returns>
 		public static float Acos(float f) { return (float)Math.Acos(f); }
+		/// <summary> Float wrapper for <see cref="Math.Atan(double)"/></summary> <param name="f"> Tan Ratio </param> <returns> Angle in radians that produces ratio </returns>
 		public static float Atan(float f) { return (float)Math.Atan(f); }
+		/// <summary> Float wrapper for <see cref="Math.Atan2(double,double)"/></summary> 
+		/// <param name="x"> x part of ratio </param> <param name="y"> y part of ratio </param> 
+		/// <returns> Angle in radians that produces given ratio </returns>
 		public static float Atan2(float y, float x) { return (float)Math.Atan2(y, x); }
+		/// <summary> Float wrapper for <see cref="Math.Sqrt(double)"/></summary> <param name="f"> Number </param> <returns> Square root of number </returns>
 		public static float Sqrt(float f) { return (float)Math.Sqrt(f); }
+		/// <summary> Float wrapper for <see cref="Math.Abs(double)"/></summary> <param name="f"> Number </param> <returns> Absolute value of number </returns>
 		public static float Abs(float f) { return Math.Abs(f); }
+		/// <summary> wrapper for <see cref="Math.Abs(int)"/></summary> <param name="f"> Number </param> <returns> Absolute value of number </returns>
 		public static int Abs(int f) { return Math.Abs(f); }
 
+		/// <summary> Wrapper for <see cref="Math.Pow(double, double)"/> </summary>
+		/// <param name="f"> base to raise </param> <param name="p"> power to raise to </param> <returns> Base raised to given power </returns>
 		public static float Pow(float f, float p) { return (float)Math.Pow(f, p); }
+		/// <summary> wrapper for <see cref="Math.Exp(double)"/></summary> <param name="power"> power </param> <returns> e raised to power </returns>
 		public static float Exp(float power) { return (float)Math.Exp(power); }
+		/// <summary> Wrapper for <see cref="Math.Log(double, double)"/></summary> <param name="f"> Number </param> <param name="b"> base</param> <returns> Log_base of number</returns>
 		public static float Log(float f, float b) { return (float)Math.Log(f, b); }
+		/// <summary> Wrapper for <see cref="Math.Log(double)"/></summary> <param name="f"> Number </param> <returns> Natural log of number </returns>
 		public static float Log(float f) { return (float)Math.Log(f); }
+		/// <summary> Wrapper for <see cref="Math.Log10(double)"/></summary> <param name="f"> Number </param> <returns> Log10 of number </returns>
 		public static float Log10(float f) { return (float)Math.Log10(f); }
 
 		public static float Ceil(float f) { return (float)Math.Ceiling(f); }

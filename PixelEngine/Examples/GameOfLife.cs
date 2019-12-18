@@ -121,7 +121,7 @@ namespace Examples {
 		}
 
 		// Flip cell status
-		public override void OnMousePress(Mouse m) => grid[MouseX, MouseY] = !grid[MouseX, MouseY];
+		public override void OnMousePress(Mouse m) { grid[MouseX, MouseY] = !grid[MouseX, MouseY]; }
 
 		// Pause the game
 		public override void OnKeyPress(Key k) {

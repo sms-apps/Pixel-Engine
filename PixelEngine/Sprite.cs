@@ -4,7 +4,15 @@ using System.Drawing.Imaging;
 using System.IO;
 
 namespace PixelEngine {
+	/// <summary> Class holding sprite information as an array of <see cref="Pixel"/>s </summary>
 	public class Sprite {
+
+		/// <summary> Get reference to pixel data </summary>
+		/// <returns> Reference to pixel array </returns>
+		internal ref Pixel[] GetData() { return ref colorData; }
+		/// <summary> Pixels in this sprite. </summary>
+		private Pixel[] colorData = null;
+
 		public Sprite(int w, int h) {
 			Width = w;
 			Height = h;
@@ -12,6 +20,8 @@ namespace PixelEngine {
 			colorData = new Pixel[Width * Height];
 		}
 
+		/// <summary> Load a given sprite from a BMP format file </summary>
+		/// <param name="bmp"> bitmap to load from </param>
 		private void LoadFromBitmap(Bitmap bmp) {
 			Width = bmp.Width;
 			Height = bmp.Height;
@@ -66,7 +76,11 @@ namespace PixelEngine {
 				bmp.UnlockBits(bmpData);
 			}
 		}
+		/// <summary> Load from an SPR file </summary>
+		/// <param name="path"> Path to load from </param>
+		/// <returns> Sprite loaded from SPR file </returns>
 		private static Sprite LoadFromSpr(string path) {
+			// Helper function to turn a single nibble into a color. 
 			Pixel Parse(short col) {
 				switch (col & 0xF) {
 					case 0x0: return Pixel.Presets.Black;
@@ -92,16 +106,17 @@ namespace PixelEngine {
 
 			Sprite spr;
 
-			using (Stream stream = File.OpenRead(path))
-			using (BinaryReader reader = new BinaryReader(stream)) {
-				int w = reader.ReadInt32();
-				int h = reader.ReadInt32();
+			using (Stream stream = File.OpenRead(path)) {
+				using (BinaryReader reader = new BinaryReader(stream)) {
+					int w = reader.ReadInt32();
+					int h = reader.ReadInt32();
 
-				spr = new Sprite(w, h);
+					spr = new Sprite(w, h);
 
-				for (int i = 0; i < h; i++) {
-					for (int j = 0; j < w; j++) {
-						spr[j, i] = Parse(reader.ReadInt16());
+					for (int i = 0; i < h; i++) {
+						for (int j = 0; j < w; j++) {
+							spr[j, i] = Parse(reader.ReadInt16());
+						}
 					}
 				}
 			}
@@ -109,6 +124,10 @@ namespace PixelEngine {
 			return spr;
 		}
 
+		/// <summary> Loads a sprite from a file. Currently .SPR and anything that <see cref="Image.FromFile(string)"/> can load is supported. 
+		/// BMP, PNG, JPG, GIF, and TIFF Should be expected to work. YMMV on other formats. </summary>
+		/// <param name="path"> Filename to load </param>
+		/// <returns> Loaded sprite. </returns>
 		public static Sprite Load(string path) {
 			if (!File.Exists(path)) {
 				return new Sprite(8, 8);
@@ -124,6 +143,9 @@ namespace PixelEngine {
 				}
 			}
 		}
+		/// <summary> Converts the given <see cref="Sprite"/> into a bitmap and saves it to a file. </summary>
+		/// <param name="spr"> Sprite to save </param>
+		/// <param name="path"> Path to save file to </param>
 		public static void Save(Sprite spr, string path) {
 			unsafe {
 				using (Bitmap bmp = new Bitmap(spr.Width, spr.Height)) {
@@ -155,29 +177,43 @@ namespace PixelEngine {
 				}
 			}
 		}
+		/// <summary> Copies <see cref="Pixel"/> data from src <see cref="Sprite"/> to dest <see cref="Sprite"/> </summary>
+		/// <param name="src"> Source Sprite </param>
+		/// <param name="dest"> Destination Sprite </param>
 		public static void Copy(Sprite src, Sprite dest) {
 			if (src.colorData.Length != dest.colorData.Length) { return; }
 
 			src.colorData.CopyTo(dest.colorData, 0);
 		}
 
+		/// <summary> Width of sprite </summary>
 		public int Width { get; private set; }
+		/// <summary> Height of sprite </summary>
 		public int Height { get; private set; }
 
+		/// <summary> 2d Accessor to directly read/write <see cref="Pixel"/>s in sprite </summary>
+		/// <param name="x">x coord to read/write at </param>
+		/// <param name="y">y coord to read/write at </param>
+		/// <returns> Pixel color at x/y </returns>
 		public Pixel this[int x, int y] {
 			get { return GetPixel(x, y); }
 			set { SetPixel(x, y, value); }
 		}
-
+		/// <summary> Logic for reading <see cref="Pixel"/>s from Sprite. </summary>
+		/// <param name="x"> x coord to read </param>
+		/// <param name="y"> y coord to read </param>
+		/// <returns> Pixel at x/y, or <see cref="Pixel.Empty"/> if x/y are invalid  </returns>
 		private Pixel GetPixel(int x, int y) {
 			if (x >= 0 && x < Width && y >= 0 && y < Height) { return colorData[y * Width + x]; }
 			else { return Pixel.Empty; }
 		}
+		/// <summary> Logic for writing <see cref="Pixel"/>s from Sprite. </summary>
+		/// <param name="x"> x coord to read </param>
+		/// <param name="y"> y coord to read </param>
+		/// <param name="p"> Pixel to write into sprite. </param>
 		private void SetPixel(int x, int y, Pixel p) {
 			if (x >= 0 && x < Width && y >= 0 && y < Height) { colorData[y * Width + x] = p; }
 		}
 
-		internal ref Pixel[] GetData() { return ref colorData; }
-		private Pixel[] colorData = null;
 	}
 }

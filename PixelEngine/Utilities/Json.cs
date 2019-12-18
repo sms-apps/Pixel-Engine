@@ -1,3 +1,5 @@
+// I tossed this in here, since it is a much more comprehensive, but still lightweight JSON library.
+
 /*	XtoJSON
 	Lightweight JSON Library for C#
 	2015-2017  Jonathan Cohen

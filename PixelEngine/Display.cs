@@ -1,9 +1,9 @@
 using System;
 using System.Runtime.InteropServices;
-
 using static PixelEngine.Windows;
 
 namespace PixelEngine {
+	/// <summary> PixelEngine base class holding logic for interacting with the display window. </summary>
 	public class Display {
 		private WindowProcess proc;
 
