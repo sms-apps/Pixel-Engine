@@ -56,6 +56,7 @@
     <Compile Include="Font.cs" />
     <Compile Include="Utilities\Animation.cs" />
     <Compile Include="Extensions\Extension.cs" />
+    <Compile Include="Utilities\Bitflags.cs" />
     <Compile Include="Utilities\Json.cs" />
     <Compile Include="Extensions\Transform.cs" />
     <Compile Include="Utilities\Algorithms.cs" />

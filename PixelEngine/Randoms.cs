@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace PixelEngine {
 	internal static class Randoms {
-		/// <summary> Workaround to avoid static constructor </summary>
+		/// <summary> Workaround to avoid static constructor penalty </summary>
 		public static bool Initialized = Init();
-		/// <summary> Workaround to avoid static constructor </summary>
+		/// <summary> Workaround to avoid static constructor penalty </summary>
 		private static bool Init() {
 			Seed = Environment.TickCount;
 			return true;

@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 namespace PixelEngine {
 	/// <summary> Class that holds information about a pixel font </summary>
 	public class Font {
-		/// <summary> Workaround for avoiding static constructor </summary>
+		/// <summary> Workaround for avoiding static constructor penalty </summary>
 		public static readonly bool Initialized = Init();
+		/// <summary> Workaround for avoiding static constructor penalty </summary>
 		private static bool Init() {
 			ResxHelper.LoadFonts();
 			retro = new Lazy<Font>(CreateRetro);
@@ -45,7 +46,7 @@ namespace PixelEngine {
 		internal Dictionary<char, Sprite> Glyphs;
 		/// <summary> Height of a line of text rendered with this font </summary>
 		internal int CharHeight;
-
+		
 		private Font() { Glyphs = new Dictionary<char, Sprite>(); }
 
 		internal Font(Dictionary<char, Sprite> glyphs) {
@@ -159,6 +160,8 @@ namespace PixelEngine {
 			return f;
 		}
 
+		/// <summary> Load preset handwritten font </summary>
+		/// <returns> Loaded font </returns>
 		private static Font CreateHandwritten() {
 			Font f = new Font();
 			f.CharHeight = 21;

@@ -25,7 +25,9 @@ namespace Examples {
 			st.Start();
 		}
 
-		public Mazes() => AppName = "MAZE!";
+		public Mazes() {
+			AppName = "MAZE!";
+		}
 
 		private const int MazeWidth = 20;
 		private const int MazeHeight = 20;

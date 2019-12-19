@@ -134,7 +134,7 @@ namespace PixelEngine.Utilities {
 		/// <summary> Search a collection for a given item. </summary> <typeparam name="T"> Generic type parameter </typeparam>
 		/// <param name="items"> Collection to search </param> <param name="item"> Item to find </param>
 		/// <returns> First matching item if found, or default value if not found </returns>
-		public static T Search<T>(this IEnumerable<T> items, T item) { return  Search(items, (t, i) => t.Equals(item)); }
+		public static T Search<T>(this IEnumerable<T> items, T item) { return Search(items, (t, i) => t.Equals(item)); }
 		/// <summary> Search a collection for an item matching a condition. </summary> <typeparam name="T"> Generic type parameter </typeparam>
 		/// <param name="items"> Collection to search </param> <param name="condition"> Condition to match </param>
 		/// <returns> first item matching condition if found, or default value if not found </returns>

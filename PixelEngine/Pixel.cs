@@ -34,6 +34,11 @@ namespace PixelEngine {
 		/// <summary> Alpha (typically transparency) channel </summary>
 		public byte A { get; private set; }
 
+		/// <summary> Create a <see cref="Pixel"/> with the given color information </summary>
+		/// <param name="red"> Red channel (0-255) </param>
+		/// <param name="green"> Green channel (0-255) </param>
+		/// <param name="blue"> Blue channel (0-255) </param>
+		/// <param name="alpha"> Alpha (transparency) channel (0-255), Default = 255 </param>
 		public Pixel(byte red, byte green, byte blue, byte alpha = 255) {
 			R = red; G = green; B = blue; A = alpha;
 		}

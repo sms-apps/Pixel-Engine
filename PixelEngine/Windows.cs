@@ -137,7 +137,8 @@ namespace PixelEngine {
 			NoZOrder = 0x0004,
 			ShowWindow = 0x0040,
 		}
-
+		
+		/// <summary> Some GL Constants </summary>
 		public enum GL {
 			Texture2D = 0x0DE1,
 			TextureMagFilter = 0x2800,
@@ -156,6 +157,7 @@ namespace PixelEngine {
 			DepthBufferBit = 0x00000100
 		}
 
+		/// <summary> WIndows Message Enumeration </summary>
 		public enum WM {
 			NULL = 0x0000,
 			CREATE = 0x0001,
@@ -388,6 +390,7 @@ namespace PixelEngine {
 			REFLECT = USER + 0x1C00,
 		}
 
+		/// <summary> Virtual Key enumeration </summary>
 		public enum VK {
 			LBUTTON = 1,
 			RBUTTON = 2,
@@ -565,8 +568,9 @@ namespace PixelEngine {
 		#endregion
 
 		#region Delegates
-		/// <summary> Windows wave processing delegate. </summary>
+		/// <summary> Windows sound processing delegate. </summary>
 		public delegate void WaveDelegate(IntPtr hdrvr, int uMsg, int dwUser, ref WaveHdr wavhdr, int dwParam2);
+		/// <summary> Window delegate </summary>
 		public delegate IntPtr WindowProcess(IntPtr handle, uint msg, int wParam, int lParam);
 		public delegate bool SwapInterval(int interval);
 		public delegate void TimerProcess(IntPtr handle, uint message, IntPtr id, uint interval);

@@ -105,7 +105,7 @@ namespace Examples {
 			int GetNeighbourElectronHeads(int x, int y) {
 				int sum = 0;
 
-				bool IsHead(int a, int b) => current[a, b] == Cell.ElectronHead;
+				bool IsHead(int a, int b) { return current[a, b] == Cell.ElectronHead; }
 
 				if (x > 0 && IsHead(x - 1, y)) { sum++; } // West
 				if (x < ScreenWidth - 1 && IsHead(x + 1, y)) { sum++; } // East

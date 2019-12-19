@@ -1,7 +1,9 @@
 namespace PixelEngine {
 	/// <summary> Helper class for wrapping a <see cref="ShaderFunc"/>. </summary>
 	public class Shader {
+		/// <summary> Wrapped <see cref="ShaderFunc"/> </summary>
 		public ShaderFunc Calculate { get; private set; }
+		/// <summary> Wrap a <see cref="ShaderFunc"/> </summary>
 		public Shader(ShaderFunc calculate) { Calculate = calculate; }
 	}
 	/// <summary> Delegate class for applying a shader-function per-pixel. </summary>

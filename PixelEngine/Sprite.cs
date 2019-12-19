@@ -13,6 +13,9 @@ namespace PixelEngine {
 		/// <summary> Pixels in this sprite. </summary>
 		private Pixel[] colorData = null;
 
+		/// <summary> Constructs an empty (transparent) sprite with given width/height </summary>
+		/// <param name="w"> Width of sprite </param>
+		/// <param name="h"> Height of sprite </param>
 		public Sprite(int w, int h) {
 			Width = w;
 			Height = h;
