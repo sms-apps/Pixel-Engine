@@ -4,15 +4,23 @@ using System.Runtime.InteropServices;
 using static PixelEngine.Windows;
 
 namespace PixelEngine {
+	/// <summary> Class holding rendering hooks and information </summary>
 	internal class OpenGL {
+		/// <summary> Bound Game instance </summary>
 		private Game game;
 
+		/// <summary> Pointer to device's context </summary>
 		private IntPtr deviceContext;
+		/// <summary> Pointer to rendering context </summary>
 		private IntPtr renderContext;
 
+		/// <summary> Pixel size </summary>
 		private float pw, ph;
+		/// <summary> Inverse float size </summary>
 		private float ww, wh;
 
+		/// <summary> Setup in regards to a Game instance </summary>
+		/// <param name="game"> Game instance to setup </param>
 		public void Create(Game game) {
 			this.game = game;
 
@@ -45,6 +53,9 @@ namespace PixelEngine {
 			GlTexEnvf((uint)GL.TextureEnv, (uint)GL.TextureEnvMode, (float)GL.Decal);
 		}
 
+		/// <summary> Initialize with sprites to render to </summary>
+		/// <param name="drawTarget"> Sprite to render plain draw calls to </param>
+		/// <param name="textTarget"> Sprite to render text to </param>
 		public unsafe void Initialize(Sprite drawTarget, Sprite textTarget) {
 			GlTexImage2D((uint)GL.Texture2D, 0, (uint)GL.RGBA,
 				game.ScreenWidth, game.ScreenHeight,
@@ -69,21 +80,25 @@ namespace PixelEngine {
 			deviceContext = GetDC(game.Handle);
 		}
 
+		/// <summary> Draw given sprites to the screen </summary>
+		/// <param name="drawTarget"> Sprite layer </param>
+		/// <param name="textTarget"> Text layer </param>
 		public unsafe void Draw(Sprite drawTarget, Sprite textTarget) {
-			fixed (Pixel* ptr = drawTarget.GetData()) {
+			fixed (Pixel* ptr = drawTarget.GetPixels()) {
 				if (game.PixWidth == 1 && game.PixHeight == 1) { 
 					RenderUnitPixels(drawTarget.Width, drawTarget.Height, ptr);
 				} else { RenderPixels(drawTarget.Width, drawTarget.Height, ptr); }
 			}
 
 			if (textTarget != null) {
-				fixed (Pixel* ptr = textTarget.GetData()) {
+				fixed (Pixel* ptr = textTarget.GetPixels()) {
 					RenderText(game.windowWidth, game.windowHeight, textTarget.Width, textTarget.Height, ptr);
 				}
 			}
 			SwapBuffers(deviceContext);
 		}
 
+		/// <summary> Releases resources when finished. </summary>
 		public void Destroy() {
 			ReleaseDC(game.Handle, deviceContext);
 			WglDeleteContext(renderContext);

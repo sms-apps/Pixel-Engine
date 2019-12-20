@@ -1,10 +1,59 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
 namespace PixelEngine {
-	public class Sprite {
+	/// <summary> Core interface for a sprite to fufill to be drawable. </summary>
+	public interface ISprite {
+
+		/// <summary> Width of sprite </summary>
+		int Width { get; }
+
+		/// <summary> Height of sprite </summary>
+		int Height { get; }
+		
+		/// <summary> 2d Accessor to read <see cref="Pixel"/>s in sprite </summary>
+		/// <param name="x">x coord to read at </param>
+		/// <param name="y">y coord to read at </param>
+		/// <returns> <see cref="Pixel"/> color at x/y </returns>
+		Pixel this[int x, int y] { get; }
+	}
+
+	
+	/// <summary> Class containing extension methods common for any <see cref="ISprite"/> implementation. </summary>
+	public static class ISpriteExt {
+		/// <summary> Gets the <see cref="ISprite.Width"/> and <see cref="ISprite.Height"/> of the given <paramref name="sprite"/> packed as a <see cref="Point"/>. </summary>
+		public static Point Size(this ISprite sprite) { return new Point(sprite.Width, sprite.Height); }
+	}
+
+	/// <summary> Class holding sprite information as an array of <see cref="Pixel"/>s </summary>
+	public class Sprite : ISprite {
+
+		/// <summary> Get reference to pixel data </summary>
+		/// <returns> Reference to pixel array </returns>
+		public ref Pixel[] GetPixels() { return ref colorData; }
+		/// <summary> Pixels in this sprite. </summary>
+		private Pixel[] colorData = null;
+
+		/// <summary> Width of sprite </summary>
+		public int Width { get; private set; }
+		/// <summary> Height of sprite </summary>
+		public int Height { get; private set; }
+
+		/// <summary> 2d Accessor to directly read/write <see cref="Pixel"/>s in sprite </summary>
+		/// <param name="x">x coord to read/write at </param>
+		/// <param name="y">y coord to read/write at </param>
+		/// <returns> <see cref="Pixel"/> color at x/y </returns>
+		public Pixel this[int x, int y] {
+			get { return GetPixel(x, y); }
+			set { SetPixel(x, y, value); }
+		}
+		
+		/// <summary> Constructs an empty (transparent) sprite with given width/height </summary>
+		/// <param name="w"> Width of sprite </param>
+		/// <param name="h"> Height of sprite </param>
 		public Sprite(int w, int h) {
 			Width = w;
 			Height = h;
@@ -12,6 +61,24 @@ namespace PixelEngine {
 			colorData = new Pixel[Width * Height];
 		}
 
+		/// <summary> Logic for reading <see cref="Pixel"/>s from Sprite. </summary>
+		/// <param name="x"> x coord to read </param>
+		/// <param name="y"> y coord to read </param>
+		/// <returns> Pixel at x/y, or <see cref="Pixel.Empty"/> if x/y are invalid  </returns>
+		private Pixel GetPixel(int x, int y) {
+			if (x >= 0 && x < Width && y >= 0 && y < Height) { return colorData[y * Width + x]; }
+			else { return Pixel.Empty; }
+		}
+		/// <summary> Logic for writing <see cref="Pixel"/>s from Sprite. </summary>
+		/// <param name="x"> x coord to read </param>
+		/// <param name="y"> y coord to read </param>
+		/// <param name="p"> Pixel to write into sprite. </param>
+		private void SetPixel(int x, int y, Pixel p) {
+			if (x >= 0 && x < Width && y >= 0 && y < Height) { colorData[y * Width + x] = p; }
+		}
+
+		/// <summary> Load a given sprite from a BMP format file </summary>
+		/// <param name="bmp"> bitmap to load from </param>
 		private void LoadFromBitmap(Bitmap bmp) {
 			Width = bmp.Width;
 			Height = bmp.Height;
@@ -66,7 +133,11 @@ namespace PixelEngine {
 				bmp.UnlockBits(bmpData);
 			}
 		}
+		/// <summary> Load from an SPR file </summary>
+		/// <param name="path"> Path to load from </param>
+		/// <returns> Sprite loaded from SPR file </returns>
 		private static Sprite LoadFromSpr(string path) {
+			// Helper function to turn a single nibble into a color. 
 			Pixel Parse(short col) {
 				switch (col & 0xF) {
 					case 0x0: return Pixel.Presets.Black;
@@ -92,16 +163,17 @@ namespace PixelEngine {
 
 			Sprite spr;
 
-			using (Stream stream = File.OpenRead(path))
-			using (BinaryReader reader = new BinaryReader(stream)) {
-				int w = reader.ReadInt32();
-				int h = reader.ReadInt32();
+			using (Stream stream = File.OpenRead(path)) {
+				using (BinaryReader reader = new BinaryReader(stream)) {
+					int w = reader.ReadInt32();
+					int h = reader.ReadInt32();
 
-				spr = new Sprite(w, h);
+					spr = new Sprite(w, h);
 
-				for (int i = 0; i < h; i++) {
-					for (int j = 0; j < w; j++) {
-						spr[j, i] = Parse(reader.ReadInt16());
+					for (int i = 0; i < h; i++) {
+						for (int j = 0; j < w; j++) {
+							spr[j, i] = Parse(reader.ReadInt16());
+						}
 					}
 				}
 			}
@@ -109,6 +181,10 @@ namespace PixelEngine {
 			return spr;
 		}
 
+		/// <summary> Loads a sprite from a file. Currently .SPR and anything that <see cref="Image.FromFile(string)"/> can load is supported. 
+		/// BMP, PNG, JPG, GIF, and TIFF Should be expected to work. YMMV on other formats. </summary>
+		/// <param name="path"> Filename to load </param>
+		/// <returns> Loaded sprite. </returns>
 		public static Sprite Load(string path) {
 			if (!File.Exists(path)) {
 				return new Sprite(8, 8);
@@ -124,6 +200,9 @@ namespace PixelEngine {
 				}
 			}
 		}
+		/// <summary> Converts the given <see cref="Sprite"/> into a bitmap and saves it to a file. </summary>
+		/// <param name="spr"> Sprite to save </param>
+		/// <param name="path"> Path to save file to </param>
 		public static void Save(Sprite spr, string path) {
 			unsafe {
 				using (Bitmap bmp = new Bitmap(spr.Width, spr.Height)) {
@@ -155,29 +234,93 @@ namespace PixelEngine {
 				}
 			}
 		}
+		/// <summary> Copies <see cref="Pixel"/> data from src <see cref="Sprite"/> to dest <see cref="Sprite"/> </summary>
+		/// <param name="src"> Source Sprite </param>
+		/// <param name="dest"> Destination Sprite </param>
 		public static void Copy(Sprite src, Sprite dest) {
 			if (src.colorData.Length != dest.colorData.Length) { return; }
 
 			src.colorData.CopyTo(dest.colorData, 0);
 		}
 
+
+	}
+
+	/// <summary> Class holding palatted sprite information. for 
+	/// <para>Supports up to 255 colors in a Palette. </para>
+	/// <para> 0 is reserved for <see cref="Pixel.Empty"/>, regardless of what it is set to internally. </para>
+	/// </summary>
+	public class PalettedSprite : ISprite {
+
+		/// <summary> Information about what colors are in what positions. 0 is always transparent. </summary>
+		private byte[] colors = null;
+		/// <summary> Palette of <see cref="Pixel"/> colors. </summary>
+		private Pixel[] palette = null;
+
+		/// <summary> Width of sprite </summary>
 		public int Width { get; private set; }
+		/// <summary> Height of sprite </summary>
 		public int Height { get; private set; }
 
+		/// <summary> 2d Accessor to directly read/write <see cref="Pixel"/>s in sprite </summary>
+		/// <param name="x">x coord to read/write at </param>
+		/// <param name="y">y coord to read/write at </param>
+		/// <returns> <see cref="Pixel"/> color at x/y </returns>
 		public Pixel this[int x, int y] {
-			get { return GetPixel(x, y); }
-			set { SetPixel(x, y, value); }
+			get {
+				int i = x + y * Width;
+				if (i < 0 || i >= palette.Length) { return new Pixel(); }
+				byte b = colors[i];
+				if (b == 0) { return new Pixel(); }
+				return palette[b];
+			}
+			set {
+				int i = x + y * Width;
+				int ci = value.Equals(Pixel.Empty) ? 0 : Array.IndexOf(palette, value);
+				if (ci < 0) { throw new InvalidOperationException(); }
+				colors[i] = (byte)ci;
+			}
 		}
 
-		private Pixel GetPixel(int x, int y) {
-			if (x >= 0 && x < Width && y >= 0 && y < Height) { return colorData[y * Width + x]; }
-			else { return Pixel.Empty; }
+		/// <summary> Gets a palette index at the given x/y coordinate </summary>
+		/// <param name="x"> x coord </param>
+		/// <param name="y"> y coord </param>
+		/// <returns> Palette index at given coordinate </returns>
+		public byte GetIndex(int x, int y) {
+			int i = x + y * Width;
+			if (i < 0 || i >= palette.Length) { return 0; }
+			return colors[i];
 		}
-		private void SetPixel(int x, int y, Pixel p) {
-			if (x >= 0 && x < Width && y >= 0 && y < Height) { colorData[y * Width + x] = p; }
+		/// <summary> Sets a palette index at the given x/y coordinate </summary>
+		/// <param name="x"> x coord </param>
+		/// <param name="y"> y coord </param>
+		/// <param name="bi"> byte index into Palette to set. </param>
+		public void SetIndex(int x, int y, byte bi) {
+			int i = x + y * Width;
+			if (i < 0 || i >= palette.Length) { return; }
+			colors[i] = bi;
 		}
 
-		internal ref Pixel[] GetData() { return ref colorData; }
-		private Pixel[] colorData = null;
+		/// <summary> Create a new, empty <see cref="PalettedSprite"/> with the given dimensions and <see cref="Pixel"/>[] palette </summary>
+		/// <param name="w"> Width of sprite </param>
+		/// <param name="h"></param>
+		/// <param name="palette"></param>
+		public PalettedSprite(int w, int h, Pixel[] palette) {
+			Width = w;
+			Height = h;
+			colors = new byte[w * h];
+			this.palette = palette;
+		}
+
+		/// <summary> Create a copy of a given <see cref="PalettedSprite"/> with the given <paramref name="palette"/> </summary>
+		/// <param name="orig"> Orignal <see cref="PalettedSprite"/> to share palette indexes with </param>
+		/// <param name="palette"> <see cref="Pixel"/>[] to use as this sprite's Palette. </param>
+		public PalettedSprite(PalettedSprite orig, Pixel[] palette) {
+			Width = orig.Width;
+			Height = orig.Height;
+			colors = orig.colors;
+			this.palette = palette;
+		}
+
 	}
 }

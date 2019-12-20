@@ -5,84 +5,143 @@ namespace PixelEngine.Utilities {
 	#region Mathf
 	/// <summary> Like UnityEngine.Mathf, Wrap <see cref="System.Math"/> functions to deal with float/int, and some custom functions. </summary>
 	public struct Mathf {
+		/// <summary> PI constant (3.14159274f) </summary>
 		public const float PI = 3.14159274f;
+		/// <summary> PI constant (2.71828182f) </summary>
+		public const float E =  2.71828182f;
+		/// <summary> Epsilon constant for normalization (1E-05f) </summary>
 		public const float EPSILON = 1E-05f;
+		/// <summary> Epsilon constant for sqr comaprisons (1E-15f) </summary>
 		public const float SQR_EPSILON = 1E-15f;
+		/// <summary> Epsilon constant for equality comparisons (9.99999944E-11f) </summary>
 		public const float COMPARE_EPSILON = 9.99999944E-11f;
+		/// <summary> Infinity </summary>
 		public const float Infinity = float.PositiveInfinity;
+		/// <summary> Negative Infinity </summary>
 		public const float NegativeInfinity = float.NegativeInfinity;
+		/// <summary> Multiplicative constant for Degrees to Radians conversion ((2f * PI) / 360f) </summary>
 		public const float Deg2Rad = (2f * PI) / 360f;
+		/// <summary> Multiplicative constant for Radians to Degrees conversion (360f / (PI * 2f)) </summary>
 		public const float Rad2Deg = 360f / (PI * 2f);
+		/// <summary> Float wrapper for <see cref="Math.Sin(double)"/></summary> <param name="f"> Angle in radians </param> <returns> Sin Ratio of angle </returns>
 		public static float Sin(float f) { return (float)Math.Sin(f); }
+		/// <summary> Float wrapper for <see cref="Math.Cos(double)"/></summary> <param name="f"> Angle in radians </param> <returns> Cos Ratio of angle </returns>
 		public static float Cos(float f) { return (float)Math.Cos(f); }
+		/// <summary> Float wrapper for <see cref="Math.Tan(double)"/></summary> <param name="f"> Angle in radians </param> <returns> Tan Ratio of angle </returns>
 		public static float Tan(float f) { return (float)Math.Tan(f); }
+		/// <summary> Float wrapper for <see cref="Math.Asin(double)"/></summary> <param name="f"> Sin Ratio </param> <returns> Angle in radians that produces ratio </returns>
 		public static float Asin(float f) { return (float)Math.Asin(f); }
+		/// <summary> Float wrapper for <see cref="Math.Acos(double)"/></summary> <param name="f"> Cos Ratio </param> <returns> Angle in radians that produces ratio </returns>
 		public static float Acos(float f) { return (float)Math.Acos(f); }
+		/// <summary> Float wrapper for <see cref="Math.Atan(double)"/></summary> <param name="f"> Tan Ratio </param> <returns> Angle in radians that produces ratio </returns>
 		public static float Atan(float f) { return (float)Math.Atan(f); }
+		/// <summary> Float wrapper for <see cref="Math.Atan2(double,double)"/></summary> 
+		/// <param name="x"> x part of ratio </param> <param name="y"> y part of ratio </param> 
+		/// <returns> Angle in radians that produces given ratio </returns>
 		public static float Atan2(float y, float x) { return (float)Math.Atan2(y, x); }
+		/// <summary> Float wrapper for <see cref="Math.Sqrt(double)"/></summary> <param name="f"> Number </param> <returns> Square root of number </returns>
 		public static float Sqrt(float f) { return (float)Math.Sqrt(f); }
+		/// <summary> Float wrapper for <see cref="Math.Abs(double)"/></summary> <param name="f"> Number </param> <returns> Absolute value of number </returns>
 		public static float Abs(float f) { return Math.Abs(f); }
+		/// <summary> wrapper for <see cref="Math.Abs(int)"/></summary> <param name="f"> Number </param> <returns> Absolute value of number </returns>
 		public static int Abs(int f) { return Math.Abs(f); }
 
+		/// <summary> Wrapper for <see cref="Math.Pow(double, double)"/> </summary>
+		/// <param name="f"> base to raise </param> <param name="p"> power to raise to </param> <returns> Base raised to given power </returns>
 		public static float Pow(float f, float p) { return (float)Math.Pow(f, p); }
+		/// <summary> wrapper for <see cref="Math.Exp(double)"/></summary> <param name="power"> power </param> <returns> e raised to power </returns>
 		public static float Exp(float power) { return (float)Math.Exp(power); }
+		/// <summary> Wrapper for <see cref="Math.Log(double, double)"/></summary> <param name="f"> Number </param> <param name="b"> base</param> <returns> Log_base of number</returns>
 		public static float Log(float f, float b) { return (float)Math.Log(f, b); }
+		/// <summary> Wrapper for <see cref="Math.Log(double)"/></summary> <param name="f"> Number </param> <returns> Natural log of number </returns>
 		public static float Log(float f) { return (float)Math.Log(f); }
+		/// <summary> Wrapper for <see cref="Math.Log10(double)"/></summary> <param name="f"> Number </param> <returns> Log10 of number </returns>
 		public static float Log10(float f) { return (float)Math.Log10(f); }
 
+		/// <summary> Wrapper for <see cref="Math.Ceiling(double)"/> </summary>
 		public static float Ceil(float f) { return (float)Math.Ceiling(f); }
+		/// <summary> Wrapper for <see cref="Math.Ceiling(double)"/>, cast to <see cref="int"/>. </summary>
 		public static int CeilToInt(float f) { return (int)Math.Ceiling(f); }
+		/// <summary> Wrapper for <see cref="Math.Floor(double)"/> </summary>
 		public static float Floor(float f) { return (float)Math.Floor(f); }
+		/// <summary> Wrapper for <see cref="Math.Floor(double)"/>, cast to <see cref="int"/> </summary>
 		public static int FloorToInt(float f) { return (int)Math.Floor(f); }
+		/// <summary> Wrapper for <see cref="Math.Round(double)"/> </summary>
 		public static float Round(float f) { return (float)Math.Round(f); }
+		/// <summary> Wrapper for <see cref="Math.Round(double)"/>, cast to <see cref="int"/> </summary>
 		public static int RoundToInt(float f) { return (int)Math.Round(f); }
 
+		/// <summary> Pick the minimum of two <see cref="float"/> values</summary>
 		public static float Min(float a, float b) { return a < b ? a : b; }
+		/// <summary> Pick the minimum of three <see cref="float"/> values</summary>
 		public static float Min(float a, float b, float c) { return a < b ? (a < c ? a : c) : (b < c ? b : c); }
+		/// <summary> Pick the maximum of two <see cref="float"/> values</summary>
 		public static float Max(float a, float b) { return a > b ? a : b; }
+		/// <summary> Pick the maximum of three <see cref="float"/> values</summary>
 		public static float Max(float a, float b, float c) { return a > b ? (a > c ? a : c) : (b > c ? b : c); }
+		/// <summary> Pick the minimum of two <see cref="int"/> values</summary>
 		public static int Min(int a, int b) { return a < b ? a : b; }
+		/// <summary> Pick the minimum of three <see cref="int"/> values</summary>
 		public static int Min(int a, int b, int c) { return a < b ? (a < c ? a : c) : (b < c ? b : c); }
+		/// <summary> Pick the maximum of two <see cref="int"/> values</summary>
 		public static int Max(int a, int b) { return a > b ? a : b; }
+		/// <summary> Pick the maximum of three <see cref="int"/> values</summary>
 		public static int Max(int a, int b, int c) { return a > b ? (a > c ? a : c) : (b > c ? b : c); }
 
+		/// <summary> Repeat a number <paramref name="f"/> over range [0, <paramref name="length"/>). </summary>
 		public static float Repeat(float f, float length) { return Clamp(f - Floor(f / length) * length, 0, length); }
+		/// <summary> Make a number <paramref name="f"/> go back and forth between range [0, <paramref name="length"/>). </summary>
 		public static float PingPong(float f, float length) { f = Repeat(f, length * 2f); return length - Abs(f - length); }
 
+		/// <summary> Gets the sign of the number <paramref name="f"/> as -1 if negative or +1 if positive/zero </summary>
 		public static float Sign(float f) { return (f < 0) ? -1f : 1f; }
+		/// <summary> Clamp a number <paramref name="f"/> between [0, 1] </summary>
 		public static float Clamp01(float f) { return f < 0 ? 0 : f > 1 ? 1 : f; }
+		/// <summary> Clamp a number <paramref name="f"/> between [<paramref name="min"/>, <paramref name="max"/>] </summary>
 		public static float Clamp(float f, float min, float max) { return f < min ? min : f > max ? max : f; }
+		/// <summary> Clamp a number <paramref name="f"/> between [<paramref name="min"/>, <paramref name="max"/>] </summary>
 		public static int Clamp(int f, int min, int max) { return f < min ? min : f > max ? max : f; }
+		/// <summary> Get the real difference between two angles (in degrees) </summary>
 		public static float DeltaAngle(float current, float target) {
 			float angle = Repeat(target - current, 360f);
 			if (angle > 180f) { angle -= 360f; }
 			return angle;
 		}
 		// @TODO: Look into the specific value of UnityEngine.Mathf.Epsilon (for COMPARE_EPSILON)
+		/// <summary> Check two numbers for aproximate equivelancy. </summary>
 		public static bool Approximately(float a, float b) {
 			return Abs(b - a) < Max(1E-06f * Max(Abs(a), Abs(b)), COMPARE_EPSILON * 8f);
 		}
+		/// <summary> Map <paramref name="val"/> from [<paramref name="a"/>, <paramref name="b"/>] space into [<paramref name="x"/>, <paramref name="y"/>] space</summary>
 		public static float Map(float a, float b, float val, float x, float y) { return Lerp(x, y, InverseLerp(a, b, val)); }
+		/// <summary> Linearly interpolate <paramref name="f"/> between [<paramref name="a"/>, <paramref name="b"/>]. </summary>
 		public static float Lerp(float a, float b, float f) { return a + (b - a) * Clamp01(f); }
+		/// <summary> Get the proportion <paramref name="value"/> is at between [<paramref name="a"/>, <paramref name="b"/>]. </summary>
 		public static float InverseLerp(float a, float b, float value) { return (a != b) ? Clamp01((value - a) / (b - a)) : 0f; }
+		/// <summary> Linearly interpolate <paramref name="f"/> between [<paramref name="a"/>, <paramref name="b"/>], without constraint inside [0,1] </summary>
 		public static float LerpUnclamped(float a, float b, float f) { return a + (b - a) * f; }
+		/// <summary> Smoothly interpolate <paramref name="f"/> between [<paramref name="a"/>, <paramref name="b"/>]. </summary>
 		public static float SmoothStep(float a, float b, float f) {
 			f = Clamp01(f);
 			f = -2f * f * f * f + 3f * f * f;
 			return a * f + b * (1f - f);
 		}
+		/// <summary> Linearly interpolate, as an angle, <paramref name="f"/> between [<paramref name="a"/>, <paramref name="b"/>]. </summary>
 		public static float LerpAngle(float a, float b, float f) {
 			float angle = Repeat(b - a, 360f);
 			if (angle > 180f) { angle -= 360f; }
 			return a + angle * Clamp01(f);
 		}
+		/// <summary> Raw step <paramref name="current"/> towards <paramref name="target"/>, at most changing by <paramref name="maxDelta"/>. </summary>
 		public static float MoveTowards(float current, float target, float maxDelta) {
 			return (Abs(target - current) <= maxDelta) ? target : (current + Sign(target - current) * maxDelta);
 		}
+		/// <summary> Raw step, as an angle, <paramref name="current"/> towards <paramref name="target"/>, at most changing by <paramref name="maxDelta"/>. </summary>
 		public static float MoveTowardsAngle(float current, float target, float maxDelta) {
 			float delta = DeltaAngle(current, target);
 			return (-maxDelta < delta && delta < maxDelta) ? target : MoveTowards(current, current + delta, maxDelta);
 		}
+		/// <summary> Real part of the Gamma function. </summary>
 		public static float Gamma(float value, float absmax, float gamma) {
 			bool negative = value < 0f;
 			float abs = Abs(value);

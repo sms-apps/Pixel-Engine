@@ -1,3 +1,5 @@
+// I tossed this in here, since it is a much more comprehensive, but still lightweight JSON library.
+
 /*	XtoJSON
 	Lightweight JSON Library for C#
 	2015-2017  Jonathan Cohen
@@ -1680,7 +1682,12 @@ public class JsonArray : JsonValue, IEnumerable<JsonValue>, IList<JsonValue> {
 	/// <param name="index"> Index in this array to use </param>
 	/// <returns> Object at the given <paramref name="index"/>, interpreted as type <typeparamref name="T"/> </returns>
 	public T Get<T>(int index) { return Json.GetValue<T>(this[index]); }
-
+	
+	/// <summary> Pulls a value from this array at the given index, as the given type, or the given default value. </summary>
+	/// <typeparam name="T"> Generic type parameter </typeparam>
+	/// <param name="index"> Index in this array to use </param>
+	/// <param name="defaultValue"> Default value if not present or conversion is not possible </param>
+	/// <returns></returns>
 	public T Pull<T>(int index, T defaultValue = default(T)) {
 		if (index >= 0 && index < Count) {
 			JsonValue val = this[index];
@@ -2138,8 +2145,9 @@ public static class JsonReflector {
 	public static void UnBlacklist(Type t) {
 		if (blacklist.Contains(t)) { blacklist.Remove(t); }
 	}
-
+	/// <summary> Create an empty nullable of any struct type </summary>
 	public static Nullable<T> NullableOfNull<T>() where T : struct { return new Nullable<T>(); }
+	/// <summary> Coerce a JsonValue into a nullable struct </summary>
 	public static Nullable<T> ToNullable<T>(JsonValue val) where T : struct {
 		if (ReferenceEquals(val, null)) { return NullableOfNull<T>(); }
 		object obj = GetReflectedValue(val, typeof(T));
@@ -2147,6 +2155,7 @@ public static class JsonReflector {
 		return new Nullable<T>((T)obj);
 	}
 
+	/// <summary> Is the given type a nullable, generic type? </summary>
 	public static bool IsNullableType(this Type type) {
 		return type.IsGenericType && typeofNullable == type.GetGenericTypeDefinition();
 	}
@@ -2476,6 +2485,7 @@ public class JsonDeserializeFailedException : Exception {
 	public int line { get { return state.line; } }
 	/// <summary> Current number of characters read on line </summary>
 	public int col { get { return state.col; } }
+	/// <summary> Constructor </summary>
 	public JsonDeserializeFailedException(string msg, JsonDeserializer state) : base(msg + $" @{state.line}:{state.col}") {
 		this.state = state;
 	}
@@ -2805,7 +2815,7 @@ public static class JsonHelpers {
 	public static bool IsNumeric(this Type type) {
 		return numericTypes.Contains(type);
 	}
-
+	/// <summary> Is the type an actual JSON type? (primitive, object, or array) </summary>
 	public static bool IsJsonType(this Type type) {
 		return type == typeof(JsonBool) ||
 			type == typeof(JsonNumber) ||
@@ -3132,6 +3142,10 @@ public static class JsonOperations {
 		return source;
 	}
 
+	/// <summary> Traverses down a path in the given value </summary>
+	/// <param name="src"> Source value to trace </param>
+	/// <param name="path"> path to try to jump down from where we are. </param>
+	/// <returns> Reached JsonValue. <see cref="JsonNull.instance"/> if any jump fails</returns>
 	public static JsonValue Xpath(this JsonValue src, string path) {
 		if (src != null) {
 			JsonValue trace = src;
@@ -3147,7 +3161,11 @@ public static class JsonOperations {
 		}
 		return JsonNull.instance;
 	}
-
+	/// <summary> Traverses down a path in the given value, and coerce the result into the target type. </summary>
+	/// <typeparam name="T">Generic type parameter </typeparam>
+	/// <param name="src"> Source value to trace </param>
+	/// <param name="path"> path to try to jump down from where we are. </param>
+	/// <returns> Reached JsonValue. <see cref="JsonNull.instance"/> if any jump fails</returns>
 	public static T XPath<T>(this JsonValue src, string path) where T : JsonValue {
 		if (src != null) {
 			JsonValue trace = src;

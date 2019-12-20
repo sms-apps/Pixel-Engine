@@ -6,20 +6,43 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using static PixelEngine.Windows;
+using WaveFormatEx = PixelEngine.Windows.WaveFormatEx;
+using WaveHdr = PixelEngine.Windows.WaveHdr;
+using WaveDelegate = PixelEngine.Windows.WaveDelegate;
 
 namespace PixelEngine {
+	/// <summary> Class holding a sound sample to play. Holds logic to load the sound from disk. </summary>
 	public class Sound {
+		
+		/// <summary> Should this sound loop? </summary>
+		public bool Loop { get; set; }
+
+		/// <summary> Header information </summary>
+		internal WaveFormatEx WavHeader;
+		/// <summary> Sound waveform sample data </summary>
+		internal short[] Samples = null;
+		/// <summary> Number of samples </summary>
+		internal long SampleCount = 0;
+		/// <summary> Number of channels </summary>
+		internal int Channels = 0;
+		/// <summary> True if successfully loaded, false otherwise. </summary>
+		internal bool Valid = false;
+		
+		/// <summary> Read a sound from a file. Currently only supports .wav and .mp3 files. </summary>
+		/// <param name="file"> File to load. </param>
 		internal Sound(string file) {
 			using (Stream stream = File.OpenRead(file)) {
 				using (BinaryReader reader = new BinaryReader(stream)) {
 					if (file.ToLower().EndsWith(".wav") && LoadFromWav(reader)) { Valid = true; }
-
 					if (file.ToLower().EndsWith(".mp3") && LoadFromMp3(reader, file)) { Valid = true; }
 				}
 			}
 		}
 
+		/// <summary> Loads a wave file </summary>
+		/// <param name="reader"> Stream reader. </param>
+		/// <param name="isFromMp3"> Flag if converted from mp3 </param>
+		/// <returns> True if success, false if failed </returns>
 		private bool LoadFromWav(BinaryReader reader, bool isFromMp3 = false) {
 			const string Riff = "RIFF";
 			const string Wave = "WAVE";
@@ -104,80 +127,106 @@ namespace PixelEngine {
 
 			return true;
 		}
-
+		/// <summary> Loads a sound from an MP3 file. </summary>
+		/// <param name="reader"> Stream reader </param>
+		/// <param name="file"> File to read </param>
+		/// <returns> true if successful, false if failed. </returns>
 		private bool LoadFromMp3(BinaryReader reader, string file) {
 			string fileName = Path.GetFileNameWithoutExtension(file);
-			string newFile = Path.Combine(TempPath, $"{fileName}.wav");
+			string newFile = Path.Combine(Windows.TempPath, $"{fileName}.wav");
 
-			ConvertToMp3(file, newFile);
+			Windows.ConvertToMp3(file, newFile);
 
 			using (Stream str = File.OpenRead(newFile)) {
 				using (BinaryReader br = new BinaryReader(str)) {
-					LoadFromWav(br, true);
+					return LoadFromWav(br, true);
 				}
 			}
-
-			return true;
 		}
-
-		public bool Loop { get; set; }
-
-		internal WaveFormatEx WavHeader;
-		internal short[] Samples = null;
-		internal long SampleCount = 0;
-		internal int Channels = 0;
-		internal bool Valid = false;
 	}
 
+	/// <summary> Struct to track progress of playing a sound </summary>
 	internal struct PlayingSample {
+		/// <summary> Sample being played </summary>
 		public Sound AudioSample { get; set; }
+		/// <summary> Current position in samples </summary>
 		public long SamplePosition { get; set; }
+		/// <summary> Did it finish by itself? </summary>
 		public bool Finished { get; set; }
+		/// <summary> Should it loop? </summary>
 		public bool Loop { get; set; }
 	}
 
+	/// <summary> Class holding actual audio engine logic </summary>
 	internal class AudioEngine {
+		/// <summary> Function to process sounds. </summary>
 		public Func<int, float, float, float> OnSoundCreate { get; set; }
+		/// <summary> Function to filter sounds. </summary>
 		public Func<int, float, float, float> OnSoundFilter { get; set; }
 
+		/// <summary> Is the sound engine currently active? </summary>
 		public bool Active { get; private set; }
 
+		/// <summary> Current global sound playback time </summary>
 		public float GlobalTime { get; private set; }
 
+		/// <summary> Current sound system volume </summary>
 		internal float Volume = 1;
 
-		private List<Sound> samples;
+		/// <summary> All sound samples loaded through the system. Keys are file names, values are sounds loaded from file.  </summary>
+		private Dictionary<string, Sound> samples;
+		/// <summary> Samples that are currently playing. </summary>
 		private List<PlayingSample> playingSamples;
 
+
+		/// <summary> Callback for Windows when sound system updates.  </summary>
 		private static WaveDelegate waveProc;
 
+		/// <summary> Sample rate of sound system </summary>
 		private uint sampleRate;
+		/// <summary> Channels in sound system </summary>
 		private uint channels;
+		/// <summary> Number of blocks in buffer </summary>
 		private uint blockCount;
+		/// <summary> Number samples per block </summary>
 		private uint blockSamples;
+		/// <summary> Current block index </summary>
 		private uint blockCurrent;
 
+		/// <summary> Blocks of samples </summary>
 		private short[] blockMemory = null;
+		/// <summary> Headers of sounds </summary>
 		private WaveHdr[] waveHeaders = null;
+		/// <summary> Native pointer to sound device </summary>
 		private IntPtr device = IntPtr.Zero;
+		/// <summary> Thread handling audio updates </summary>
 		private Thread audioThread;
+		/// <summary> Free blocks </summary>
 		private uint blockFree = 0;
 
+		/// <summary> delay between sound thread updates. </summary>
 		private const int SoundInterval = 10;
 
+		/// <summary> Loads a sound from a file. </summary>
+		/// <param name="file"> Filename to load </param>
+		/// <returns> <see cref="Sound"/> object representing sound if load is successful, or null if it fails. </returns>
 		public Sound LoadSound(string file) {
-			if (samples == null) { samples = new List<Sound>(); }
+			if (samples == null) { samples = new Dictionary<string, Sound>(); }
+			if (samples.ContainsKey(file)) { return samples[file]; }
 
 			FileInfo fi = new FileInfo(file);
 			Sound s = new Sound(fi.FullName);
 			if (s.Valid) {
-				samples.Add(s);
+				samples[file] = s;
 				return s;
-			} else {
-				return null;
-			}
+			} 
+			
+			samples[file] = null;
+			return null;
 		}
 
+		/// <summary> Play a given sound object. </summary>
+		/// <param name="s"> Sound to play </param>
 		public void PlaySound(Sound s) {
 			if (s == null) { return; }
 			if (playingSamples == null) { playingSamples = new List<PlayingSample>(); }
@@ -192,10 +241,12 @@ namespace PixelEngine {
 			playingSamples.Add(ps);
 		}
 
+		/// <summary> Stop the first instance of the given sound. </summary>
+		/// <param name="s"> Sound to stop </param>
 		public void StopSound(Sound s) {
 			if (s == null) { return; }
 			
-			bool Match(PlayingSample p) => !p.Finished && p.AudioSample == s;
+			bool Match(PlayingSample p) { return !p.Finished && p.AudioSample == s; }
 
 			if (playingSamples != null && playingSamples.Exists(Match)) {
 				int index = playingSamples.FindIndex(Match);
@@ -205,6 +256,11 @@ namespace PixelEngine {
 			}
 		}
 
+		/// <summary> Initializes the audio system with given settings </summary>
+		/// <param name="sampleRate"> Sample rate (default is 44.1kHz) </param>
+		/// <param name="channels"> Number of channels (default is 1) </param>
+		/// <param name="blocks"> Number of blocks in buffer (default is 8) </param>
+		/// <param name="blockSamples"> Number of samples per block (default is 512) </param>
 		public void CreateAudio(uint sampleRate = 44100, uint channels = 1, uint blocks = 8, uint blockSamples = 512) {
 			Active = false;
 			this.sampleRate = sampleRate;
@@ -217,7 +273,7 @@ namespace PixelEngine {
 			waveHeaders = null;
 
 			WaveFormatEx waveFormat = new WaveFormatEx {
-				FormatTag = WaveFormatPcm,
+				FormatTag = Windows.WaveFormatPcm,
 				SamplesPerSec = (int)sampleRate,
 				BitsPerSample = sizeof(short) * 8,
 				Channels = (short)channels,
@@ -228,7 +284,7 @@ namespace PixelEngine {
 
 			waveProc = WaveOutProc;
 
-			if (WaveOutOpen(out device, WaveMapper, waveFormat, waveProc, 0, CallbackFunction) != 0) {
+			if (Windows.WaveOutOpen(out device, Windows.WaveMapper, waveFormat, waveProc, 0, Windows.CallbackFunction) != 0) {
 				DestroyAudio();
 			}
 			
@@ -249,14 +305,20 @@ namespace PixelEngine {
 			audioThread.Start();
 		}
 
-		public void DestroyAudio() => Active = false;
+		/// <summary> Stops audio system, and makes audio thread exit sometime in future. </summary>
+		public void DestroyAudio() { Active = false; }
 
+		/// <summary> Hook for <see cref="Windows.WaveDelegate"/> to find when sounds are finished. </summary>
 		private void WaveOutProc(IntPtr hWaveOut, int uMsg, int dwUser, ref WaveHdr wavhdr, int dwParam2) {
-			if (uMsg != WomDone) { return; }
+			if (uMsg != Windows.WomDone) { return; }
 
 			blockFree++;
 		}
-
+		/// <summary> Sound-mixer function </summary>
+		/// <param name="channel"> Channel to mix </param>
+		/// <param name="globalTime"> Global timestamp </param>
+		/// <param name="timeStep"> Time between updates </param>
+		/// <returns> Mixed audio output </returns>
 		private float GetMixerOutput(int channel, float globalTime, float timeStep) {
 			const float MaxValue = 1f / short.MaxValue;
 
@@ -288,6 +350,7 @@ namespace PixelEngine {
 			return mixerSample;
 		}
 
+		/// <summary> Audio thread loop. Pipes waveform to windows for playback. </summary>
 		private void AudioThread() {
 			float Clip(float sample, float max) {
 				if (sample >= 0) { return Math.Min(sample, max); } 
@@ -312,8 +375,8 @@ namespace PixelEngine {
 				short newSample = 0;
 				int currentBlock = (int)(blockCurrent * blockSamples);
 
-				if ((waveHeaders[blockCurrent].Flags & WHdrPrepared) != 0) {
-					WaveOutUnprepareHeader(device, ref waveHeaders[blockCurrent], whdrSize);
+				if ((waveHeaders[blockCurrent].Flags & Windows.WHdrPrepared) != 0) {
+					Windows.WaveOutUnprepareHeader(device, ref waveHeaders[blockCurrent], whdrSize);
 				}
 
 
@@ -326,8 +389,8 @@ namespace PixelEngine {
 					GlobalTime += timeStep;
 				}
 
-				WaveOutPrepareHeader(device, ref waveHeaders[blockCurrent], whdrSize);
-				WaveOutWrite(device, ref waveHeaders[blockCurrent], whdrSize);
+				Windows.WaveOutPrepareHeader(device, ref waveHeaders[blockCurrent], whdrSize);
+				Windows.WaveOutWrite(device, ref waveHeaders[blockCurrent], whdrSize);
 
 				blockCurrent++;
 				blockCurrent %= blockCount;

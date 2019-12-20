@@ -1,31 +1,40 @@
 using System;
 using System.Runtime.InteropServices;
-
 using static PixelEngine.Windows;
 
 namespace PixelEngine {
+	/// <summary> PixelEngine base class holding logic for interacting with the display window. </summary>
 	public class Display {
+		/// <summary> Callback for windows to send the window messages </summary>
 		private WindowProcess proc;
 
+		/// <summary> Has the window been initialized yet? </summary>
 		private bool init;
+		/// <summary> Window title text </summary>
 		private string text;
 
+		/// <summary> Create a new display with default <see cref="WndProc(IntPtr, uint, int, int)"/> handler.</summary>
 		public Display() {
 			proc = WndProc;
 		}
-
-		// Display details
+		
+		/// <summary> Pixels from left to right of screen </summary>
 		public int ScreenWidth { get; private protected set; }
+		/// <summary> Pixels from top to bottom of screen </summary>
 		public int ScreenHeight { get; private protected set; }
+		/// <summary> Width per pixel </summary>
 		public int PixWidth { get; private protected set; }
+		/// <summary> Height per pixel </summary>
 		public int PixHeight { get; private protected set; }
 
+		/// <summary> Width of window </summary>
 		internal int windowWidth;
+		/// <summary> Height of window </summary>
 		internal int windowHeight;
 
-		// Title of the app
+		/// <summary> Window title </summary>
 		public virtual string AppName {
-			get => text;
+			get { return text; }
 			protected set {
 				text = value;
 				if (init) {
@@ -34,16 +43,20 @@ namespace PixelEngine {
 			}
 		}
 
-		// Name of class used to make a window
-		private protected string ClassName => GetType().FullName;
+		/// <summary> Name of overriding class, used as the default window title text. </summary>
+		private protected string ClassName { get { return  GetType().FullName; } }
 
-		// Client area of window
+		/// <summary> Area of client window </summary>
 		internal WRect ClientRect { get; set; }
 
-		// Handle of the window
+		/// <summary> Native pointer to window handle </summary>
 		internal IntPtr Handle { get; set; }
 
-		// Assign the window details
+		/// <summary> Constructs a window. </summary>
+		/// <param name="width"> Width, in pixels. Default = 100 </param>
+		/// <param name="height"> Height, in pixels. Default = 100</param>
+		/// <param name="pixWidth"> Width in screen pixels of a single game pixel. Default = 5 </param>
+		/// <param name="pixHeight"> Height in screen pixels of a single game pixel. Default = 5 </param>
 		internal void Construct(int width = 100, int height = 100, int pixWidth = 5, int pixHeight = 5) {
 			ScreenWidth = width;
 			ScreenHeight = height;
@@ -54,7 +67,7 @@ namespace PixelEngine {
 			windowHeight = ScreenHeight * PixHeight;
 		}
 
-		// Start the windows message pump
+		/// <summary> Start the windows message pump </summary>
 		private protected void MessagePump() {
 			while (GetMessage(out Message msg, IntPtr.Zero, 0, 0) > 0) {
 				TranslateMessage(ref msg);
@@ -62,7 +75,7 @@ namespace PixelEngine {
 			}
 		}
 
-		// Create the window using the winapi
+		/// <summary> Create the window using the winapi </summary>
 		private protected virtual void CreateWindow() {
 			if (string.IsNullOrWhiteSpace(AppName)) {
 				AppName = GetType().Name;
@@ -77,7 +90,7 @@ namespace PixelEngine {
 			init = true;
 		}
 
-		// Register the class with the winapi
+		/// <summary> Register the class with the winapi </summary>
 		private protected virtual void RegisterClass() {
 			WindowClassEx wcex = new WindowClassEx() {
 				Style = DoubleClicks | VRedraw | HRedraw,
@@ -96,7 +109,7 @@ namespace PixelEngine {
 			RegisterClassEx(ref wcex);
 		}
 
-		// Handle messages for processing
+		/// <summary> Windows message processor </summary>
 		private protected virtual IntPtr WndProc(IntPtr handle, uint msg, int wParam, int lParam) {
 			switch (msg) {
 				case (uint)WM.CLOSE:
