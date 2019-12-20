@@ -36,6 +36,7 @@
     <WarningLevel>4</WarningLevel>
     <LangVersion>7.3</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Release\PixelEngine.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
