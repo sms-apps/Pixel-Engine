@@ -21,13 +21,9 @@ This engine uses OpenGL and the .NET Framework, so it's quite fast due to OpenGL
 
 ```C#
 using PixelEngine;
-
-namespace Examples
-{
-	public class RandomPixels : Game
-	{
-		static void Main(string[] args)
-		{
+namespace Examples {
+	public class RandomPixels : Game {
+		static void Main(string[] args) {
 			// Create an instance
 			RandomPixels rp = new RandomPixels();
       
@@ -39,12 +35,13 @@ namespace Examples
 		}
 
 		// Called once per frame
-	  	public override void OnUpdate(float elapsed)
-		{
+	  	public override void OnUpdate(float elapsed) {
 			// Loop through all the pixels
-			for (int i = 0; i < ScreenWidth; i++)
-				for (int j = 0; j < ScreenHeight; j++)
+			for (int i = 0; i < ScreenWidth; i++) {
+				for (int j = 0; j < ScreenHeight; j++) {
 					Draw(i, j, Pixel.Random()); // Draw a random pixel
+				}
+			}
 		}
 	}
 }
@@ -56,11 +53,11 @@ There are no additional dependencies outside the Windows Api, which is present i
 
 ## Examples
 
-There are many examples present in the [Examples](https://github.com/DevChrome/Pixel-Engine/tree/master/Examples) folder, including Javidx9's and my own.
+There are many examples present in the [Examples](https://github.com/DevChrome/Pixel-Engine/tree/master/Examples) folder, including Javidx9's and the orignal author's (DevChrome).
 
 ## Deployment
 
-Build your projects with this as a reference and run the generated .exe file.
+Build your projects with the `Libraries/PixelEngine.dll` as a reference and run the generated .exe file.
 
 ## Built With
 
@@ -70,3 +67,4 @@ Build your projects with this as a reference and run the generated .exe file.
 ## Acknowledgments
 
 Check out the [olcPixelGameEngine](https://github.com/OneLoneCoder/olcPixelGameEngine) for C++ and its creator, [Javidx9](https://www.youtube.com/channel/UC-yuWVUplUJZvieEligKBkA), his website [OneLoneCoder](https://onelonecoder.com/), and the [OLC-3 License](https://github.com/DevChrome/Pixel-Engine/blob/master/Licences.txt) in the original project.
+
