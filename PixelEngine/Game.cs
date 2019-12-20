@@ -1119,10 +1119,10 @@ namespace PixelEngine {
 				DrawLine(points[i], points[i + 1], col);
 			}
 		}
-		/// <summary> Draw all the <see cref="Pixel"/>s in a given <see cref="Sprite"/> to the screen </summary>
+		/// <summary> Draw all the <see cref="Pixel"/>s in a given <see cref="ISprite"/> to the screen </summary>
 		/// <param name="p"> World origin <see cref="Point"/> of given sprite </param>
-		/// <param name="spr"> Given <see cref="Sprite"/> to draw </param>
-		public void DrawSprite(Point p, Sprite spr) {
+		/// <param name="spr"> Given <see cref="ISprite"/> to draw </param>
+		public void DrawSprite(Point p, ISprite spr) {
 			if (spr == null) { return; }
 			
 			for (int i = 0; i < spr.Width; i++) {
@@ -1131,13 +1131,13 @@ namespace PixelEngine {
 				}
 			}
 		}
-		/// <summary> Draws a subset of <see cref="Pixel"/>s in a <see cref="Sprite"/> to the screen. Useful for Spritesheets. </summary>
+		/// <summary> Draws a subset of <see cref="Pixel"/>s in a <see cref="ISprite"/> to the screen. Useful for Spritesheets. </summary>
 		/// <param name="p"> World origin <see cref="Point"/> of drawn <see cref="Pixel"/>s </param>
-		/// <param name="spr"> Source <see cref="Sprite"/> to draw from </param>
-		/// <param name="op"> Offset <see cref="Point"/> into given <see cref="Sprite"/> to start copying pixels from </param>
+		/// <param name="spr"> Source <see cref="ISprite"/> to draw from </param>
+		/// <param name="op"> Offset <see cref="Point"/> into given <see cref="ISprite"/> to start copying pixels from </param>
 		/// <param name="w"> Width of region to draw </param>
 		/// <param name="h"> Height of region to draw </param>
-		public void DrawPartialSprite(Point p, Sprite spr, Point op, int w, int h) {
+		public void DrawPartialSprite(Point p, ISprite spr, Point op, int w, int h) {
 			if (spr == null) { return; }
 			
 			for (int i = 0; i < w; i++) {

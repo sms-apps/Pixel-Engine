@@ -65,10 +65,10 @@ namespace PixelEngine.Extensions.Transforms {
 			Multiply();
 		}
 
-		/// <summary> Draws a sprite, using the current transform state of the given `Transform` </summary>
-		/// <param name="spr"> Sprite to draw </param>
+		/// <summary> Draws a sprite, using the current transform state of the given <see cref="Transform"/> </summary>
+		/// <param name="spr"> <see cref="ISprite"/> to draw </param>
 		/// <param name="transform"> Transformation to apply </param>
-		public static void DrawSprite(Sprite spr, Transform transform) {
+		public static void DrawSprite(ISprite spr, Transform transform) {
 			if (spr == null) { return; }
 
 			float ex = 0, ey = 0;
