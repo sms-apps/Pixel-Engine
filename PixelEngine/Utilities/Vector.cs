@@ -279,11 +279,11 @@ namespace PixelEngine.Utilities {
 		}
 
 		/// <summary> <see cref="Mathf.FloorToInt(float)"/>'s each component in this <see cref="Vector2"/> to produce a <see cref="Vector2Int"/></summary>
-		public Vector2Int FloorToInt(this Vector2 v) { return new Vector2Int(Mathf.FloorToInt(x), Mathf.FloorToInt(y)); }
+		public Vector2Int FloorToInt(Vector2 v) { return new Vector2Int(Mathf.FloorToInt(x), Mathf.FloorToInt(y)); }
 		/// <summary> <see cref="Mathf.CeilToInt(float)"/>'s each component in this <see cref="Vector2"/> to produce a <see cref="Vector2Int"/></summary>
-		public Vector2Int CeilToInt(this Vector2 v) { return new Vector2Int(Mathf.CeilToInt(x), Mathf.CeilToInt(y)); }
+		public Vector2Int CeilToInt(Vector2 v) { return new Vector2Int(Mathf.CeilToInt(x), Mathf.CeilToInt(y)); }
 		/// <summary> <see cref="Mathf.RoundToInt(float)"/>'s each component in this <see cref="Vector2"/> to produce a <see cref="Vector2Int"/></summary>
-		public Vector2Int RoundToInt(this Vector2 v) { return new Vector2Int(Mathf.RoundToInt(x), Mathf.RoundToInt(y)); }
+		public Vector2Int RoundToInt(Vector2 v) { return new Vector2Int(Mathf.RoundToInt(x), Mathf.RoundToInt(y)); }
 
 		/// <summary> Calculate dot product between vectors <paramref name="a"/> and <paramref name="b"/></summary>
 		public static float Dot(Vector2 a, Vector2 b) { return a.x * b.x + a.y * b.y; }
