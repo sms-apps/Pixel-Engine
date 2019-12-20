@@ -1643,19 +1643,19 @@
             <param name="y"> y coordinate of sample </param>
             <param name="z"> z coordinate of sample </param>
         </member>
-        <member name="M:PixelEngine.Utilities.Noise.Perlin(System.Single)">
-            <summary> 1d Perlin Fractal noise </summary>
+        <member name="M:PixelEngine.Utilities.Noise.FBM(System.Single)">
+            <summary> 1d Fractal Brownian Motion noise </summary>
             <param name="x"> coordinate of sample </param>
             <returns> Output of fractal noise sample </returns>
         </member>
-        <member name="M:PixelEngine.Utilities.Noise.Calculate(System.Single,System.Single)">
-            <summary> 2d Perlin Fractal noise </summary>
+        <member name="M:PixelEngine.Utilities.Noise.FBM(System.Single,System.Single)">
+            <summary> 2d Fractal Brownian Motion noise </summary>
             <param name="x"> x coordinate of sample </param>
             <param name="y"> y coordinate of sample </param>
             <returns> Output of fractal noise sample </returns>
         </member>
-        <member name="M:PixelEngine.Utilities.Noise.Calculate(System.Single,System.Single,System.Single)">
-            <summary> 3d Perlin Fractal noise </summary>
+        <member name="M:PixelEngine.Utilities.Noise.FBM(System.Single,System.Single,System.Single)">
+            <summary> 3d Fractal Brownian Motion noise </summary>
             <param name="x"> x coordinate of sample </param>
             <param name="y"> y coordinate of sample </param>
             <param name="z"> z coordinate of sample </param>

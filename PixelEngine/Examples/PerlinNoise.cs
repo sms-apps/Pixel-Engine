@@ -31,7 +31,7 @@ namespace Examples {
 					float x = (float)i / ScreenWidth;
 					float y = (float)j / ScreenWidth;
 
-					float noise = Noise.Calculate(x, y, time);
+					float noise = Noise.FBM(x, y, time);
 					noise = noise / 2 + 1;
 
 					Pixel p = Pixel.FromHsv(noise * time * 360, noise, noise * 0.8f);
