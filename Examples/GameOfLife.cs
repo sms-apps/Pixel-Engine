@@ -1,10 +1,8 @@
 using System;
 using PixelEngine;
 
-namespace Examples
-{
-	public class GameOfLife : Game
-	{
+namespace Examples {
+	public class GameOfLife : Game {
 		// Current instance
 		private bool[,] grid;
 		// Next instance
@@ -18,18 +16,15 @@ namespace Examples
 		// Color of deas pixels
 		private Pixel dead = Pixel.Presets.Black;
 
-		static void Main(string[] args)
-		{
+		static void Run(string[] args) {
 			GameOfLife gol = new GameOfLife();
 			gol.Construct(frameRate: 45);
 			gol.Start();
 		}
 
 		// Utility function to set cells
-		private void Set(int x, int y, string s)
-		{
-			for (int p = 0; p < s.Length; p++)
-			{
+		private void Set(int x, int y, string s) {
+			for (int p = 0; p < s.Length; p++) {
 				int i = y * ScreenWidth + x + p;
 				int nx = i % ScreenWidth;
 				int ny = i / ScreenWidth;
@@ -37,8 +32,7 @@ namespace Examples
 			}
 		}
 
-		public override void OnCreate()
-		{
+		public override void OnCreate() {
 			// Init the grids 
 			// We need two buffers so that cells don't change due to looping in a fixed order
 			grid = new bool[ScreenWidth, ScreenHeight];
@@ -61,8 +55,7 @@ namespace Examples
 		}
 
 		// Utility to make a gosper glider gun
-		private void MakeGosperGun(int x, int y)
-		{
+		private void MakeGosperGun(int x, int y) {
 			Set(x, y + 0, "........................#............");
 			Set(x, y + 1, "......................#.#............");
 			Set(x, y + 2, "............##......##............##.");
@@ -74,8 +67,7 @@ namespace Examples
 			Set(x, y + 8, "............##.......................");
 		}
 
-		public override void OnUpdate(float elapsed)
-		{
+		public override void OnUpdate(float elapsed) {
 			// Clear field
 			Clear(dead);
 
@@ -83,32 +75,31 @@ namespace Examples
 			DrawCells();
 
 			// If not paused
-			if (running)
-			{
+			if (running) {
 				// Update all cells
 				UpdateCells();
 
 				// Switch buffer
-				for (int i = 0; i < ScreenWidth; i++)
-					for (int j = 0; j < ScreenHeight; j++)
+				for (int i = 0; i < ScreenWidth; i++) {
+					for (int j = 0; j < ScreenHeight; j++){
 						grid[i, j] = newGrid[i, j];
+					}
+				}
 			}
 		}
 
 		// Update the cells
-		private void UpdateCells()
-		{
-			int GetCell(int a, int b)
-			{
-				if (a < 0 || a >= ScreenWidth || b < 0 || b >= ScreenHeight)
+		private void UpdateCells() {
+			int GetCell(int a, int b) {
+				if (a < 0 || a >= ScreenWidth || b < 0 || b >= ScreenHeight) {
 					return 0;
+				}
+
 				return grid[a, b] ? 1 : 0;
 			}
 
-			for (int x = 0; x < ScreenWidth; x++)
-			{
-				for (int y = 0; y < ScreenHeight; y++)
-				{
+			for (int x = 0; x < ScreenWidth; x++) {
+				for (int y = 0; y < ScreenHeight; y++) {
 					int neighbors = GetCell(x - 1, y - 1) + GetCell(x - 0, y - 1) + GetCell(x + 1, y - 1) +
 									GetCell(x - 1, y + 0) + 0 + GetCell(x + 1, y + 0) +
 									GetCell(x - 1, y + 1) + GetCell(x + 0, y + 1) + GetCell(x + 1, y + 1);
@@ -119,22 +110,25 @@ namespace Examples
 		}
 
 		// Draw the cells
-		private void DrawCells()
-		{
-			for (int i = 0; i < ScreenWidth; i++)
-				for (int j = 0; j < ScreenHeight; j++)
-					if (grid[i, j])
+		private void DrawCells() {
+			for (int i = 0; i < ScreenWidth; i++) {
+				for (int j = 0; j < ScreenHeight; j++) {
+					if (grid[i, j]) {
 						Draw(i, j, alive);
+					}
+				}
+			}
 		}
 
 		// Flip cell status
-		public override void OnMousePress(Mouse m) => grid[MouseX, MouseY] = !grid[MouseX, MouseY];
+		public override void OnMousePress(Mouse m) { grid[MouseX, MouseY] = !grid[MouseX, MouseY]; }
 
 		// Pause the game
-		public override void OnKeyPress(Key k)
-		{
-			if (k == Key.Enter)
+		public override void OnKeyPress(Key k) {
+			if (k == Key.Enter) {
 				running = !running;
+			}
+
 		}
 	}
 }

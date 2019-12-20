@@ -7,10 +7,8 @@ using System;
 using System.Collections.Generic;
 using PixelEngine;
 
-namespace Examples
-{
-	public class Snake : Game
-	{
+namespace Examples {
+	public class Snake : Game {
 		private List<SnakeSegment> snake; // Store all segments of snake
 
 		// Coordinates of the food
@@ -24,8 +22,7 @@ namespace Examples
 		private bool dead; // Is the snake dead?
 		private bool started; // Has the game been started?
 
-		static void Main(string[] args)
-		{
+		static void Run(string[] args) {
 			// Create an instance
 			Snake s = new Snake();
 			// Construct the game
@@ -35,10 +32,8 @@ namespace Examples
 		}
 
 		// A part of the snake
-		private struct SnakeSegment
-		{
-			public SnakeSegment(int x, int y) : this()
-			{
+		private struct SnakeSegment {
+			public SnakeSegment(int x, int y) : this() {
 				this.X = x;
 				this.Y = y;
 			}
@@ -48,11 +43,10 @@ namespace Examples
 		}
 
 		// Set the title of the window
-		public Snake() => AppName = "SNAKE!";
+		public Snake() { AppName = "SNAKE!"; }
 
 		// Start the game
-		public override void OnCreate()
-		{
+		public override void OnCreate() {
 			// Uncomment to make the game fullscreen
 			//Enable(Subsystem.Fullscreen);
 
@@ -62,12 +56,12 @@ namespace Examples
 		}
 
 		// Reset all fields
-		private void Reset()
-		{
+		private void Reset() {
 			// Init and make the snake
 			snake = new List<SnakeSegment>();
-			for (int i = 0; i < 9; i++)
+			for (int i = 0; i < 9; i++) {
 				snake.Add(new SnakeSegment(i + 20, 15));
+			}
 
 			// Set the variables to default values
 			foodX = 30;
@@ -79,31 +73,32 @@ namespace Examples
 			Seed();
 		}
 
-		public override void OnUpdate(float elapsed)
-		{
+		public override void OnUpdate(float elapsed) {
 			CheckStart();
 			UpdateSnake();
 			DrawGame();
 		}
 
 		// Draw the game
-		private void DrawGame()
-		{
+		private void DrawGame() {
 			// Clear the screen
 			Clear(Pixel.Presets.Black);
 
-			if (started) // Inform the player of their score
+			if (started) {
+				// Inform the player of their score
 				DrawTextHr(new Point(15, 15), "Score: " + score, Pixel.Presets.Green, 2);
-			else // Inform the player to start by pressing enter
+			} else {
+				// Inform the player to start by pressing enter
 				DrawTextHr(new Point(15, 15), "Press Enter To Start", Pixel.Presets.Green, 2);
-
+			}
+			
 			// Draw the border
 			DrawRect(new Point(0, 0), ScreenWidth - 1, ScreenHeight - 1, Pixel.Presets.Grey);
 
 			// Render snake
-			for (int i = 1; i < snake.Count; i++)
+			for (int i = 1; i < snake.Count; i++) {
 				Draw(snake[i].X, snake[i].Y, dead ? Pixel.Presets.Blue : Pixel.Presets.Yellow);
-
+			}
 			// Draw snake head
 			Draw(snake[0].X, snake[0].Y, dead ? Pixel.Presets.Green : Pixel.Presets.Magenta);
 
@@ -112,33 +107,30 @@ namespace Examples
 		}
 
 		// Update the snake's position
-		private void UpdateSnake()
-		{
+		private void UpdateSnake() {
 			// End game if snake is dead
-			if (dead)
+			if (dead) {
 				started = false;
-
+			}
 			// Turn right
-			if (GetKey(Key.Right).Pressed)
-			{
+			if (GetKey(Key.Right).Pressed) {
 				dir++;
-				if (dir == 4)
+				if (dir == 4) {
 					dir = 0;
+				}
 			}
 
 			// Turn left
-			if (GetKey(Key.Left).Pressed)
-			{
+			if (GetKey(Key.Left).Pressed) {
 				dir--;
-				if (dir == -1)
+				if (dir == -1) {
 					dir = 3;
+				}
 			}
 
-			if (started)
-			{
+			if (started) {
 				// Move in the direction
-				switch (dir)
-				{
+				switch (dir) {
 					case 0: // UP
 						snake.Insert(0, new SnakeSegment(snake[0].X, snake[0].Y - 1));
 						break;
@@ -161,11 +153,9 @@ namespace Examples
 		}
 
 		// Check for snake's collision
-		private void CheckCollision()
-		{
+		private void CheckCollision() {
 			// Check collision with food
-			if (snake[0].X == foodX && snake[0].Y == foodY)
-			{
+			if (snake[0].X == foodX && snake[0].Y == foodY) {
 				score++;
 				RandomizeFood();
 
@@ -173,23 +163,22 @@ namespace Examples
 			}
 
 			// Check wall collision
-			if (snake[0].X <= 0 || snake[0].X >= ScreenWidth || snake[0].Y <= 0 || snake[0].Y >= ScreenHeight - 1)
+			if (snake[0].X <= 0 || snake[0].X >= ScreenWidth || snake[0].Y <= 0 || snake[0].Y >= ScreenHeight - 1) {
 				dead = true;
-
+			}
 			// Check self collision
-			for (int i = 1; i < snake.Count; i++)
-				if (snake[i].X == snake[0].X && snake[i].Y == snake[0].Y)
+			for (int i = 1; i < snake.Count; i++) {
+				if (snake[i].X == snake[0].X && snake[i].Y == snake[0].Y) {
 					dead = true;
+				}
+			}
 		}
 
 		// Check if the game is started
-		private void CheckStart()
-		{
-			if (!started)
-			{
+		private void CheckStart() {
+			if (!started) {
 				// Check if game has to be started
-				if (GetKey(Key.Enter).Pressed)
-				{
+				if (GetKey(Key.Enter).Pressed) {
 					Reset();
 					started = true;
 				}
@@ -197,11 +186,9 @@ namespace Examples
 		}
 
 		// Set random location for food
-		private void RandomizeFood()
-		{
+		private void RandomizeFood() {
 			// Loop while the food is not on empty cell
-			while (GetScreenPixel(foodX, foodY) != Pixel.Presets.Black)
-			{
+			while (GetScreenPixel(foodX, foodY) != Pixel.Presets.Black) {
 				// Set food to random point
 				foodX = Random(ScreenWidth);
 				foodY = Random(ScreenHeight);
