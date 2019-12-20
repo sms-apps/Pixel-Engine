@@ -187,103 +187,182 @@ namespace PixelEngine.Utilities {
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	#region extensions
+	/// <summary> Class to hold various extension methods for vector and other types, to maintain compatability with Unity's Vectors </summary>
 	public static class MathExtensions {
-		public static Vector3Int ToInts(this Vector3 v) {
-			int x = FloorToInt(v.x);
-			int y = FloorToInt(v.y);
-			int z = FloorToInt(v.z);
+		/// <summary> <see cref="Mathf.FloorToInt(float)"/>'s each component in the given <see cref="Vector3"/> to produce a <see cref="Vector3Int"/></summary>
+		public static Vector3Int FloorToInt(this Vector3 v) {
+			int x = Mathf.FloorToInt(v.x);
+			int y = Mathf.FloorToInt(v.y);
+			int z = Mathf.FloorToInt(v.z);
 			return new Vector3Int(x, y, z);
 		}
+		/// <summary> <see cref="Mathf.CeilToInt(float)"/>'s each component in the given <see cref="Vector3"/> to produce a <see cref="Vector3Int"/></summary>
+		public static Vector3Int CeilToInt(this Vector3 v) {
+			int x = Mathf.CeilToInt(v.x);
+			int y = Mathf.CeilToInt(v.y);
+			int z = Mathf.CeilToInt(v.z);
+			return new Vector3Int(x, y, z);
+		}
+		/// <summary> <see cref="Mathf.RoundToInt(float)"/>'s each component in the given <see cref="Vector3"/> to produce a <see cref="Vector3Int"/></summary>
+		public static Vector3Int RoundToInt(this Vector3 v) {
+			int x = Mathf.RoundToInt(v.x);
+			int y = Mathf.RoundToInt(v.y);
+			int z = Mathf.RoundToInt(v.z);
+			return new Vector3Int(x, y, z);
+		}
+		
 	}
 	#endregion
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	#region Vector2
-	/// <summary> Surrogate class, similar to UnityEngine.Vector2 </summary>
+	/// <summary> Surrogate Vector2 class, similar to UnityEngine.Vector2. Stores two <see cref="float"/> components, and provides some math functions. </summary>
 	[System.Serializable]
 	public struct Vector2 {
+		/// <summary> Zero vector (0, 0) </summary>
 		public static Vector2 zero { get { return new Vector2(0, 0); } }
+		/// <summary> One unit vector (1, 1) </summary>
 		public static Vector2 one { get { return new Vector2(1, 1); } }
+		/// <summary> Up unit vector (0, -1) </summary>
 		public static Vector2 up { get { return new Vector2(0, 1); } }
+		/// <summary> Down unit vector (0, 1) </summary>
 		public static Vector2 down { get { return new Vector2(0, -1); } }
+		/// <summary> Left unit vector (-1, 0) </summary>
 		public static Vector2 left { get { return new Vector2(-1, 0); } }
+		/// <summary> Right unit vector (1, 0) </summary>
 		public static Vector2 right { get { return new Vector2(1, 0); } }
+		/// <summary> Negative Infinity Unit Vector (-inf, -inf) </summary>
 		public static Vector2 negativeInfinity { get { return new Vector2(float.NegativeInfinity, float.NegativeInfinity); } }
+		/// <summary> Positive Infinity Unit Vector (+inf, +inf) </summary>
 		public static Vector2 positiveInfinity { get { return new Vector2(float.PositiveInfinity, float.PositiveInfinity); } }
 
+		/// <summary> Vector component  </summary>
 		public float x, y;
+		/// <summary> Create a Vector with the given components  </summary>
 		public Vector2(float x, float y) { this.x = x; this.y = y; }
 
+		/// <summary> Vector length by distance formula (Sqrt(x*x + y*y)) </summary>
 		public float magnitude { get { return Mathf.Sqrt(x * x + y * y); } }
+		/// <summary> Vector squared length, partial distance formula (x*x + y*y), faster for length comparison than using square root. </summary>
 		public float sqrMagnitude { get { return (x * x) + (y * y); } }
+		/// <summary> Create a vector with length 1 in the same direction as this vector, or zero if the vector is really short. </summary>
 		public Vector2 normalized { get { float m = magnitude; if (m > EPSILON) { return this / m; } return zero; } }
+		/// <summary> Index-wise access to vector components. </summary>
+		/// <param name="i"> Index to access at. Must be in range [0, 1] </param>
 		public float this[int i] {
 			get { if (i == 0) { return x; } if (i == 1) { return y; } throw new IndexOutOfRangeException($"Vector2 has length=2, {i} is out of range."); }
 			set { if (i == 0) { x = value; } if (i == 1) { y = value; } throw new IndexOutOfRangeException($"Vector2 has length=2, {i} is out of range."); }
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(object other) { return other is Vector2 && Equals((Vector2)other); }
+		/// <summary> Compare vector comparison by component values. </summary>
 		public bool Equals(Vector2 other) { return x.Equals(other.x) && y.Equals(other.y); }
+		/// <inheritdoc />
 		public override int GetHashCode() { return x.GetHashCode() ^ y.GetHashCode() << 2; }
+		/// <inheritdoc />
 		public override string ToString() { return $"({x:F2}, {y:F2})"; }
 
+		/// <summary> Normalizes this vector in-place. Modifies the x/y in the memory location it is called on. </summary>
 		public void Normalize() { float m = magnitude; if (m > EPSILON) { this /= m; } else { this = zero; } }
+		/// <summary> Sets the x/y component of the vector in-place. Modifies the x/y in the memory location it is called on. </summary>
 		public void Set(float x, float y) { this.x = x; this.y = y; }
+		/// <summary> Scales this vector in-place to be (<paramref name="a"/>*<see cref="x"/>, <paramref name="b"/>*<see cref="y"/>). Modifies the x/y in the memory location it is called on. </summary>
 		public void Scale(float a, float b) { x *= a; y *= b; }
+		/// <summary> Scales this vector in-place by another vector <paramref name="s"/>, component wise. Modifies the x/y in the memory location it is called on. </summary>
 		public void Scale(Vector2 s) { x *= s.x; y *= s.y; }
+		/// <summary> Clamps this vector in-place. Modifies the x/y in the memory location it is called on. </summary>
 		public void Clamp(Vector2 min, Vector2 max) {
 			x = Mathf.Clamp(x, min.x, max.x);
 			y = Mathf.Clamp(y, min.y, max.y);
 		}
 
+		/// <summary> <see cref="Mathf.FloorToInt(float)"/>'s each component in this <see cref="Vector2"/> to produce a <see cref="Vector2Int"/></summary>
+		public Vector2Int FloorToInt(this Vector2 v) { return new Vector2Int(Mathf.FloorToInt(x), Mathf.FloorToInt(y)); }
+		/// <summary> <see cref="Mathf.CeilToInt(float)"/>'s each component in this <see cref="Vector2"/> to produce a <see cref="Vector2Int"/></summary>
+		public Vector2Int CeilToInt(this Vector2 v) { return new Vector2Int(Mathf.CeilToInt(x), Mathf.CeilToInt(y)); }
+		/// <summary> <see cref="Mathf.RoundToInt(float)"/>'s each component in this <see cref="Vector2"/> to produce a <see cref="Vector2Int"/></summary>
+		public Vector2Int RoundToInt(this Vector2 v) { return new Vector2Int(Mathf.RoundToInt(x), Mathf.RoundToInt(y)); }
+
+		/// <summary> Calculate dot product between vectors <paramref name="a"/> and <paramref name="b"/></summary>
 		public static float Dot(Vector2 a, Vector2 b) { return a.x * b.x + a.y * b.y; }
+		/// <summary> Componentwise Min between vectors <paramref name="a"/> and <paramref name="b"/></summary>
 		public static Vector2 Min(Vector2 a, Vector2 b) { return new Vector2(Mathf.Min(a.x, b.x), Mathf.Min(a.y, b.y)); }
+		/// <summary> Componentwise Max between vectors <paramref name="a"/> and <paramref name="b"/></summary>
 		public static Vector2 Max(Vector2 a, Vector2 b) { return new Vector2(Mathf.Max(a.x, b.x), Mathf.Max(a.y, b.y)); }
 
+		/// <summary> Linearly interpolate between vectors <paramref name="a"/> and <paramref name="b"/> by proportion <paramref name="f"/>. </summary>
 		public static Vector2 Lerp(Vector2 a, Vector2 b, float f) { f = Clamp01(f); return new Vector2(a.x + (b.x - a.x) * f, a.y + (b.y - a.y) * f); }
+		/// <summary> Linearly interpolate between vectors <paramref name="a"/> and <paramref name="b"/> by proportion <paramref name="f"/>, without a <see cref="Mathf.Clamp01(float)"/>. </summary>
 		public static Vector2 LerpUnclamped(Vector2 a, Vector2 b, float f) { return new Vector2(a.x + (b.x - a.x) * f, a.y + (b.y - a.y) * f); }
+		/// <summary> Steps <paramref name="current"/> vector towards <paramref name="target"/>, at most moving <paramref name="maxDistanceDelta"/>. </summary>
+		/// <param name="current"> Current vector location </param>
+		/// <param name="target"> Target vector location </param>
+		/// <param name="maxDistanceDelta"> Maximum distance to move </param>
+		/// <returns> <paramref name="current"/> stepped towards <paramref name="target"/>, at most by <paramref name="maxDistanceDelta"/> units. </returns>
 		public static Vector2 MoveTowards(Vector2 current, Vector2 target, float maxDistanceDelta) {
 			Vector2 a = target - current;
 			float m = a.magnitude;
 			return (m < maxDistanceDelta || m == 0f) ? target : (current + a / m * maxDistanceDelta);
 		}
+		/// <summary> Scales one vector <paramref name="a"/>componentwise by another <paramref name="b"/>. </summary>
 		public static Vector2 Scale(Vector2 a, Vector2 b) { return new Vector2(a.x * b.x, a.y * b.y); }
+		/// <summary> Clamps the length of the <paramref name="vector"/> so it is not longer than <paramref name="maxLength"/>. </summary>
 		public static Vector2 ClampMagnitude(Vector2 vector, float maxLength) {
 			return (vector.sqrMagnitude > maxLength * maxLength) ? vector.normalized * maxLength : vector;
 		}
+		/// <summary> Reflect a <paramref name="dir"/>ection vector about a surface <paramref name="normal"/>. </summary>
 		public static Vector2 Reflect(Vector2 dir, Vector2 normal) { return -2f * Dot(normal, dir) * normal + dir; }
+		/// <summary> Project a <paramref name="dir"/>ection vector along another direction, <paramref name="normal"/>. </summary>
 		public static Vector2 Project(Vector2 dir, Vector2 normal) {
 			float len = Dot(normal, normal);
 			return (len < SQR_EPSILON) ? zero : normal * Dot(dir, normal) / len;
 		}
+		/// <summary> Create a vector that is perpindicular to the given <paramref name="dir"/>ection. </summary>
 		public static Vector2 Perpendicular(Vector2 dir) { return new Vector2(-dir.y, dir.x); }
 
+		/// <summary> Calculate distance between vectors <paramref name="a"/> and <paramref name="b"/>. </summary>
 		public static float Distance(Vector2 a, Vector2 b) { return (a - b).magnitude; }
+		/// <summary> Calculate absolute angle between vectors <paramref name="from"/> and <paramref name="to"/> when placed at origin. </summary>
 		public static float Angle(Vector2 from, Vector2 to) {
 			float e = Sqrt(from.sqrMagnitude * to.sqrMagnitude);
 			if (e < SQR_EPSILON) { return 0; }
 			float f = Mathf.Clamp(Dot(from, to) / e, -1f, 1f);
 			return Acos(f) * Rad2Deg;
 		}
+		/// <summary> Calculate signed angle between two vectors <paramref name="from"/> and <paramref name="to"/> when placed at origin. </summary>
 		public static float SignedAngle(Vector2 from, Vector2 to) {
 			float angle = Angle(from, to);
 			float sign = Sign(from.x * to.y - from.y * to.x);
 			return sign * angle;
 		}
 
+		/// <summary> Negate both components of the given vector. </summary>
 		public static Vector2 operator -(Vector2 a) { return new Vector2(-a.x, -a.y); }
+		/// <summary> Add vectors <paramref name="a"/> and <paramref name="b"/>. </summary>
 		public static Vector2 operator +(Vector2 a, Vector2 b) { return new Vector2(a.x + b.x, a.y + b.y); }
+		/// <summary> Subtract vector <paramref name="b"/> from <paramref name="a"/>. </summary>
 		public static Vector2 operator -(Vector2 a, Vector2 b) { return new Vector2(a.x - b.x, a.y - b.y); }
+		/// <summary> Multiply vectors <paramref name="a"/> and <paramref name="b"/>. </summary>
 		public static Vector2 operator *(Vector2 a, Vector2 b) { return new Vector2(a.x * b.x, a.y * b.y); }
+		/// <summary> Divide vector <paramref name="a"/> by <paramref name="b"/>. </summary>
 		public static Vector2 operator /(Vector2 a, Vector2 b) { return new Vector2(a.x / b.x, a.y / b.y); }
+		/// <summary> Multiply vector <paramref name="a"/> by float <paramref name="f"/>. </summary>
 		public static Vector2 operator *(Vector2 a, float f) { return new Vector2(a.x * f, a.y * f); }
+		/// <summary> Multiply vector <paramref name="a"/> by float <paramref name="f"/>. </summary>
 		public static Vector2 operator *(float f, Vector2 a) { return new Vector2(a.x * f, a.y * f); }
+		/// <summary> Divide vector <paramref name="a"/> by <paramref name="f"/>. </summary>
 		public static Vector2 operator /(Vector2 a, float f) { return new Vector2(a.x / f, a.y / f); }
+		/// <summary> Inverse divide vector <paramref name="a"/> by <paramref name="f"/>. </summary>
 		public static Vector2 operator /(float f, Vector2 a) { return new Vector2(f / a.x, f / a.y); }
+		/// <summary> Compare vectors <paramref name="a"/> and <paramref name="b"/>, by approximate equality, if their <see cref="sqrMagnitude"/> of difference is within <see cref="COMPARE_EPSILON"/>. </summary>
 		public static bool operator ==(Vector2 a, Vector2 b) { return (a - b).sqrMagnitude < COMPARE_EPSILON; }
+		/// <summary> Inversion of comparison of vectors <paramref name="a"/> and <paramref name="b"/>, by approximate equality, if their <see cref="sqrMagnitude"/> of difference is within <see cref="COMPARE_EPSILON"/>. </summary>
 		public static bool operator !=(Vector2 a, Vector2 b) { return !(a == b); }
+		/// <summary> Automatic coercion of <see cref="Vector3"/> to <see cref="Vector2"/> </summary>
 		public static implicit operator Vector2(Vector3 v) { return new Vector2(v.x, v.y); }
+		/// <summary> Automatic coercion of <see cref="Vector2"/> to <see cref="Vector3"/> </summary>
 		public static implicit operator Vector3(Vector2 v) { return new Vector3(v.x, v.y, 0f); }
 	}
 	#endregion
@@ -291,62 +370,96 @@ namespace PixelEngine.Utilities {
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 	#region Vector2Int
-	/// <summary> Surrogate class, similar to UnityEngine.Vector2Int </summary>
+	/// <summary> Surrogate class, similar to UnityEngine.Vector2Int. Stores two <see cref="int"/> components, and provides some math functions. </summary>
 	[System.Serializable]
 	public struct Vector2Int : IEquatable<Vector2Int> {
+		/// <summary> Zero vector, (0, 0). </summary>
 		public static Vector2Int zero { get { return new Vector2Int(0, 0); } }
+		/// <summary> One unit vector, (1, 1). </summary>
 		public static Vector2Int one { get { return new Vector2Int(1, 1); } }
+		/// <summary> Up unit vector, (0, -1). </summary>
 		public static Vector2Int up { get { return new Vector2Int(0, 1); } }
+		/// <summary> Down unit vector, (0, 1). </summary>
 		public static Vector2Int down { get { return new Vector2Int(0, -1); } }
+		/// <summary> Left unit vector, (-1, 0). </summary>
 		public static Vector2Int left { get { return new Vector2Int(-1, 0); } }
+		/// <summary> Right unit vector, (1, 0). </summary>
 		public static Vector2Int right { get { return new Vector2Int(1, 0); } }
 
+		/// <summary> Vector component </summary>
 		public int x, y;
+		/// <summary> Construct a vector with the given components. </summary>
 		public Vector2Int(int x, int y) { this.x = x; this.y = y; }
 
+		/// <summary> Index-wise access to vector components. </summary>
+		/// <param name="i"> Index to access at. Must be in range [0, 1] </param>
 		public int this[int i] {
 			get { if (i == 0) { return x; } if (i == 1) { return y; } throw new IndexOutOfRangeException($"Vector2Int has length=2, {i} is out of range."); }
 			set { if (i == 0) { x = value; } if (i == 1) { y = value; } throw new IndexOutOfRangeException($"Vector2Int has length=2, {i} is out of range."); }
 		}
 
+		/// <inheritdoc />
 		public override bool Equals(object other) { return other is Vector2Int && Equals((Vector2Int)other); }
+		/// <summary> Compare by exact component values </summary>
 		public bool Equals(Vector2Int other) { return x.Equals(other.x) && y.Equals(other.y); }
+		/// <inheritdoc />
 		public override int GetHashCode() { return x.GetHashCode() ^ y.GetHashCode() << 2; }
+		/// <inheritdoc />
 		public override string ToString() { return $"({x}, {y})"; }
 
+		/// <summary> Vector length by distance formula (Sqrt(x*x + y*y)) </summary>
 		public float magnitude { get { return Sqrt(x * x + y * y); } }
+		/// <summary> Vector length by partial distance formula (x*x + y*y), faster without the Sqrt </summary>
 		public int sqrMagnitude { get { return x * x + y * y; } }
 
+		/// <summary> Sets the x/y component of the vector in-place. Modifies the x/y in the memory location it is called on. </summary>
 		public void Set(int a, int b) { x = a; y = b; }
+		/// <summary> Scales this vector in-place by another vector <paramref name="scale"/>, component wise. Modifies the x/y in the memory location it is called on. </summary>
 		public void Scale(Vector2Int scale) { x *= scale.x; y *= scale.y; }
+		/// <summary> Clamp vector in-place between <paramref name="min"/> and <paramref name="max"/>. Modifies the x/y in the memory location it is called on.  </summary>
 		public void Clamp(Vector2 min, Vector2 max) {
 			x = (int)Mathf.Clamp(x, min.x, max.x);
 			y = (int)Mathf.Clamp(y, min.y, max.y);
 		}
 
+		/// <summary> Component-wise minimum between <paramref name="a"/> and <paramref name="b"/>. </summary>
 		public static Vector2Int Min(Vector2Int a, Vector2Int b) { return new Vector2Int(Mathf.Min(a.x, b.x), Mathf.Min(a.y, b.y)); }
+		/// <summary> Component-wise maximum between <paramref name="a"/> and <paramref name="b"/>. </summary>
 		public static Vector2Int Max(Vector2Int a, Vector2Int b) { return new Vector2Int(Mathf.Max(a.x, b.x), Mathf.Max(a.y, b.y)); }
+		/// <summary> Scale <paramref name="a"/> component-wise by <paramref name="b"/>. </summary>
 		public static Vector2Int Scale(Vector2Int a, Vector2Int b) { return new Vector2Int(a.x * b.x, a.y * b.y); }
+		/// <summary> Get distance between <paramref name="a"/> and <paramref name="b"/>. </summary>
 		public static float Distance(Vector2Int a, Vector2Int b) { return (b - a).magnitude; }
 
-		public static Vector2Int FloorToInt(Vector2 v) { return new Vector2Int(Mathf.FloorToInt(v.x), Mathf.FloorToInt(v.y)); }
-		public static Vector2Int CeilToInt(Vector2 v) { return new Vector2Int(Mathf.CeilToInt(v.x), Mathf.CeilToInt(v.y)); }
-		public static Vector2Int RoundToInt(Vector2 v) { return new Vector2Int(Mathf.RoundToInt(v.x), Mathf.RoundToInt(v.y)); }
-
+		/// <summary> Negate each component of a Vector2Int </summary>
 		public static Vector2Int operator -(Vector2Int a) { return new Vector2Int(-a.x, -a.y); }
+		/// <summary> Add <paramref name="a"/> and <paramref name="b"/> </summary>
 		public static Vector2Int operator +(Vector2Int a, Vector2Int b) { return new Vector2Int(a.x + b.x, a.y + b.y); }
+		/// <summary> Add <paramref name="b"/> from <paramref name="a"/> </summary>
 		public static Vector2Int operator -(Vector2Int a, Vector2Int b) { return new Vector2Int(a.x - b.x, a.y - b.y); }
+		/// <summary> Multiply <paramref name="a"/> and <paramref name="b"/> </summary>
 		public static Vector2Int operator *(Vector2Int a, Vector2Int b) { return new Vector2Int(a.x * b.x, a.y * b.y); }
+		/// <summary> Divide<paramref name="a"/> by <paramref name="b"/> </summary>
 		public static Vector2Int operator /(Vector2Int a, Vector2Int b) { return new Vector2Int(a.x / b.x, a.y / b.y); }
+		/// <summary> Multiply <paramref name="a"/> and <paramref name="i"/> </summary>
 		public static Vector2Int operator *(Vector2Int a, int i) { return new Vector2Int(a.x * i, a.y * i); }
+		/// <summary> Multiply <paramref name="a"/> and <paramref name="i"/> </summary>
 		public static Vector2Int operator *(int i, Vector2Int a) { return new Vector2Int(a.x * i, a.y * i); }
+		/// <summary> Divide<paramref name="a"/> by <paramref name="f"/> </summary>
 		public static Vector2Int operator /(Vector2Int a, int i) { return new Vector2Int(a.x / i, a.y / i); }
+		/// <summary> Inverse divide<paramref name="a"/> by <paramref name="f"/> </summary>
 		public static Vector2Int operator /(int i, Vector2Int a) { return new Vector2Int(i / a.x, i / a.y); }
+		/// <summary> Compare components of <paramref name="a"/> and <paramref name="b"/> </summary>
 		public static bool operator ==(Vector2Int a, Vector2Int b) { return a.x == b.x && a.y == b.y; }
+		/// <summary> Inverse compare components of <paramref name="a"/> and <paramref name="b"/> </summary>
 		public static bool operator !=(Vector2Int a, Vector2Int b) { return !(a == b); }
 
+		/// <summary> Coerce a <see cref="Vector2Int"/> into  a <see cref="Vector2"/> </summary>
 		public static implicit operator Vector2(Vector2Int v) { return new Vector2(v.x, v.y); }
+		/// <summary> Coerce a <see cref="Vector2Int"/> into  a <see cref="Vector3Int"/> </summary>
 		public static explicit operator Vector3Int(Vector2Int v) { return new Vector3Int(v.x, v.y, 0); }
+		/// <summary> Coerce a <see cref="Vector3Int"/> into  a <see cref="Vector2Int"/> </summary>
+		public static explicit operator Vector2Int(Vector3Int v) { return new Vector2Int(v.x, v.y); }
 
 	}
 	#endregion
