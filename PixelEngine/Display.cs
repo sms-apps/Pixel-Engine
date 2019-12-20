@@ -13,6 +13,7 @@ namespace PixelEngine {
 		/// <summary> Window title text </summary>
 		private string text;
 
+		/// <summary> Create a new display with default <see cref="WndProc(IntPtr, uint, int, int)"/> handler.</summary>
 		public Display() {
 			proc = WndProc;
 		}

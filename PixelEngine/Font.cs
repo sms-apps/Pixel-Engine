@@ -28,8 +28,11 @@ namespace PixelEngine {
 		/// <summary> Lazy loader for <see cref="Presets.Handwritten"/></summary>
 		private static Lazy<Font> handwritten;
 
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 		/// <summary> Enum for preset font </summary>
 		public enum Presets { Retro, Modern, Formal, Handwritten }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
+
 		/// <summary> Helper conversion from <see cref="Presets"/> enum into <see cref="Font"/></summary>
 		/// <param name="p"> Preset to convert </param>
 		public static implicit operator Font(Presets p) {

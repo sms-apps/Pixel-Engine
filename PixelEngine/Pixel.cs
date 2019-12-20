@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace PixelEngine {
+	/// <summary> Struct holding color and transparency information for a single pixel </summary>
 	public struct Pixel {
 		/// <summary> Workaround to avoid static constructor. </summary>
 		public static readonly bool Initialized = Init();
@@ -21,6 +22,7 @@ namespace PixelEngine {
 			Presets[] presets = (Presets[])Enum.GetValues(typeof(Presets));
 			presetPixels = presets.ToDictionary(p => p, p => ToPixel(p)); 
 			PresetPixels = presetPixels.Values.ToArray();
+
 
 			return true;
 		}
@@ -43,8 +45,11 @@ namespace PixelEngine {
 			R = red; G = green; B = blue; A = alpha;
 		}
 
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 		/// <summary> Pixel blending modes </summary>
 		public enum Mode { Normal, Mask, Alpha, Custom }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 		/// <summary> Create a randomly colored, opaque pixel. </summary>
 		public static Pixel Random() {
@@ -58,6 +63,7 @@ namespace PixelEngine {
 		}
 
 		#region Presets
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 		/// <summary> Color presets. </summary>
 		public enum Presets : uint {
 			White = 0xffffff,
@@ -90,18 +96,57 @@ namespace PixelEngine {
 			DarkCyan = 0x008B8B,
 			DarkBlue = 0x00008B,
 			DarkMagenta = 0x8B008B
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 		}
 
-		/// <summary> Clear pixel (is same as default(Pixel)) </summary>
+		/// <summary> Create a <see cref="Pixel"/> color from an integer. </summary>
+		/// <param name="rgba"><see cref="uint"/>[] value treated as 0xRRGGBBAA </param>
+		/// <returns> <see cref="Pixel"/> representing value of given RGBA </returns>
+		public static Pixel RGBA(uint rgba) {
+			byte a = (byte)(rgba & 0xFF);
+			byte b = (byte)((rgba >> 8) & 0xFF);
+			byte g = (byte)((rgba >> 16) & 0xFF);
+			byte r = (byte)((rgba >> 24) & 0xFF);
+			return new Pixel(r, g, b, a);
+		}
+		/// <summary> Create a <see cref="Pixel"/> color from an integer. </summary>
+		/// <param name="argb"><see cref="uint"/>[] value treated as 0xAARRGGBB </param>
+		/// <returns> <see cref="Pixel"/> representing value of given ARGB </returns>
+		public static Pixel ARGB(uint argb) {
+			byte a = (byte)((argb >> 24) & 0xFF);
+			byte r = (byte)((argb >> 16) & 0xFF);
+			byte g = (byte)((argb >> 8) & 0xFF);
+			byte b = (byte)((argb >> 0) & 0xFF);
+			return new Pixel(r, g, b, a);
+		}
+		/// <summary> Convert a list of ARGB values into a <see cref="Pixel"/>[] for ease of creating palettes. </summary>
+		/// <param name="argb"> <see cref="uint"/>[] to use as ARGB color source </param>
+		/// <returns> <see cref="Pixel"/>[] created from source </returns>
+		public static Pixel[] PaletteARGB(params uint[] argb) {
+			Pixel[] palette = new Pixel[argb.Length]; 
+			for (int i = 0; i < argb.Length; i++) { palette[i] = ARGB(argb[i]); }
+			return palette;
+		}
+		/// <summary> Convert a list of RGBA values into a <see cref="Pixel"/>[] for ease of creating palettes. </summary>
+		/// <param name="rgba"> <see cref="uint"/>[] to use as RGBA color source </param>
+		/// <returns> <see cref="Pixel"/>[] created from source </returns>
+		public static Pixel[] PaletteRGBA(params uint[] rgba) {
+			Pixel[] palette = new Pixel[rgba.Length];
+			for (int i = 0; i < rgba.Length; i++) { palette[i] = RGBA(rgba[i]); }
+			return palette;
+		}
+
+		/// <summary> Clear pixel (is same as default(Pixel) or new Pixel() ) </summary>
 		public static readonly Pixel Empty = new Pixel(0, 0, 0, 0);
 
 		/// <summary> Dictionary for preset pixels </summary>
 		private static Dictionary<Presets, Pixel> presetPixels;
 		/// <summary> Array for preset pixels </summary>
 		public static Pixel[] PresetPixels { get; private set; }
+		
 		#endregion
 
-		/// <summary> Create a color from an integer. </summary>
+		/// <summary> Create a color from an integer, as RGBA. </summary>
 		/// <param name="rgba">uint value treated as 0xRRGGBBAA </param>
 		/// <returns> Pixel representing value of given RGBA </returns>
 		public static Pixel FromRgb(uint rgba) {
@@ -112,7 +157,7 @@ namespace PixelEngine {
 
 			return new Pixel(r, g, b, a);
 		}
-		/// <summary> Create a color from HSV space </summary>
+		/// <summary> Create a color from HSV space coordinates </summary>
 		/// <param name="h"> Hue (Angle of color, [0, 1]) </param>
 		/// <param name="s"> Saturation (Grayscale or Vibrant [0, 1]) </param>
 		/// <param name="v"> Value (Dark or Bright [0, 1]) </param>

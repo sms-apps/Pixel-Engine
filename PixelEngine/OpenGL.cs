@@ -84,14 +84,14 @@ namespace PixelEngine {
 		/// <param name="drawTarget"> Sprite layer </param>
 		/// <param name="textTarget"> Text layer </param>
 		public unsafe void Draw(Sprite drawTarget, Sprite textTarget) {
-			fixed (Pixel* ptr = drawTarget.GetData()) {
+			fixed (Pixel* ptr = drawTarget.GetPixels()) {
 				if (game.PixWidth == 1 && game.PixHeight == 1) { 
 					RenderUnitPixels(drawTarget.Width, drawTarget.Height, ptr);
 				} else { RenderPixels(drawTarget.Width, drawTarget.Height, ptr); }
 			}
 
 			if (textTarget != null) {
-				fixed (Pixel* ptr = textTarget.GetData()) {
+				fixed (Pixel* ptr = textTarget.GetPixels()) {
 					RenderText(game.windowWidth, game.windowHeight, textTarget.Width, textTarget.Height, ptr);
 				}
 			}

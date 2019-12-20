@@ -1,4 +1,5 @@
 namespace PixelEngine {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 	/// <summary> Enum for possible keyboard keys </summary>
 	public enum Key {
 		A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z,
@@ -43,10 +44,9 @@ namespace PixelEngine {
 
 		Any, None
 	}
-
 	/// <summary> Enum for possible mouse buttons </summary>
 	public enum Mouse { Left, Middle, Right, Any, None }
-
 	/// <summary> Enum for possible scroll directions </summary>
 	public enum Scroll { Up = -1, None = 0, Down = 1 }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

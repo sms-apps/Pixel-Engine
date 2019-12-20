@@ -79,7 +79,7 @@ namespace PixelEngine {
 		/// <summary> Graphics object bound to this game </summary>
 		private OpenGL canvas;
 
-		/// <summary> field backing <see cref="PixBlend"/> property </summary>
+		/// <summary> field backing <see cref="PixelBlend"/> property </summary>
 		private float pixBlend = 1;
 
 		/// <summary> Timer for frame ticks </summary>
@@ -441,7 +441,7 @@ namespace PixelEngine {
 		public float Power(float val, float pow) { return (float)Math.Pow(val, pow); }
 		/// <summary> Wrapper for <see cref="Math.Sqrt"/> </summary>
 		public float Sqrt(float val) { return (float)Math.Sqrt(val); }
-		/// <summary> Wrapper for <see cref="Math.Round"/> </summary>
+		/// <summary> Wrapper for <see cref="Math.Round(double)"/> </summary>
 		public float Round(float val, int digits = 0) { return (float)Math.Round(val, digits); }
 
 		/// <summary> Remap <paramref name="val"/> from [<paramref name="oMin"/>, <paramref name="oMax"/>] space to [<paramref name="nMin"/>, <paramref name="nMax"/>] space. </summary>
@@ -667,8 +667,7 @@ namespace PixelEngine {
 		/// <remarks> Applies any blendmode settings configured by <see cref="PixelMode"/> when drawing the pixel. </remarks>
 		public void Draw(int x, int y, Pixel col) { Draw(new Point(x, y), col); }
 		/// <summary> Put a <see cref="Pixel"/> somewhere on the screen </summary>
-		/// <param name="x"> x coord </param>
-		/// <param name="y"> y coord </param>
+		/// <param name="p"> coordinate points </param>
 		/// <param name="col"> color of pixel to draw </param>
 		/// <remarks> Applies any blendmode settings configured by <see cref="PixelMode"/> when drawing the pixel. </remarks>
 		public void Draw(Point p, Pixel col) {
@@ -1096,7 +1095,7 @@ namespace PixelEngine {
 			}
 		}
 		/// <summary> Draws a wireframe polygon defined by the given list of <see cref="Point"/>s </summary>
-		/// <param name="verts"> <see cref="Point"/>s to connect with lines </param>
+		/// <param name="verts"> <see cref="Point"/>[] to connect with lines </param>
 		/// <param name="col"> <see cref="Pixel"/> color to draw </param>
 		public void DrawPolygon(Point[] verts, Pixel col) {
 			for (int i = 0; i < verts.Length - 1; i++) {
@@ -1105,7 +1104,7 @@ namespace PixelEngine {
 			DrawLine(verts[verts.Length - 1], verts[0], col);
 		}
 		/// <summary> Draws a filled polygon defined by the given list of <see cref="Point"/>s </summary>
-		/// <param name="verts"> <see cref="Point"/>s to connect with triangles</param>
+		/// <param name="verts"> <see cref="Point"/>[] to connect with triangles</param>
 		/// <param name="col"> <see cref="Pixel"/> color to draw </param>
 		public void FillPolygon(Point[] verts, Pixel col) {
 			for (int i = 1; i < verts.Length - 1; i++) {
@@ -1113,7 +1112,7 @@ namespace PixelEngine {
 			}
 		}
 		/// <summary> Draws a wireframe path defined by the given list of <see cref="Point"/>s </summary>
-		/// <param name="verts"> <see cref="Point"/>s to connect with lines </param>
+		/// <param name="points"> <see cref="Point"/>[] to connect with lines </param>
 		/// <param name="col"> <see cref="Pixel"/> color to draw </param>
 		public void DrawPath(Point[] points, Pixel col) {
 			for (int i = 0; i < points.Length - 1; i++) {
@@ -1150,12 +1149,12 @@ namespace PixelEngine {
 		/// <summary> Clears the screen, so it has a given color. </summary>
 		/// <param name="p"> <see cref="Pixel"/> color to clear to </param>
 		public void Clear(Pixel p) {
-			Pixel[] pixels = drawTarget.GetData();
+			Pixel[] pixels = drawTarget.GetPixels();
 			for (int i = 0; i < pixels.Length; i++)
 				pixels[i] = p;
 
 			if (hrText) {
-				pixels = textTarget.GetData();
+				pixels = textTarget.GetPixels();
 				for (int i = 0; i < pixels.Length; i++) {
 					pixels[i] = Pixel.Empty;
 				}
@@ -1164,8 +1163,11 @@ namespace PixelEngine {
 		#endregion
 
 		#region Subsystems
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 		/// <summary> Enum of built-in subsystems </summary>
 		public enum Subsystem { Fullscreen, Audio, HrText }
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 
 		/// <summary> Enable a given <see cref="Subsystem"/>. </summary>
 		/// <param name="subsystem"> <see cref="Subsystem"/> to enable. </param>
@@ -1294,7 +1296,7 @@ namespace PixelEngine {
 					for (int y = 0; y < textTarget.Height; y++) {
 						int index = y * textTarget.Width;
 						int indexTemp = y * temp.Width;
-						Array.Copy(textTarget.GetData(), index, temp.GetData(), indexTemp, textTarget.Width);
+						Array.Copy(textTarget.GetPixels(), index, temp.GetPixels(), indexTemp, textTarget.Width);
 					}
 
 					textTarget = temp;
@@ -1306,7 +1308,7 @@ namespace PixelEngine {
 					for (int y = 0; y < textTarget.Height; y++) {
 						int index = y * textTarget.Width;
 						int indexTemp = y * temp.Width;
-						Array.Copy(textTarget.GetData(), index, temp.GetData(), indexTemp, textTarget.Width);
+						Array.Copy(textTarget.GetPixels(), index, temp.GetPixels(), indexTemp, textTarget.Width);
 					}
 
 					textTarget = temp;

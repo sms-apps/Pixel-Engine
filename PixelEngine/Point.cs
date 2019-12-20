@@ -16,5 +16,21 @@ namespace PixelEngine {
 
 		/// <summary> Always (0, 0) </summary>
 		public static Point Origin { get { return new Point(); } }
+
+		/// <summary> Add two <see cref="Point"/>s component-wise </summary>
+		public static Point operator +(Point a, Point b) { return new Point(a.X + b.X, a.Y + b.Y); }
+		/// <summary> Subtract two <see cref="Point"/>s component-wise </summary>
+		public static Point operator -(Point a, Point b) { return new Point(a.X - b.X, a.Y - b.Y); }
+		/// <summary> Multiply two <see cref="Point"/>s component-wise </summary>
+		public static Point operator *(Point a, Point b) { return new Point(a.X * b.X, a.Y * b.Y); }
+		/// <summary> Divide two <see cref="Point"/>s component-wise </summary>
+		public static Point operator /(Point a, Point b) { return new Point(a.X / b.X, a.Y / b.Y); }
+		/// <summary> Multiply a <see cref="Point"/> by an <see cref="int"/> </summary>
+		public static Point operator *(Point a, int b) { return new Point(a.X * b, a.Y * b); }
+		/// <summary> Multiply a <see cref="Point"/> by an <see cref="int"/> </summary>
+		public static Point operator *(int b, Point a) { return new Point(a.X * b, a.Y * b); }
+		/// <summary> Divide a <see cref="Point"/> by an <see cref="int"/> </summary>
+		public static Point operator /(Point a, int b) { return new Point(a.X / b, a.Y / b); }
+
 	}
 }

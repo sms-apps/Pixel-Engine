@@ -25,10 +25,12 @@ namespace PixelEngine.Utilities {
 		/// <summary> ms interval to update on </summary>
 		private int interval;
 
+		/// <summary> Creates a new animation that will iterate the given <paramref name="values"/>. </summary>
 		public Animation(T[] values) {
 			this.values = values;
 			Automatic = false;
 		}
+		/// <summary> Creates a new animation that will iterate the given <paramref name="values"/> over the given <paramref name="duration"/>. </summary>
 		public Animation(T[] values, float duration) {
 			this.values = values;
 			interval = (int)(duration * 1000 / values.Length);

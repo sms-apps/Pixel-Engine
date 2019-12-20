@@ -41,7 +41,7 @@ namespace PixelEngine.Utilities {
 		/// <summary> Sort a given array with a given comparison function </summary> <typeparam name="T"> Generic type parameter </typeparam> 
 		/// <param name="items"> Array to sort </param><param name="comparision">Custom compare function to use</param>
 		public static void Sort<T>(this T[] items, Comparison<T> comparision) {
-			/// Helper function for quicksort partitioning 
+			// Helper function for quicksort partitioning 
 			int Partition(T[] arr, int left, int right) {
 				T pivot = arr[(left+right)/2]; // Less likely to pick a bad pivot on sorted data.
 
@@ -60,7 +60,7 @@ namespace PixelEngine.Utilities {
 					}
 				}
 			}
-			/// Recursive helper 
+			// Recursive helper 
 			void QuickSort(T[] arr, int left, int right) {
 				if (left < right) {
 					int pivot = Partition(arr, left, right);
@@ -75,7 +75,7 @@ namespace PixelEngine.Utilities {
 		/// <summary> Sort a given List with a given comparison function </summary> <typeparam name="T"> Generic type parameter </typeparam> 
 		/// <param name="items"> List to sort </param><param name="comparision">Custom compare function to use</param>
 		public static void Sort<T>(this List<T> items, Comparison<T> comparision) {
-			/// Helper function for quicksort partitioning 
+			// Helper function for quicksort partitioning 
 			int Partition(List<T> arr, int left, int right) {
 				T pivot = arr[(left+right)/2]; // Less likely to pick a bad pivot on sorted data
 
@@ -94,7 +94,7 @@ namespace PixelEngine.Utilities {
 					}
 				}
 			}
-			/// Recursive helper 
+			// Recursive helper 
 			void QuickSort(List<T> arr, int left, int right) {
 				if (left < right) {
 					int pivot = Partition(arr, left, right);

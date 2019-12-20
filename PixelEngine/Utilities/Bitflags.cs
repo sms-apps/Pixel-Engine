@@ -53,7 +53,7 @@ namespace PixelEngine.Utilities {
 		}
 	}
 
-	/// <summary> Highly packed bitflags for large numbers of flags. 8 Times more efficient packing than <see cref="bool[]"/>. </summary>
+	/// <summary> Highly packed bitflags for large numbers of flags. 8 Times more efficient packing than <see cref="bool"/>[]. </summary>
 	public class Bitflags {
 
 		/// <summary> Array containing flags </summary>
