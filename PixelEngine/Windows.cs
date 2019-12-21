@@ -5,13 +5,26 @@ using System.Runtime.InteropServices;
 using System.Security;
 
 namespace PixelEngine {
+	/// <summary> Class holding read access to some information in <see cref="Windows"/>. </summary>
+	public static class WindowsInfo {
+		/// <summary> Temporary directory path </summary>
+		public static string TempPath { get { return Windows.TempPath; } }
+
+
+	}
+
 	/// <summary> Class holding external bindings and other information for interacting with the Windows operating system. </summary>
 	internal static unsafe class Windows {
 		/// <summary> Workaround to avoid static initializer </summary>
 		public static readonly bool Initialized = Init();
 		/// <summary> Workaround to avoid static initializer </summary>
 		private static bool Init() {
-			TempPath = Path.Combine(Path.GetTempPath(), $"{nameof(PixelEngine)}.{Assembly.GetExecutingAssembly().GetName().Version}");
+			// string exeName = AppDomain.CurrentDomain.FriendlyName;
+			string entryName = Assembly.GetEntryAssembly().GetName().Name;
+			string entryVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
+			string pixelEngine = nameof(PixelEngine);
+
+			TempPath = Path.Combine(Path.GetTempPath(), pixelEngine, $"{entryName}.{entryVersion}");
 
 			if (!Directory.Exists(TempPath)) {
 				Directory.CreateDirectory(TempPath);
