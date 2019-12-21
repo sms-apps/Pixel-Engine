@@ -48,7 +48,7 @@ namespace PixelEngine {
 		/// <summary> Sprites representing each character in the font </summary>
 		internal Dictionary<char, Sprite> Glyphs;
 		/// <summary> Height of a line of text rendered with this font </summary>
-		internal int CharHeight;
+		public int CharHeight { get; private set; }
 		
 		private Font() { Glyphs = new Dictionary<char, Sprite>(); }
 

@@ -163,6 +163,7 @@ namespace PixelEngine {
 		/// <param name="v"> Value (Dark or Bright [0, 1]) </param>
 		/// <returns> Pixel representing value of given HSV </returns>
 		public static Pixel FromHsv(float h, float s, float v) {
+			h *= 360;
 			float c = v * s;
 			float nh = (h / 60) % 6;
 			float x = c * (1 - Math.Abs(nh % 2 - 1));
@@ -219,5 +220,11 @@ namespace PixelEngine {
 			hashCode = hashCode * -152113 + A.GetHashCode();
 			return hashCode;
 		}
+
+		/// <summary> Returns hex-formatted string in ARGB order </summary>
+		public string ToHexARGB() { return $"0x{A:X2}{R:X2}{G:X2}{B:X2}"; }
+		/// <summary> Returns hex-formatted string in RGBA order </summary>
+		public string ToHexRGBA() { return $"0x{R:X2}{G:X2}{B:X2}{A:X2}"; }
+
 	}
 }
