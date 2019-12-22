@@ -1928,6 +1928,9 @@
         <member name="T:PixelEngine.Utilities.Clock">
             <summary> Clock helper for timing things. </summary>
         </member>
+        <member name="M:PixelEngine.Utilities.Clock.#ctor">
+            <summary> Create a new Clock </summary>
+        </member>
         <member name="P:PixelEngine.Utilities.Clock.Start">
             <summary> Get starting time of clock. </summary>
         </member>
@@ -1937,11 +1940,17 @@
         <member name="M:PixelEngine.Utilities.Clock.Tick">
             <summary> Tick the clock. </summary>
         </member>
-        <member name="P:PixelEngine.Utilities.Clock.Elapsed">
+        <member name="P:PixelEngine.Utilities.Clock.ElapsedSpan">
             <summary> Get the time elapsed since clock was created. </summary>
         </member>
+        <member name="P:PixelEngine.Utilities.Clock.DeltaSpan">
+            <summary> Get the delta since the <see cref="P:PixelEngine.Utilities.Clock.Last"/> <see cref="M:PixelEngine.Utilities.Clock.Tick"/>. </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Clock.Elapsed">
+            <summary> Get the total time in seconds sinc the <see cref="P:PixelEngine.Utilities.Clock.Start"/> of this clock. </summary>
+        </member>
         <member name="P:PixelEngine.Utilities.Clock.Delta">
-            <summary> Get the delta since the <see cref="P:PixelEngine.Utilities.Clock.Last"/> tick. </summary>
+            <summary> Get the delta time in seconds sinc the <see cref="P:PixelEngine.Utilities.Clock.Last"/> <see cref="M:PixelEngine.Utilities.Clock.Tick"/></summary>
         </member>
         <member name="T:PixelEngine.Utilities.Mathf">
             <summary> Like UnityEngine.Mathf, Wrap <see cref="T:System.Math"/> functions to deal with float/int, and some custom functions. </summary>
@@ -3361,6 +3370,174 @@
         </member>
         <member name="M:PixelEngine.Utilities.BoundsInt.Distance(PixelEngine.Utilities.Vector3)">
             <summary> Signed distance from the surface of this <see cref="T:PixelEngine.Utilities.BoundsInt"/> to the given <paramref name="point"/> </summary>
+        </member>
+        <member name="T:PixelEngine.Utilities.Matrix4x4">
+            <summary> Similar to UnityEngine.Matrix4x4. 4-by-4 Matrix for 3d transformations. </summary> 
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.zero">
+            <summary> Get zero (empty) <see cref="T:PixelEngine.Utilities.Matrix4x4"/></summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.identity">
+            <summary> Creates an identity matrix. </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.determinant">
+            <summary> Calculate the determinant of this matrix. </summary>
+        </member>
+        <member name="F:PixelEngine.Utilities.Matrix4x4.m00">
+            <summary> Matrix component. </summary>
+        </member>
+        <member name="F:PixelEngine.Utilities.Matrix4x4.m10">
+            <summary> Matrix component. </summary>
+        </member>
+        <member name="F:PixelEngine.Utilities.Matrix4x4.m20">
+            <summary> Matrix component. </summary>
+        </member>
+        <member name="F:PixelEngine.Utilities.Matrix4x4.m30">
+            <summary> Matrix component. </summary>
+        </member>
+        <member name="F:PixelEngine.Utilities.Matrix4x4.m01">
+            <summary> Matrix component. </summary>
+        </member>
+        <member name="F:PixelEngine.Utilities.Matrix4x4.m11">
+            <summary> Matrix component. </summary>
+        </member>
+        <member name="F:PixelEngine.Utilities.Matrix4x4.m21">
+            <summary> Matrix component. </summary>
+        </member>
+        <member name="F:PixelEngine.Utilities.Matrix4x4.m31">
+            <summary> Matrix component. </summary>
+        </member>
+        <member name="F:PixelEngine.Utilities.Matrix4x4.m02">
+            <summary> Matrix component. </summary>
+        </member>
+        <member name="F:PixelEngine.Utilities.Matrix4x4.m12">
+            <summary> Matrix component. </summary>
+        </member>
+        <member name="F:PixelEngine.Utilities.Matrix4x4.m22">
+            <summary> Matrix component. </summary>
+        </member>
+        <member name="F:PixelEngine.Utilities.Matrix4x4.m32">
+            <summary> Matrix component. </summary>
+        </member>
+        <member name="F:PixelEngine.Utilities.Matrix4x4.m03">
+            <summary> Matrix component. </summary>
+        </member>
+        <member name="F:PixelEngine.Utilities.Matrix4x4.m13">
+            <summary> Matrix component. </summary>
+        </member>
+        <member name="F:PixelEngine.Utilities.Matrix4x4.m23">
+            <summary> Matrix component. </summary>
+        </member>
+        <member name="F:PixelEngine.Utilities.Matrix4x4.m33">
+            <summary> Matrix component. </summary>
+        </member>
+        <member name="M:PixelEngine.Utilities.Matrix4x4.Invertable(System.Single@)">
+            <summary> Figure out if a matrix is invertable, and capture its <see cref="P:PixelEngine.Utilities.Matrix4x4.determinant"/>. </summary>
+            <param name="detOut"> Output parameter for the captured <see cref="P:PixelEngine.Utilities.Matrix4x4.determinant"/></param>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.inverse">
+            <summary> Calculates the inverse <see cref="T:PixelEngine.Utilities.Matrix4x4"/> of this one, if possible. If not, returns <see cref="P:PixelEngine.Utilities.Matrix4x4.zero"/>. </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.transpose">
+            <summary> Get the transpose of this matrix </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.a">
+            <summary> Alternate naming scheme accessor. (<see cref="F:PixelEngine.Utilities.Matrix4x4.m00"/>) </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.b">
+            <summary> Alternate naming scheme accessor. (<see cref="F:PixelEngine.Utilities.Matrix4x4.m10"/>) </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.c">
+            <summary> Alternate naming scheme accessor. (<see cref="F:PixelEngine.Utilities.Matrix4x4.m20"/>) </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.d">
+            <summary> Alternate naming scheme accessor. (<see cref="F:PixelEngine.Utilities.Matrix4x4.m30"/>) </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.e">
+            <summary> Alternate naming scheme accessor. (<see cref="F:PixelEngine.Utilities.Matrix4x4.m01"/>) </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.f">
+            <summary> Alternate naming scheme accessor. (<see cref="F:PixelEngine.Utilities.Matrix4x4.m11"/>) </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.g">
+            <summary> Alternate naming scheme accessor. (<see cref="F:PixelEngine.Utilities.Matrix4x4.m21"/>) </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.h">
+            <summary> Alternate naming scheme accessor. (<see cref="F:PixelEngine.Utilities.Matrix4x4.m31"/>) </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.i">
+            <summary> Alternate naming scheme accessor. (<see cref="F:PixelEngine.Utilities.Matrix4x4.m02"/>) </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.j">
+            <summary> Alternate naming scheme accessor. (<see cref="F:PixelEngine.Utilities.Matrix4x4.m12"/>) </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.k">
+            <summary> Alternate naming scheme accessor. (<see cref="F:PixelEngine.Utilities.Matrix4x4.m22"/>) </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.l">
+            <summary> Alternate naming scheme accessor. (<see cref="F:PixelEngine.Utilities.Matrix4x4.m32"/>) </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.m">
+            <summary> Alternate naming scheme accessor. (<see cref="F:PixelEngine.Utilities.Matrix4x4.m03"/>) </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.n">
+            <summary> Alternate naming scheme accessor. (<see cref="F:PixelEngine.Utilities.Matrix4x4.m13"/>) </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.o">
+            <summary> Alternate naming scheme accessor. (<see cref="F:PixelEngine.Utilities.Matrix4x4.m23"/>) </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.p">
+            <summary> Alternate naming scheme accessor. (<see cref="F:PixelEngine.Utilities.Matrix4x4.m33"/>) </summary>
+        </member>
+        <member name="M:PixelEngine.Utilities.Matrix4x4.#ctor(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+            <summary> Construct a matrix from the given 16 components. </summary>
+        </member>
+        <member name="M:PixelEngine.Utilities.Matrix4x4.#ctor(PixelEngine.Utilities.Vector4,PixelEngine.Utilities.Vector4,PixelEngine.Utilities.Vector4,PixelEngine.Utilities.Vector4)">
+            <summary> Construct a <see cref="T:PixelEngine.Utilities.Matrix4x4"/> from 4 column <see cref="T:PixelEngine.Utilities.Vector4"/>s </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.Item(System.Int32,System.Int32)">
+            <summary> Index this <see cref="T:PixelEngine.Utilities.Matrix4x4"/> with a two int indexes  in range [0, 3], in row-major order. </summary>
+        </member>
+        <member name="P:PixelEngine.Utilities.Matrix4x4.Item(System.Int32)">
+            <summary> Index this <see cref="T:PixelEngine.Utilities.Matrix4x4"/> with a single int index in range [0, 15]. </summary>
+        </member>
+        <member name="M:PixelEngine.Utilities.Matrix4x4.MultiplyPoint(PixelEngine.Utilities.Vector3)">
+            <summary> Multiplies this <see cref="T:PixelEngine.Utilities.Matrix4x4"/> by a given <see cref="T:PixelEngine.Utilities.Vector3"/> with an implicit 1 in the w-component. </summary>
+        </member>
+        <member name="M:PixelEngine.Utilities.Matrix4x4.MultiplyPointDirect(PixelEngine.Utilities.Vector3)">
+            <summary> Multiplies this <see cref="T:PixelEngine.Utilities.Matrix4x4"/> by a given <see cref="T:PixelEngine.Utilities.Vector3"/> with an implicit 1 in the w-component, but discards the re-normalization process. </summary>
+        </member>
+        <member name="M:PixelEngine.Utilities.Matrix4x4.MultiplyVector(PixelEngine.Utilities.Vector3)">
+            <summary> Multiplies this <see cref="T:PixelEngine.Utilities.Matrix4x4"/> by a given <see cref="T:PixelEngine.Utilities.Vector3"/>, ignoring the 4th dimension. </summary>
+        </member>
+        <member name="M:PixelEngine.Utilities.Matrix4x4.Scale(PixelEngine.Utilities.Vector3)">
+            <summary> Create a <see cref="T:PixelEngine.Utilities.Matrix4x4"/> that scales by the given scale <see cref="T:PixelEngine.Utilities.Vector3"/>. </summary>
+        </member>
+        <member name="M:PixelEngine.Utilities.Matrix4x4.Translate(PixelEngine.Utilities.Vector3)">
+            <summary> Create a <see cref="T:PixelEngine.Utilities.Matrix4x4"/> that translates by the given <see cref="T:PixelEngine.Utilities.Vector3"/>. </summary>
+        </member>
+        <member name="M:PixelEngine.Utilities.Matrix4x4.Rotate(System.Single,PixelEngine.Utilities.Vector3)">
+            <summary> Create a <see cref="T:PixelEngine.Utilities.Matrix4x4"/> that rotates <paramref name="angle"/> degrees about the given <paramref name="axis"/>. </summary>
+        </member>
+        <member name="M:PixelEngine.Utilities.Matrix4x4.Rotate(System.Single,System.Single,System.Single,System.Single)">
+            <summary> Create a <see cref="T:PixelEngine.Utilities.Matrix4x4"/> that rotates <paramref name="angle"/> degrees about the axis formed by given <paramref name="x"/>, <paramref name="y"/>, <paramref name="z"/>. </summary>
+        </member>
+        <member name="M:PixelEngine.Utilities.Matrix4x4.Frustrum(System.Single,System.Single,System.Single,System.Single,System.Single,System.Single)">
+            <summary> Creates a Perspective Frustrum <see cref="T:PixelEngine.Utilities.Matrix4x4"/>, looking through a window defined by 
+            <paramref name="left"/>, <paramref name="right"/>, <paramref name="top"/>, <paramref name="bottom"/>, which is
+            <paramref name="near"/> units away, up to <paramref name="far"/> units away </summary>
+        </member>
+        <member name="M:PixelEngine.Utilities.Matrix4x4.LookAt(PixelEngine.Utilities.Vector3,PixelEngine.Utilities.Vector3,PixelEngine.Utilities.Vector3)">
+            <summary> Create a matrix looking from <paramref name="eye"/> at <paramref name="target"/>, with the given <paramref name="up"/>wards direction. </summary>
+        </member>
+        <member name="M:PixelEngine.Utilities.Matrix4x4.ToString">
+            <inheritdoc />
+        </member>
+        <member name="M:PixelEngine.Utilities.Matrix4x4.op_Multiply(PixelEngine.Utilities.Matrix4x4,PixelEngine.Utilities.Matrix4x4)">
+            <summary> Multiply two <see cref="T:PixelEngine.Utilities.Matrix4x4"/>s, order matters. </summary>
+        </member>
+        <member name="M:PixelEngine.Utilities.Matrix4x4.op_Multiply(PixelEngine.Utilities.Matrix4x4,PixelEngine.Utilities.Vector4)">
+            <summary> Multiply this <see cref="T:PixelEngine.Utilities.Matrix4x4"/> by the given <see cref="T:PixelEngine.Utilities.Vector4"/>. </summary>
         </member>
         <member name="T:PixelEngine.Extensions.Extension">
             <summary> PixelEngine Extension framework base class. </summary>

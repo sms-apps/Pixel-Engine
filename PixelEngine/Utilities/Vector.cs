@@ -1398,6 +1398,7 @@ namespace PixelEngine.Utilities {
 		/// <inheritdoc />
 		public override string ToString() { return $"(Center: {position}, Extents: {size})"; }
 
+
 		/// <summary> Directly modify both the min and max points of this <see cref="BoundsInt"/>. </summary>
 		public void SetMinMax(Vector3Int min, Vector3Int max) { size = ((max - min)/2).Abs(); position = min + size; }
 		/// <summary> Grow the <see cref="BoundsInt"/> so it encapsulates the given <paramref name="point"/>. </summary>
@@ -1468,6 +1469,299 @@ namespace PixelEngine.Utilities {
 			return Vector3.Max(q, Vector3.zero).magnitude + Min(Max(q.x, Max(q.y, q.z)), 0);
 		}
 
+	}
+
+	/// <summary> Similar to UnityEngine.Matrix4x4. 4-by-4 Matrix for 3d transformations. </summary> 
+	public struct Matrix4x4 {
+		/// <summary> Get zero (empty) <see cref="Matrix4x4"/></summary>
+		public static Matrix4x4 zero { get; } = new Matrix4x4();
+		/// <summary> Creates an identity matrix. </summary>
+		public static Matrix4x4 identity { get; } = new Matrix4x4(
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1);
+
+		/// <summary> Calculate the determinant of this matrix. </summary>
+		public float determinant {
+			get {
+				float kp = k * p; float lo = l * o; float jp = j * p; 
+				float ln = l * n; float jo = j * o; float kn = k * n;
+				float ip = i * p; float lm = l * m; float km = k * m; 
+				float @in = i * n;float jm = j * m;
+				float io = i * o;
+				
+				return a * (f*kp - f*lo - g*jp + g*ln + h*jo + h*kn)
+					+ b * (e*kp - e*lo - g*ip + g*lm + h*jo - h*kn)
+					+ c * (e*jp - e*ln - f*ip + f*lm+ h*@in - h*jm)
+					+ d * (e*jo - e*kn - f*io + f*km + g*@in - g*jm);
+			}
+		}
+		/// <summary> Matrix component. </summary>
+		public float	m00, m10, m20, m30, 
+						m01, m11, m21, m31, 
+						m02, m12, m22, m32, 
+						m03, m13, m23, m33;
+
+		/// <summary> Figure out if a matrix is invertable, and capture its <see cref="determinant"/>. </summary>
+		/// <param name="detOut"> Output parameter for the captured <see cref="determinant"/></param>
+		public bool Invertable(out float detOut) {
+			float det = detOut = determinant;
+			return (det != 0);
+		}
+
+		/// <summary> Calculates the inverse <see cref="Matrix4x4"/> of this one, if possible. If not, returns <see cref="zero"/>. </summary>
+		public Matrix4x4 inverse {
+			get { 
+				Matrix4x4 inv = default;
+				inv.m00 = m11 * m22 * m33 - m11 * m32 * m23 - m12 * m21 * m33 + m12 * m31 * m23 + m13 * m21 * m32 - m13 * m31 * m22;
+				inv.m10 = -m10 * m22 * m33 + m10 * m32 * m23 + m12 * m20 * m33 - m12 * m30 * m23 - m13 * m20 * m32 + m13 * m30 * m22;
+				inv.m20 = m10 * m21 * m33 - m10 * m31 * m23 - m11 * m20 * m33 + m11 * m30 * m23 + m13 * m20 * m31 - m13 * m30 * m21;
+				inv.m30 = -m10 * m21 * m32 + m10 * m31 * m22 + m11 * m20 * m32 - m11 * m30 * m22 - m12 * m20 * m31 + m12 * m30 * m21;
+				inv.m01 = -m01 * m22 * m33 + m01 * m32 * m23 + m02 * m21 * m33 - m02 * m31 * m23 - m03 * m21 * m32 + m03 * m31 * m22;
+				inv.m11 = m00 * m22 * m33 - m00 * m32 * m23 - m02 * m20 * m33 + m02 * m30 * m23 + m03 * m20 * m32 - m03 * m30 * m22;
+				inv.m21 = -m00 * m21 * m33 + m00 * m31 * m23 + m01 * m20 * m33 - m01 * m30 * m23 - m03 * m20 * m31 + m03 * m30 * m21;
+				inv.m31 = m00 * m21 * m32 - m00 * m31 * m22 - m01 * m20 * m32 + m01 * m30 * m22 + m02 * m20 * m31 - m02 * m30 * m21;
+				inv.m02 = m01 * m12 * m33 - m01 * m32 * m13 - m02 * m11 * m33 + m02 * m31 * m13 + m03 * m11 * m32 - m03 * m31 * m12;
+				inv.m12 = -m00 * m12 * m33 + m00 * m32 * m13 + m02 * m10 * m33 - m02 * m30 * m13 - m03 * m10 * m32 + m03 * m30 * m12;
+				inv.m22 = m00 * m11 * m33 - m00 * m31 * m13 - m01 * m10 * m33 + m01 * m30 * m13 + m03 * m10 * m31 - m03 * m30 * m11;
+				inv.m32 = -m00 * m11 * m32 + m00 * m31 * m12 + m01 * m10 * m32 - m01 * m30 * m12 - m02 * m10 * m31 + m02 * m30 * m11;
+				inv.m03 = -m01 * m12 * m23 + m01 * m22 * m13 + m02 * m11 * m23 - m02 * m21 * m13 - m03 * m11 * m22 + m03 * m21 * m12;
+				inv.m13 = m00 * m12 * m23 - m00 * m22 * m13 - m02 * m10 * m23 + m02 * m20 * m13 + m03 * m10 * m22 - m03 * m20 * m12;
+				inv.m23 = -m00 * m11 * m23 + m00 * m21 * m13 + m01 * m10 * m23 - m01 * m20 * m13 - m03 * m10 * m21 + m03 * m20 * m11;
+				inv.m33 = m00 * m11 * m22 - m00 * m21 * m12 - m01 * m10 * m22 + m01 * m20 * m12 + m02 * m10 * m21 - m02 * m20 * m11;
+
+				float det = m00 * inv.m00 + m10 * inv.m01 + m20 * inv.m02 + m30 * inv.m03;
+				if (det == 0) { return zero; }
+
+				det = 1.0f / det;
+				for (int i = 0; i < 16; i++) { inv[i] *= det; }
+
+				return inv;
+			}
+		}
+
+		/// <summary> Get the transpose of this matrix </summary>
+		public Matrix4x4 transpose {
+			get {
+				return new Matrix4x4(m00, m01, m02, m03,
+									m10, m11, m12, m13,
+									m20, m21, m22, m23,
+									m30, m31, m32, m33);
+			}
+		}
+		
+		/// <summary> Alternate naming scheme accessor. (<see cref="m00"/>) </summary>
+		public float a { get { return m00; } set { m00 = value; } }
+		/// <summary> Alternate naming scheme accessor. (<see cref="m10"/>) </summary>
+		public float b { get { return m10; } set { m10 = value; } }
+		/// <summary> Alternate naming scheme accessor. (<see cref="m20"/>) </summary>
+		public float c { get { return m20; } set { m20 = value; } }
+		/// <summary> Alternate naming scheme accessor. (<see cref="m30"/>) </summary>
+		public float d { get { return m30; } set { m30 = value; } }
+		/// <summary> Alternate naming scheme accessor. (<see cref="m01"/>) </summary>
+		public float e { get { return m01; } set { m01 = value; } }
+		/// <summary> Alternate naming scheme accessor. (<see cref="m11"/>) </summary>
+		public float f { get { return m11; } set { m11 = value; } }
+		/// <summary> Alternate naming scheme accessor. (<see cref="m21"/>) </summary>
+		public float g { get { return m21; } set { m21 = value; } }
+		/// <summary> Alternate naming scheme accessor. (<see cref="m31"/>) </summary>
+		public float h { get { return m31; } set { m31 = value; } }
+		/// <summary> Alternate naming scheme accessor. (<see cref="m02"/>) </summary>
+		public float i { get { return m02; } set { m02 = value; } }
+		/// <summary> Alternate naming scheme accessor. (<see cref="m12"/>) </summary>
+		public float j { get { return m12; } set { m12 = value; } }
+		/// <summary> Alternate naming scheme accessor. (<see cref="m22"/>) </summary>
+		public float k { get { return m22; } set { m22 = value; } }
+		/// <summary> Alternate naming scheme accessor. (<see cref="m32"/>) </summary>
+		public float l { get { return m32; } set { m32 = value; } }
+		/// <summary> Alternate naming scheme accessor. (<see cref="m03"/>) </summary>
+		public float m { get { return m03; } set { m03 = value; } }
+		/// <summary> Alternate naming scheme accessor. (<see cref="m13"/>) </summary>
+		public float n { get { return m13; } set { m13 = value; } }
+		/// <summary> Alternate naming scheme accessor. (<see cref="m23"/>) </summary>
+		public float o { get { return m23; } set { m23 = value; } }
+		/// <summary> Alternate naming scheme accessor. (<see cref="m33"/>) </summary>
+		public float p { get { return m33; } set { m33 = value; } }
+		
+		/// <summary> Construct a matrix from the given 16 components. </summary>
+		public Matrix4x4(	float a00, float a10, float a20, float a30, 
+							float a01, float a11, float a21, float a31,
+							float a02, float a12, float a22, float a32,
+							float a03, float a13, float a23, float a33) {
+			m00 = a00; m10 = a10; m20 = a20; m30 = a30;
+			m01 = a01; m11 = a11; m21 = a21; m31 = a31;
+			m02 = a02; m12 = a12; m22 = a22; m32 = a32;
+			m03 = a03; m13 = a13; m23 = a23; m33 = a33;
+		}
+
+		/// <summary> Construct a <see cref="Matrix4x4"/> from 4 column <see cref="Vector4"/>s </summary>
+		public Matrix4x4(Vector4 col0, Vector4 col1, Vector4 col2, Vector4 col3) {
+			m00 = col0.x; m01 = col1.x; m02 = col2.x; m03 = col3.x;
+			m10 = col0.y; m11 = col1.y; m12 = col2.y; m13 = col3.y;
+			m20 = col0.z; m21 = col1.z; m22 = col2.z; m23 = col3.z;
+			m30 = col0.w; m31 = col1.w; m32 = col2.w; m33 = col3.w;
+		}
+
+		/// <summary> Index this <see cref="Matrix4x4"/> with a two int indexes  in range [0, 3], in row-major order. </summary>
+		public float this[int row, int col] {
+			get { return this[row + col * 4]; }
+			set { this[row + col * 4] = value; }
+		}
+		/// <summary> Index this <see cref="Matrix4x4"/> with a single int index in range [0, 15]. </summary>
+		public float this[int index] {
+			get {
+				switch (index) {
+					case  0: return m00; case  1: return m10; case  2: return m20; case  3: return m30;
+					case  4: return m01; case  5: return m11; case  6: return m21; case  7: return m31;
+					case  8: return m02; case  9: return m12; case 10: return m22; case 11: return m32;
+					case 12: return m03; case 13: return m13; case 14: return m23; case 15: return m33;
+					default: throw new IndexOutOfRangeException($"Invalid matrix index {index}!");
+				}
+			}
+			set {
+				switch (index) {
+					case  0: m00 = value; break; case  1: m10 = value; break; case  2: m20 = value; break; case  3: m30 = value; break;
+					case  4: m01 = value; break; case  5: m11 = value; break; case  6: m21 = value; break; case  7: m31 = value; break;
+					case  8: m02 = value; break; case  9: m12 = value; break; case 10: m22 = value; break; case 11: m32 = value; break;
+					case 12: m03 = value; break; case 13: m13 = value; break; case 14: m23 = value; break; case 15: m33 = value; break;
+					default: throw new IndexOutOfRangeException($"Invalid matrix index {index}!");
+				}
+			}
+		}
+		/// <summary> Multiplies this <see cref="Matrix4x4"/> by a given <see cref="Vector3"/> with an implicit 1 in the w-component. </summary>
+		public Vector3 MultiplyPoint(Vector3 point) {
+			Vector3 result = default;
+			result.x = m00 * point.x + m01 * point.y + m02 * point.z + m03;
+			result.y = m10 * point.x + m11 * point.y + m12 * point.z + m13;
+			result.z = m20 * point.x + m21 * point.y + m22 * point.z + m23;
+			float norm = m30 * point.x + m31 * point.y + m32 * point.z + m33;
+			norm = 1f / norm;
+			return result * norm;
+		}
+
+		/// <summary> Multiplies this <see cref="Matrix4x4"/> by a given <see cref="Vector3"/> with an implicit 1 in the w-component, but discards the re-normalization process. </summary>
+		public Vector3 MultiplyPointDirect(Vector3 point) {
+			Vector3 result = default;
+			result.x = m00 * point.x + m01 * point.y + m02 * point.z + m03;
+			result.y = m10 * point.x + m11 * point.y + m12 * point.z + m13;
+			result.z = m20 * point.x + m21 * point.y + m22 * point.z + m23;
+			return result;
+		}
+		/// <summary> Multiplies this <see cref="Matrix4x4"/> by a given <see cref="Vector3"/>, ignoring the 4th dimension. </summary>
+		public Vector3 MultiplyVector(Vector3 point) {
+			Vector3 result = default;
+			result.x = m00 * point.x + m01 * point.y + m02 * point.z;
+			result.y = m10 * point.x + m11 * point.y + m12 * point.z;
+			result.z = m20 * point.x + m21 * point.y + m22 * point.z;
+			return result;
+		}
+
+		/// <summary> Create a <see cref="Matrix4x4"/> that scales by the given scale <see cref="Vector3"/>. </summary>
+		public static Matrix4x4 Scale(Vector3 v) {
+			Matrix4x4 result = default;
+			result.m00 = v.x;
+				result.m11 = v.y;
+					result.m22 = v.z;
+						result.m33 = 1f;
+
+			return result;
+		}
+
+		/// <summary> Create a <see cref="Matrix4x4"/> that translates by the given <see cref="Vector3"/>. </summary>
+		public static Matrix4x4 Translate(Vector3 v) {
+			Matrix4x4 result = default;
+			result.m00 = 1;				result.m03 = v.x;
+				result.m11 = 1;			result.m13 = v.y;
+					result.m22 = 1;		result.m23 = v.z;
+										result.m33 = 1;
+			return result;
+		}
+
+		/// <summary> Create a <see cref="Matrix4x4"/> that rotates <paramref name="angle"/> degrees about the given <paramref name="axis"/>. </summary>
+		public static Matrix4x4 Rotate(float angle, Vector3 axis) { return Rotate(angle, axis.x, axis.y, axis.z); }
+		/// <summary> Create a <see cref="Matrix4x4"/> that rotates <paramref name="angle"/> degrees about the axis formed by given <paramref name="x"/>, <paramref name="y"/>, <paramref name="z"/>. </summary>
+		public static Matrix4x4 Rotate(float angle, float x, float y, float z) {
+			float c = Cos(angle * Deg2Rad);
+			float s = Sin(angle * Deg2Rad);
+
+			float d = 1.0f - c;
+			Matrix4x4 result = new Matrix4x4(x*x*d+c, x*y*d-s*z, x*z*d+s*y, 0,
+											 x*y*d+s*z, y*y*d+c, y*z*d-s*x, 0,
+											 x*z*d-s*y, y*z*d+s*x, z*z*d+c, 0,
+											 0, 0, 0, 1 );
+			return result;
+		}
+		/// <summary> Creates a Perspective Frustrum <see cref="Matrix4x4"/>, looking through a window defined by 
+		/// <paramref name="left"/>, <paramref name="right"/>, <paramref name="top"/>, <paramref name="bottom"/>, which is
+		/// <paramref name="near"/> units away, up to <paramref name="far"/> units away </summary>
+		public static Matrix4x4 Frustrum(float left, float right, float bottom, float top, float near, float far) {
+			float l = left; float r = right; float b = bottom; float t = top; float n = near; float f = far;
+			return new Matrix4x4(2*n/(r-l), 0, (r+l)/(r-l), 0,
+								 0, 2*n/(t-b), (t+b)/(t-b), 0,
+								 0, 0, - (f+n)/(f-n), -(2*f*n)/(f-n),
+								 0, 0, -1, 0 );
+		}
+
+
+		/// <summary> Create a matrix looking from <paramref name="eye"/> at <paramref name="target"/>, with the given <paramref name="up"/>wards direction. </summary>
+		public static Matrix4x4 LookAt(Vector3 eye, Vector3 target, Vector3 up) {
+			Vector3 n = (target - eye); n.Normalize();
+			Vector3 r = Vector3.Cross(n, up); r.Normalize();
+			Vector3 w = Vector3.Cross(r, n); w.Normalize();
+
+			Matrix4x4 translate = new Matrix4x4(1,0,0,-eye.x,
+										0,1,0,-eye.y,
+										0,0,1,-eye.z,
+										0,0,0,1);
+
+			Matrix4x4 rotate = new Matrix4x4(	r.x, r.y, r.z, 0,
+												w.x, w.y, w.z, 0,
+												-n.x, -n.y, -n.z, 0,
+												0, 0, 0, 1);
+			return rotate * translate;
+		}
+		
+		/// <inheritdoc />
+		public override string ToString() {
+			return $"{m00}\t{m01}\t{m02}\t{m03}\n{m10}\t{m11}\t{m12}\t{m13}\n{m20}\t{m21}\t{m22}\t{m23}\n{m30}\t{m31}\t{m32}\t{m33}";
+		}
+
+
+		/// <summary> Multiply two <see cref="Matrix4x4"/>s, order matters. </summary>
+		public static Matrix4x4 operator *(Matrix4x4 lhs, Matrix4x4 rhs) {
+			Matrix4x4 result = default;
+			result.m00 = lhs.m00 * rhs.m00 + lhs.m10 * rhs.m01 + lhs.m20 * rhs.m02 + lhs.m30 * rhs.m03;
+			result.m10 = lhs.m00 * rhs.m10 + lhs.m10 * rhs.m11 + lhs.m20 * rhs.m12 + lhs.m30 * rhs.m13;
+			result.m20 = lhs.m00 * rhs.m20 + lhs.m10 * rhs.m21 + lhs.m20 * rhs.m22 + lhs.m30 * rhs.m23;
+			result.m30 = lhs.m00 * rhs.m30 + lhs.m10 * rhs.m31 + lhs.m20 * rhs.m32 + lhs.m30 * rhs.m33;
+
+			result.m01 = lhs.m01 * rhs.m00 + lhs.m11 * rhs.m01 + lhs.m21 * rhs.m02 + lhs.m31 * rhs.m03;
+			result.m11 = lhs.m01 * rhs.m10 + lhs.m11 * rhs.m11 + lhs.m21 * rhs.m12 + lhs.m31 * rhs.m13;
+			result.m21 = lhs.m01 * rhs.m20 + lhs.m11 * rhs.m21 + lhs.m21 * rhs.m22 + lhs.m31 * rhs.m23;
+			result.m31 = lhs.m01 * rhs.m30 + lhs.m11 * rhs.m31 + lhs.m21 * rhs.m32 + lhs.m31 * rhs.m33;
+
+			result.m02 = lhs.m02 * rhs.m00 + lhs.m12 * rhs.m01 + lhs.m22 * rhs.m02 + lhs.m32 * rhs.m03;
+			result.m12 = lhs.m02 * rhs.m10 + lhs.m12 * rhs.m11 + lhs.m22 * rhs.m12 + lhs.m32 * rhs.m13;
+			result.m22 = lhs.m02 * rhs.m20 + lhs.m12 * rhs.m21 + lhs.m22 * rhs.m22 + lhs.m32 * rhs.m23;
+			result.m32 = lhs.m02 * rhs.m30 + lhs.m12 * rhs.m31 + lhs.m22 * rhs.m32 + lhs.m32 * rhs.m33;
+
+			result.m03 = lhs.m03 * rhs.m00 + lhs.m13 * rhs.m01 + lhs.m23 * rhs.m02 + lhs.m33 * rhs.m03;
+			result.m13 = lhs.m03 * rhs.m10 + lhs.m13 * rhs.m11 + lhs.m23 * rhs.m12 + lhs.m33 * rhs.m13;
+			result.m23 = lhs.m03 * rhs.m20 + lhs.m13 * rhs.m21 + lhs.m23 * rhs.m22 + lhs.m33 * rhs.m23;
+			result.m33 = lhs.m03 * rhs.m30 + lhs.m13 * rhs.m31 + lhs.m23 * rhs.m32 + lhs.m33 * rhs.m33;
+			return result; 
+		}
+
+		/// <summary> Multiply this <see cref="Matrix4x4"/> by the given <see cref="Vector4"/>. </summary>
+		public static Vector4 operator *(Matrix4x4 lhs, Vector4 vec) {
+			Vector4 result = default;
+			result.x = lhs.m00 * vec.x + lhs.m10 * vec.y + lhs.m20 * vec.z + lhs.m30 * vec.w;
+			result.y = lhs.m01 * vec.x + lhs.m11 * vec.y + lhs.m21 * vec.z + lhs.m31 * vec.w;
+			result.z = lhs.m02 * vec.x + lhs.m12 * vec.y + lhs.m22 * vec.z + lhs.m32 * vec.w;
+			result.w = lhs.m03 * vec.x + lhs.m13 * vec.y + lhs.m23 * vec.z + lhs.m33 * vec.w;
+			return result;
+		}
 	}
 	#endregion
 }
