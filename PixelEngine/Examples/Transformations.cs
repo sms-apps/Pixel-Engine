@@ -26,10 +26,10 @@ namespace PixelEngine.Examples {
 		public override void OnKeyDown(Key k) {
 			switch (k) {
 				case Key.Left:
-					angle += (float)Clock.Delta.TotalSeconds * 12f;
+					angle += Clock.Delta;
 					break;
 				case Key.Right:
-					angle -= (float)Clock.Delta.TotalSeconds * 12f;
+					angle -= Clock.Delta;
 					break;
 			}
 		}

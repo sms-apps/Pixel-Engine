@@ -26,7 +26,7 @@ namespace PixelEngine.Examples {
 		public override void OnCreate() { Reset(); }
 
 		/// <inheritdoc />
-		public override void OnUpdate(float elapsed) {
+		public override void OnUpdate(float delta) {
 			Clear(Pixel.Presets.Black);
 
 			if (!started) {
@@ -49,7 +49,7 @@ namespace PixelEngine.Examples {
 				}
 			}
 
-			enemyElapsed += elapsed;
+			enemyElapsed += delta;
 
 			if (enemyElapsed > enemyTimer) {
 				enemies.Add(new Enemy(Random(ScreenWidth), -50, Random(200f, 300f), Random(5, 30), Random(5, 30)));
@@ -63,7 +63,7 @@ namespace PixelEngine.Examples {
 			for (int i = enemies.Count - 1; i >= 0; i--) {
 				Enemy enemy = enemies[i];
 
-				if (!gameOver) { enemy.Update(elapsed); }
+				if (!gameOver) { enemy.Update(delta); }
 				enemy.Render(this);
 
 				if (Colliding(enemy)) { gameOver = true; }
@@ -75,8 +75,8 @@ namespace PixelEngine.Examples {
 			}
 
 			if (!gameOver) {
-				if (GetKey(Key.Left).Down) {player.Update(-1, elapsed); }
-				if (GetKey(Key.Right).Down){player.Update(1, elapsed); }
+				if (GetKey(Key.Left).Down) {player.Update(-1, delta); }
+				if (GetKey(Key.Right).Down){player.Update(1, delta); }
 			}
 
 			player.Constrain(this);

@@ -42,7 +42,7 @@ namespace PixelEngine.Examples {
 		}
 
 		/// <inheritdoc />
-		public override void OnUpdate(float elapsed) {
+		public override void OnUpdate(float delta) {
 			if (GetKey(Key.Enter).Pressed) {
 				Clear(Pixel.Presets.Black);
 				Reset();

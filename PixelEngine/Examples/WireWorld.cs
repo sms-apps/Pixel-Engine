@@ -68,7 +68,7 @@ namespace PixelEngine.Examples {
 		}
 
 		/// <inheritdoc />
-		public override void OnUpdate(float elapsed) {
+		public override void OnUpdate(float delta) {
 			if (!running && GetMouse(Mouse.Any).Down == true) {
 				Cell c = Cell.Empty;
 

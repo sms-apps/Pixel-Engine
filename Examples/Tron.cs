@@ -38,7 +38,7 @@ namespace PixelEngine.Examples {
 		}
 
 		/// <inheritdoc />
-		public override void OnUpdate(float elapsed) {
+		public override void OnUpdate(float delta) {
 			Delay(0.025f);
 
 			Clear(Pixel.Presets.Black);

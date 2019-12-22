@@ -25,13 +25,13 @@ namespace PixelEngine.Examples {
 			}
 		}
 		/// <inheritdoc />
-		public override void OnUpdate(float elapsed) {
+		public override void OnUpdate(float delta) {
 			Clear(Pixel.Presets.Black);
 
 			for (int k = 0; k < streamers.Count; k++) {
 				Streamer s = streamers[k];
 
-				s.Position += elapsed * s.Speed * 10;
+				s.Position += delta * s.Speed * 10;
 
 				for (int i = 0; i < s.Text.Length; i++) {
 					Pixel col = s.Speed > 10 ? Pixel.Presets.Green : Pixel.Presets.DarkGreen;

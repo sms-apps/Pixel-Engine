@@ -39,20 +39,20 @@ namespace PixelEngine.Examples {
 		}
 
 		/// <inheritdoc />
-		public override void OnUpdate(float elapsed) {
+		public override void OnUpdate(float delta) {
 			Clear(Pixel.Presets.Black);
 
-			elapsed *= speed;
+			delta *= speed;
 
-			if (GetKey(Key.Q).Down) { near += 0.01f * elapsed; }
-			if (GetKey(Key.W).Down) { near -= 0.01f * elapsed; }
-			if (GetKey(Key.A).Down) { far += 0.01f * elapsed; }
-			if (GetKey(Key.S).Down) { far -= 0.01f * elapsed; }
-			if (GetKey(Key.Z).Down) { foVHalf += 0.01f * elapsed; }
-			if (GetKey(Key.X).Down) { foVHalf -= 0.01f * elapsed; }
+			if (GetKey(Key.Q).Down) { near += 0.01f * delta; }
+			if (GetKey(Key.W).Down) { near -= 0.01f * delta; }
+			if (GetKey(Key.A).Down) { far += 0.01f * delta; }
+			if (GetKey(Key.S).Down) { far -= 0.01f * delta; }
+			if (GetKey(Key.Z).Down) { foVHalf += 0.01f * delta; }
+			if (GetKey(Key.X).Down) { foVHalf -= 0.01f * delta; }
 
-			if (GetKey(Key.O).Down) { speed += 0.5f * elapsed / speed; }
-			if (GetKey(Key.P).Down) { speed -= 0.5f * elapsed / speed; }
+			if (GetKey(Key.O).Down) { speed += 0.5f * delta / speed; }
+			if (GetKey(Key.P).Down) { speed -= 0.5f * delta / speed; }
 
 			if (speed <= 0) { speed = 0.1f; }
 
@@ -96,18 +96,18 @@ namespace PixelEngine.Examples {
 
 			DrawLine(new Point(0, ScreenHeight / 2), new Point(ScreenWidth, ScreenHeight / 2), Pixel.Presets.Cyan);
 
-			if (GetKey(Key.Left).Down) { worldA -= elapsed * 2; }
+			if (GetKey(Key.Left).Down) { worldA -= delta * 2; }
 
-			if (GetKey(Key.Right).Down) { worldA += elapsed * 2; }
+			if (GetKey(Key.Right).Down) { worldA += delta * 2; }
 
 			if (GetKey(Key.Up).Down) {
-				worldX += Cos(worldA) * elapsed;
-				worldY += Sin(worldA) * elapsed;
+				worldX += Cos(worldA) * delta;
+				worldY += Sin(worldA) * delta;
 			}
 
 			if (GetKey(Key.Down).Down) {
-				worldX -= Cos(worldA) * elapsed;
-				worldY -= Sin(worldA) * elapsed;
+				worldX -= Cos(worldA) * delta;
+				worldY -= Sin(worldA) * delta;
 			}
 
 			DrawText(new Point(10, 10), $"X:{Round(worldX, 3)}", Pixel.Presets.White, 1);

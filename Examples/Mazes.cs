@@ -64,7 +64,7 @@ namespace PixelEngine.Examples {
 		}
 
 		/// <inheritdoc />
-		public override void OnUpdate(float elapsed) {
+		public override void OnUpdate(float delta) {
 			int GetOffsetCellIndex(int x, int y) { return (pointStack.Peek().Y + y) * MazeWidth + (pointStack.Peek().X + x); }
 
 			if (visited < MazeWidth * MazeHeight) {

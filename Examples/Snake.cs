@@ -78,7 +78,7 @@ namespace PixelEngine.Examples {
 		}
 
 		/// <inheritdoc />
-		public override void OnUpdate(float elapsed) {
+		public override void OnUpdate(float delta) {
 			CheckStart();
 			UpdateSnake();
 			DrawGame();

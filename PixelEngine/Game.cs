@@ -194,8 +194,8 @@ namespace PixelEngine {
 			
 			while (active) {
 				while (active) {
-					float now = (float)Clock.Elapsed.TotalSeconds;
-					float delta = (float)Clock.Delta.TotalSeconds;
+					
+					float delta = Clock.Delta;
 
 					if (frameTimer != null && !frameTimer.Tick()) {
 						continue;
@@ -1426,7 +1426,7 @@ namespace PixelEngine {
 		/// <summary> Override this to insert logic before the Game loop begins </summary>
 		public virtual void OnCreate() { }
 		/// <summary> Override this to have logic run every frame </summary>
-		public virtual void OnUpdate(float elapsed) { }
+		public virtual void OnUpdate(float delta) { }
 		/// <summary> Override this to have logic run when any mouse button is pressed </summary>
 		public virtual void OnMousePress(Mouse m) { }
 		/// <summary> Override this to have logic run when any mouse button is released </summary>

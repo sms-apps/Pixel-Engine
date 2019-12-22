@@ -14,7 +14,7 @@ namespace PixelEngine.Examples {
 		}
 
 		/// <inheritdoc />
-		public override void OnUpdate(float elapsed) {
+		public override void OnUpdate(float delta) {
 			// Loop through all the pixels
 			for (int i = 0; i < ScreenWidth; i++) {
 				for (int j = 0; j < ScreenHeight; j++) {

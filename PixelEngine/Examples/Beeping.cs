@@ -21,6 +21,6 @@ namespace PixelEngine.Examples {
 		
 		/// <inheritdoc />
 		// This is zeroing sound at periodic times to make it sound like beeping
-		public override float OnSoundFilter(int channels, float globalTime, float sample) { return sample * Sin(globalTime * PI * 2); }
+		public override float OnSoundFilter(int channels, float globalTime, float sample) { return sample * Sin(globalTime * PI * 4); }
 	}
 }
