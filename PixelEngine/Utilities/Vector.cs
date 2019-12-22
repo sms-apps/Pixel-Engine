@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using static PixelEngine.Utilities.Mathf;
 
 namespace PixelEngine.Utilities {
@@ -190,36 +191,35 @@ namespace PixelEngine.Utilities {
 	/// <summary> Surrogate Vector2 class, similar to UnityEngine.Vector2. Stores two <see cref="float"/> components, and provides some math functions. </summary>
 	[System.Serializable]
 	public struct Vector2 {
-		/// <summary> Zero vector (0, 0) </summary>
+		/// <summary> Zero <see cref="Vector2"/> (0, 0) </summary>
 		public static Vector2 zero { get { return new Vector2(0, 0); } }
-		/// <summary> One unit vector (1, 1) </summary>
+		/// <summary> One unit <see cref="Vector2"/> (1, 1) </summary>
 		public static Vector2 one { get { return new Vector2(1, 1); } }
-		/// <summary> Up unit vector (0, 1) </summary>
+		/// <summary> Up unit <see cref="Vector2"/> (0, 1) </summary>
 		public static Vector2 up { get { return new Vector2(0, 1); } }
-		/// <summary> Down unit vector (0, -1) </summary>
+		/// <summary> Down unit <see cref="Vector2"/> (0, -1) </summary>
 		public static Vector2 down { get { return new Vector2(0, -1); } }
-		/// <summary> Left unit vector (-1, 0) </summary>
+		/// <summary> Left unit <see cref="Vector2"/> (-1, 0) </summary>
 		public static Vector2 left { get { return new Vector2(-1, 0); } }
-		/// <summary> Right unit vector (1, 0) </summary>
+		/// <summary> Right unit <see cref="Vector2"/> (1, 0) </summary>
 		public static Vector2 right { get { return new Vector2(1, 0); } }
-		/// <summary> Negative Infinity Unit Vector (-inf, -inf) </summary>
+		/// <summary> Negative Infinity Unit <see cref="Vector2"/> (-inf, -inf) </summary>
 		public static Vector2 negativeInfinity { get { return new Vector2(float.NegativeInfinity, float.NegativeInfinity); } }
-		/// <summary> Positive Infinity Unit Vector (+inf, +inf) </summary>
+		/// <summary> Positive Infinity Unit <see cref="Vector2"/> (+inf, +inf) </summary>
 		public static Vector2 positiveInfinity { get { return new Vector2(float.PositiveInfinity, float.PositiveInfinity); } }
 
 		/// <summary> Vector component  </summary>
 		public float x, y;
-		/// <summary> Create a Vector with the given components  </summary>
+		/// <summary> Create a <see cref="Vector2"/> with the given components  </summary>
 		public Vector2(float x, float y) { this.x = x; this.y = y; }
 
-		/// <summary> Vector length by distance formula (Sqrt(x*x + y*y)) </summary>
+		/// <summary> <see cref="Vector2"/> length by distance formula (Sqrt(x*x + y*y)) </summary>
 		public float magnitude { get { return Mathf.Sqrt(x * x + y * y); } }
-		/// <summary> Vector squared length, partial distance formula (x*x + y*y), faster for length comparison than using square root. </summary>
+		/// <summary> <see cref="Vector2"/> squared length, partial distance formula (x*x + y*y), faster for length comparison than using <see cref="Sqrt(float)"/> </summary>
 		public float sqrMagnitude { get { return (x * x) + (y * y); } }
-		/// <summary> Create a vector with length 1 in the same direction as this vector, or zero if the vector is really short. </summary>
+		/// <summary> Create a <see cref="Vector2"/> with length 1 in the same direction as this vector, or zero if the vector is really short. </summary>
 		public Vector2 normalized { get { float m = magnitude; if (m > EPSILON) { return this / m; } return zero; } }
-		/// <summary> Index-wise access to vector components. </summary>
-		/// <param name="i"> Index to access at. Must be in range [0, 1] </param>
+		/// <summary> Index-wise access to <see cref="Vector2"/> components. Index must be in range [0, 1] </summary>
 		public float this[int i] {
 			get { if (i == 0) { return x; } if (i == 1) { return y; } throw new IndexOutOfRangeException($"Vector2 has length=2, {i} is out of range."); }
 			set { if (i == 0) { x = value; } if (i == 1) { y = value; } throw new IndexOutOfRangeException($"Vector2 has length=2, {i} is out of range."); }
@@ -227,22 +227,22 @@ namespace PixelEngine.Utilities {
 
 		/// <inheritdoc />
 		public override bool Equals(object other) { return other is Vector2 && Equals((Vector2)other); }
-		/// <summary> Compare vector comparison by component values. </summary>
+		/// <summary> Compare <see cref="Vector2"/> by component values. </summary>
 		public bool Equals(Vector2 other) { return x.Equals(other.x) && y.Equals(other.y); }
 		/// <inheritdoc />
 		public override int GetHashCode() { return x.GetHashCode() ^ y.GetHashCode() << 2; }
 		/// <inheritdoc />
 		public override string ToString() { return $"({x:F2}, {y:F2})"; }
 
-		/// <summary> Normalizes this vector in-place. Modifies the x/y in the memory location it is called on. </summary>
+		/// <summary> Normalizes this <see cref="Vector2"/> in-place. Modifies the x/y in the memory location it is called on. </summary>
 		public void Normalize() { float m = magnitude; if (m > EPSILON) { this /= m; } else { this = zero; } }
-		/// <summary> Sets the x/y component of the vector in-place. Modifies the x/y in the memory location it is called on. </summary>
+		/// <summary> Sets the x/y component of the <see cref="Vector2"/> in-place. Modifies the x/y in the memory location it is called on. </summary>
 		public void Set(float x, float y) { this.x = x; this.y = y; }
-		/// <summary> Scales this vector in-place to be (<paramref name="a"/>*<see cref="x"/>, <paramref name="b"/>*<see cref="y"/>). Modifies the x/y in the memory location it is called on. </summary>
+		/// <summary> Scales this <see cref="Vector2"/> in-place to be (<paramref name="a"/>*<see cref="x"/>, <paramref name="b"/>*<see cref="y"/>). Modifies the x/y in the memory location it is called on. </summary>
 		public void Scale(float a, float b) { x *= a; y *= b; }
-		/// <summary> Scales this vector in-place by another vector <paramref name="s"/>, component wise. Modifies the x/y in the memory location it is called on. </summary>
+		/// <summary> Scales this <see cref="Vector2"/> in-place by another vector <paramref name="s"/>, component wise. Modifies the x/y in the memory location it is called on. </summary>
 		public void Scale(Vector2 s) { x *= s.x; y *= s.y; }
-		/// <summary> Clamps this vector in-place. Modifies the x/y in the memory location it is called on. </summary>
+		/// <summary> Clamps this <see cref="Vector2"/> in-place. Modifies the x/y in the memory location it is called on. </summary>
 		public void Clamp(Vector2 min, Vector2 max) {
 			x = Mathf.Clamp(x, min.x, max.x);
 			y = Mathf.Clamp(y, min.y, max.y);
@@ -255,20 +255,26 @@ namespace PixelEngine.Utilities {
 		/// <summary> <see cref="Mathf.RoundToInt(float)"/>'s each component in this <see cref="Vector2"/> to produce a <see cref="Vector2Int"/></summary>
 		public Vector2Int RoundToInt() { return new Vector2Int(Mathf.RoundToInt(x), Mathf.RoundToInt(y)); }
 
-		/// <summary> Calculate dot product between vectors <paramref name="a"/> and <paramref name="b"/></summary>
+		/// <summary> Get component-wise absolute value of this <see cref="Vector2"/>. </summary>
+		public Vector2 Abs() { return new Vector2(Mathf.Abs(x), Mathf.Abs(y)); }
+
+		/// <summary> Get component-wise absolute value of given <see cref="Vector2"/>. </summary>
+		public static Vector2 Abs(Vector2 v) { return new Vector2(Mathf.Abs(v.x), Mathf.Abs(v.y)); }
+
+		/// <summary> Calculate dot product between <see cref="Vector2"/>s <paramref name="a"/> and <paramref name="b"/></summary>
 		public static float Dot(Vector2 a, Vector2 b) { return a.x * b.x + a.y * b.y; }
-		/// <summary> Componentwise Min between vectors <paramref name="a"/> and <paramref name="b"/></summary>
+		/// <summary> Componentwise Min between <see cref="Vector2"/>s <paramref name="a"/> and <paramref name="b"/></summary>
 		public static Vector2 Min(Vector2 a, Vector2 b) { return new Vector2(Mathf.Min(a.x, b.x), Mathf.Min(a.y, b.y)); }
-		/// <summary> Componentwise Max between vectors <paramref name="a"/> and <paramref name="b"/></summary>
+		/// <summary> Componentwise Max between <see cref="Vector2"/>s <paramref name="a"/> and <paramref name="b"/></summary>
 		public static Vector2 Max(Vector2 a, Vector2 b) { return new Vector2(Mathf.Max(a.x, b.x), Mathf.Max(a.y, b.y)); }
 
-		/// <summary> Linearly interpolate between vectors <paramref name="a"/> and <paramref name="b"/> by proportion <paramref name="f"/>. </summary>
+		/// <summary> Linearly interpolate between <see cref="Vector2"/>s <paramref name="a"/> and <paramref name="b"/> by proportion <paramref name="f"/>. </summary>
 		public static Vector2 Lerp(Vector2 a, Vector2 b, float f) { f = Clamp01(f); return new Vector2(a.x + (b.x - a.x) * f, a.y + (b.y - a.y) * f); }
-		/// <summary> Linearly interpolate between vectors <paramref name="a"/> and <paramref name="b"/> by proportion <paramref name="f"/>, without a <see cref="Mathf.Clamp01(float)"/>. </summary>
+		/// <summary> Linearly interpolate between <see cref="Vector2"/>s <paramref name="a"/> and <paramref name="b"/> by proportion <paramref name="f"/>, without a <see cref="Mathf.Clamp01(float)"/>. </summary>
 		public static Vector2 LerpUnclamped(Vector2 a, Vector2 b, float f) { return new Vector2(a.x + (b.x - a.x) * f, a.y + (b.y - a.y) * f); }
-		/// <summary> Steps <paramref name="current"/> vector towards <paramref name="target"/>, at most moving <paramref name="maxDistanceDelta"/>. </summary>
-		/// <param name="current"> Current vector location </param>
-		/// <param name="target"> Target vector location </param>
+		/// <summary> Steps <paramref name="current"/> <see cref="Vector2"/> towards <paramref name="target"/>, at most moving <paramref name="maxDistanceDelta"/>. </summary>
+		/// <param name="current"> Current <see cref="Vector2"/> location </param>
+		/// <param name="target"> Target <see cref="Vector2"/> location </param>
 		/// <param name="maxDistanceDelta"> Maximum distance to move </param>
 		/// <returns> <paramref name="current"/> stepped towards <paramref name="target"/>, at most by <paramref name="maxDistanceDelta"/> units. </returns>
 		public static Vector2 MoveTowards(Vector2 current, Vector2 target, float maxDistanceDelta) {
@@ -276,60 +282,61 @@ namespace PixelEngine.Utilities {
 			float m = a.magnitude;
 			return (m < maxDistanceDelta || m == 0f) ? target : (current + a / m * maxDistanceDelta);
 		}
-		/// <summary> Scales one vector <paramref name="a"/>componentwise by another <paramref name="b"/>. </summary>
+		/// <summary> Scales one <see cref="Vector2"/> <paramref name="a"/>componentwise by another <paramref name="b"/>. </summary>
 		public static Vector2 Scale(Vector2 a, Vector2 b) { return new Vector2(a.x * b.x, a.y * b.y); }
 		/// <summary> Clamps the length of the <paramref name="vector"/> so it is not longer than <paramref name="maxLength"/>. </summary>
 		public static Vector2 ClampMagnitude(Vector2 vector, float maxLength) {
 			return (vector.sqrMagnitude > maxLength * maxLength) ? vector.normalized * maxLength : vector;
 		}
-		/// <summary> Reflect a <paramref name="dir"/>ection vector about a surface <paramref name="normal"/>. </summary>
+		/// <summary> Reflect a <paramref name="dir"/>ection <see cref="Vector2"/> about a surface <paramref name="normal"/>. </summary>
 		public static Vector2 Reflect(Vector2 dir, Vector2 normal) { return -2f * Dot(normal, dir) * normal + dir; }
-		/// <summary> Project a <paramref name="dir"/>ection vector along another direction, <paramref name="normal"/>. </summary>
+		/// <summary> Project a <paramref name="dir"/>ection <see cref="Vector2"/> along another direction, <paramref name="normal"/>. </summary>
 		public static Vector2 Project(Vector2 dir, Vector2 normal) {
 			float len = Dot(normal, normal);
 			return (len < SQR_EPSILON) ? zero : normal * Dot(dir, normal) / len;
 		}
-		/// <summary> Create a vector that is perpindicular to the given <paramref name="dir"/>ection. </summary>
+		/// <summary> Create a <see cref="Vector2"/> that is perpindicular to the given <paramref name="dir"/>ection. </summary>
 		public static Vector2 Perpendicular(Vector2 dir) { return new Vector2(-dir.y, dir.x); }
 
-		/// <summary> Calculate distance between vectors <paramref name="a"/> and <paramref name="b"/>. </summary>
+		/// <summary> Calculate distance between <see cref="Vector2"/>s <paramref name="a"/> and <paramref name="b"/>. </summary>
 		public static float Distance(Vector2 a, Vector2 b) { return (a - b).magnitude; }
-		/// <summary> Calculate absolute angle between vectors <paramref name="from"/> and <paramref name="to"/> when placed at origin. </summary>
+		/// <summary> Calculate absolute angle between <see cref="Vector2"/>s <paramref name="from"/> and <paramref name="to"/> when placed at origin. </summary>
 		public static float Angle(Vector2 from, Vector2 to) {
 			float e = Sqrt(from.sqrMagnitude * to.sqrMagnitude);
 			if (e < SQR_EPSILON) { return 0; }
 			float f = Mathf.Clamp(Dot(from, to) / e, -1f, 1f);
 			return Acos(f) * Rad2Deg;
 		}
-		/// <summary> Calculate signed angle between two vectors <paramref name="from"/> and <paramref name="to"/> when placed at origin. </summary>
+		/// <summary> Calculate signed angle between two <see cref="Vector2"/>s <paramref name="from"/> and <paramref name="to"/> when placed at origin. </summary>
 		public static float SignedAngle(Vector2 from, Vector2 to) {
 			float angle = Angle(from, to);
 			float sign = Sign(from.x * to.y - from.y * to.x);
 			return sign * angle;
 		}
 
-		/// <summary> Negate both components of the given vector. </summary>
+		/// <summary> Negate both components of the given <see cref="Vector2"/>. </summary>
 		public static Vector2 operator -(Vector2 a) { return new Vector2(-a.x, -a.y); }
-		/// <summary> Add vectors <paramref name="a"/> and <paramref name="b"/>. </summary>
+		/// <summary> Add <see cref="Vector2"/>s <paramref name="a"/> and <paramref name="b"/>. </summary>
 		public static Vector2 operator +(Vector2 a, Vector2 b) { return new Vector2(a.x + b.x, a.y + b.y); }
-		/// <summary> Subtract vector <paramref name="b"/> from <paramref name="a"/>. </summary>
+		/// <summary> Subtract <see cref="Vector2"/> <paramref name="b"/> from <paramref name="a"/>. </summary>
 		public static Vector2 operator -(Vector2 a, Vector2 b) { return new Vector2(a.x - b.x, a.y - b.y); }
-		/// <summary> Multiply vectors <paramref name="a"/> and <paramref name="b"/>. </summary>
+		/// <summary> Multiply <see cref="Vector2"/>s <paramref name="a"/> and <paramref name="b"/>. </summary>
 		public static Vector2 operator *(Vector2 a, Vector2 b) { return new Vector2(a.x * b.x, a.y * b.y); }
-		/// <summary> Divide vector <paramref name="a"/> by <paramref name="b"/>. </summary>
+		/// <summary> Divide <see cref="Vector2"/> <paramref name="a"/> by <paramref name="b"/>. </summary>
 		public static Vector2 operator /(Vector2 a, Vector2 b) { return new Vector2(a.x / b.x, a.y / b.y); }
-		/// <summary> Multiply vector <paramref name="a"/> by float <paramref name="f"/>. </summary>
+		/// <summary> Multiply <see cref="Vector2"/> <paramref name="a"/> by float <paramref name="f"/>. </summary>
 		public static Vector2 operator *(Vector2 a, float f) { return new Vector2(a.x * f, a.y * f); }
-		/// <summary> Multiply vector <paramref name="a"/> by float <paramref name="f"/>. </summary>
+		/// <summary> Multiply <see cref="Vector2"/> <paramref name="a"/> by float <paramref name="f"/>. </summary>
 		public static Vector2 operator *(float f, Vector2 a) { return new Vector2(a.x * f, a.y * f); }
-		/// <summary> Divide vector <paramref name="a"/> by <paramref name="f"/>. </summary>
+		/// <summary> Divide <see cref="Vector2"/> <paramref name="a"/> by <paramref name="f"/>. </summary>
 		public static Vector2 operator /(Vector2 a, float f) { return new Vector2(a.x / f, a.y / f); }
-		/// <summary> Inverse divide vector <paramref name="a"/> by <paramref name="f"/>. </summary>
+		/// <summary> Inverse divide <see cref="Vector2"/> <paramref name="a"/> by <paramref name="f"/>. </summary>
 		public static Vector2 operator /(float f, Vector2 a) { return new Vector2(f / a.x, f / a.y); }
-		/// <summary> Compare vectors <paramref name="a"/> and <paramref name="b"/>, by approximate equality, if their <see cref="sqrMagnitude"/> of difference is within <see cref="COMPARE_EPSILON"/>. </summary>
+		/// <summary> Compare <see cref="Vector2"/>s <paramref name="a"/> and <paramref name="b"/>, by approximate equality, if their <see cref="sqrMagnitude"/> of difference is within <see cref="COMPARE_EPSILON"/>. </summary>
 		public static bool operator ==(Vector2 a, Vector2 b) { return (a - b).sqrMagnitude < COMPARE_EPSILON; }
-		/// <summary> Inversion of comparison of vectors <paramref name="a"/> and <paramref name="b"/>, by approximate equality, if their <see cref="sqrMagnitude"/> of difference is within <see cref="COMPARE_EPSILON"/>. </summary>
+		/// <summary> Inversion of comparison of <see cref="Vector2"/>s <paramref name="a"/> and <paramref name="b"/>, by approximate equality, if their <see cref="sqrMagnitude"/> of difference is within <see cref="COMPARE_EPSILON"/>. </summary>
 		public static bool operator !=(Vector2 a, Vector2 b) { return !(a == b); }
+
 		/// <summary> Automatic coercion of <see cref="Vector3"/> to <see cref="Vector2"/> </summary>
 		public static implicit operator Vector2(Vector3 v) { return new Vector2(v.x, v.y); }
 		/// <summary> Automatic coercion of <see cref="Vector2"/> to <see cref="Vector3"/> </summary>
@@ -343,26 +350,25 @@ namespace PixelEngine.Utilities {
 	/// <summary> Surrogate class, similar to UnityEngine.Vector2Int. Stores two <see cref="int"/> components, and provides some math functions. </summary>
 	[System.Serializable]
 	public struct Vector2Int : IEquatable<Vector2Int> {
-		/// <summary> Zero vector, (0, 0). </summary>
+		/// <summary> Zero <see cref="Vector2Int"/>, (0, 0). </summary>
 		public static Vector2Int zero { get { return new Vector2Int(0, 0); } }
-		/// <summary> One unit vector, (1, 1). </summary>
+		/// <summary> One unit <see cref="Vector2Int"/>, (1, 1). </summary>
 		public static Vector2Int one { get { return new Vector2Int(1, 1); } }
-		/// <summary> Up unit vector, (0, 1). </summary>
+		/// <summary> Up unit <see cref="Vector2Int"/>, (0, 1). </summary>
 		public static Vector2Int up { get { return new Vector2Int(0, 1); } }
-		/// <summary> Down unit vector, (0, -1). </summary>
+		/// <summary> Down unit <see cref="Vector2Int"/>, (0, -1). </summary>
 		public static Vector2Int down { get { return new Vector2Int(0, -1); } }
-		/// <summary> Left unit vector, (-1, 0). </summary>
+		/// <summary> Left unit <see cref="Vector2Int"/>, (-1, 0). </summary>
 		public static Vector2Int left { get { return new Vector2Int(-1, 0); } }
-		/// <summary> Right unit vector, (1, 0). </summary>
+		/// <summary> Right unit <see cref="Vector2Int"/>, (1, 0). </summary>
 		public static Vector2Int right { get { return new Vector2Int(1, 0); } }
 
 		/// <summary> Vector component </summary>
 		public int x, y;
-		/// <summary> Construct a vector with the given components. </summary>
+		/// <summary> Construct a <see cref="Vector2Int"/> with the given components. </summary>
 		public Vector2Int(int x, int y) { this.x = x; this.y = y; }
 
-		/// <summary> Index-wise access to vector components. </summary>
-		/// <param name="i"> Index to access at. Must be in range [0, 1] </param>
+		/// <summary> Index-wise access to <see cref="Vector2Int"/> components Index Must be in range [0, 1] </summary>
 		public int this[int i] {
 			get { if (i == 0) { return x; } if (i == 1) { return y; } throw new IndexOutOfRangeException($"Vector2Int has length=2, {i} is out of range."); }
 			set { if (i == 0) { x = value; } if (i == 1) { y = value; } throw new IndexOutOfRangeException($"Vector2Int has length=2, {i} is out of range."); }
@@ -377,20 +383,26 @@ namespace PixelEngine.Utilities {
 		/// <inheritdoc />
 		public override string ToString() { return $"({x}, {y})"; }
 
-		/// <summary> Vector length by distance formula (Sqrt(x*x + y*y)) </summary>
+		/// <summary> <see cref="Vector2Int"/> length by distance formula (Sqrt(x*x + y*y)) </summary>
 		public float magnitude { get { return Sqrt(x * x + y * y); } }
-		/// <summary> Vector length by partial distance formula (x*x + y*y), faster without the Sqrt </summary>
+		/// <summary> <see cref="Vector2Int"/> length by partial distance formula (x*x + y*y), faster without the <see cref="Sqrt(float)"/>. </summary>
 		public int sqrMagnitude { get { return x * x + y * y; } }
 
 		/// <summary> Sets the x/y component of the vector in-place. Modifies the x/y in the memory location it is called on. </summary>
 		public void Set(int a, int b) { x = a; y = b; }
-		/// <summary> Scales this vector in-place by another vector <paramref name="scale"/>, component wise. Modifies the x/y in the memory location it is called on. </summary>
+		/// <summary> Scales this <see cref="Vector2Int"/> in-place by another vector <paramref name="scale"/>, component wise. Modifies the x/y in the memory location it is called on. </summary>
 		public void Scale(Vector2Int scale) { x *= scale.x; y *= scale.y; }
-		/// <summary> Clamp vector in-place between <paramref name="min"/> and <paramref name="max"/>. Modifies the x/y in the memory location it is called on.  </summary>
+		/// <summary> Clamp <see cref="Vector2Int"/> in-place between <paramref name="min"/> and <paramref name="max"/>. Modifies the x/y in the memory location it is called on.  </summary>
 		public void Clamp(Vector2 min, Vector2 max) {
 			x = (int)Mathf.Clamp(x, min.x, max.x);
 			y = (int)Mathf.Clamp(y, min.y, max.y);
 		}
+
+		/// <summary> Get component-wise absolute value of this <see cref="Vector2Int"/>. </summary>
+		public Vector2Int Abs() { return new Vector2Int(Mathf.Abs(x), Mathf.Abs(y)); }
+
+		/// <summary> Get component-wise absolute value of given <see cref="Vector2Int"/>. </summary>
+		public static Vector2Int Abs(Vector2Int v) { return new Vector2Int(Mathf.Abs(v.x), Mathf.Abs(v.y)); }
 
 		/// <summary> Component-wise minimum between <paramref name="a"/> and <paramref name="b"/>. </summary>
 		public static Vector2Int Min(Vector2Int a, Vector2Int b) { return new Vector2Int(Mathf.Min(a.x, b.x), Mathf.Min(a.y, b.y)); }
@@ -401,7 +413,7 @@ namespace PixelEngine.Utilities {
 		/// <summary> Get distance between <paramref name="a"/> and <paramref name="b"/>. </summary>
 		public static float Distance(Vector2Int a, Vector2Int b) { return (b - a).magnitude; }
 
-		/// <summary> Negate each component of a Vector2Int </summary>
+		/// <summary> Negate each component of a <see cref="Vector2Int"/> </summary>
 		public static Vector2Int operator -(Vector2Int a) { return new Vector2Int(-a.x, -a.y); }
 		/// <summary> Add <paramref name="a"/> and <paramref name="b"/> </summary>
 		public static Vector2Int operator +(Vector2Int a, Vector2Int b) { return new Vector2Int(a.x + b.x, a.y + b.y); }
@@ -440,34 +452,34 @@ namespace PixelEngine.Utilities {
 	/// <summary> Surrogate class, similar to UnityEngine.Vector3. Stores three <see cref="float"/> components, and provides some math functions. </summary>
 	[System.Serializable]
 	public struct Vector3 {
-		/// <summary> Zero vector (0,0,0) </summary>
+		/// <summary> Zero <see cref="Vector3"/> (0,0,0) </summary>
 		public static Vector3 zero { get { return new Vector3(0, 0, 0); } }
-		/// <summary> One unit vector (1,1,1) </summary>
+		/// <summary> One unit <see cref="Vector3"/> (1,1,1) </summary>
 		public static Vector3 one { get { return new Vector3(1, 1, 1); } }
-		/// <summary> Right unit vector (1,0,0) </summary>
+		/// <summary> Right unit <see cref="Vector3"/> (1,0,0) </summary>
 		public static Vector3 right { get { return new Vector3(1, 0, 0); } }
-		/// <summary> Left unit vector (-1,0,0) </summary>
+		/// <summary> Left unit <see cref="Vector3"/> (-1,0,0) </summary>
 		public static Vector3 left { get { return new Vector3(-1, 0, 0); } }
-		/// <summary> Up unit vector (0,1,0) </summary>
+		/// <summary> Up unit <see cref="Vector3"/> (0,1,0) </summary>
 		public static Vector3 up { get { return new Vector3(0, 1, 0); } }
-		/// <summary> Down unit vector (0,-1,0) </summary>
+		/// <summary> Down unit <see cref="Vector3"/> (0,-1,0) </summary>
 		public static Vector3 down { get { return new Vector3(0, -1, 0); } }
-		/// <summary> Forward unit vector (0,0,1) </summary>
+		/// <summary> Forward unit <see cref="Vector3"/> (0,0,1) </summary>
 		public static Vector3 forward { get { return new Vector3(0, 0, 1); } }
-		/// <summary> Backward unit vector (0,0,1) </summary>
+		/// <summary> Backward unit <see cref="Vector3"/> (0,0,1) </summary>
 		public static Vector3 back { get { return new Vector3(0, 0, -1); } }
-		/// <summary> Infinity vector (+inf, +inf, +inf) </summary>
+		/// <summary> Infinity <see cref="Vector3"/> (+inf, +inf, +inf) </summary>
 		public static Vector3 positiveInfinity { get { return new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity); } }
-		/// <summary> Infinity vector (-inf, -inf, -inf) </summary>
+		/// <summary> Infinity <see cref="Vector3"/> (-inf, -inf, -inf) </summary>
 		public static Vector3 negativeInfinity { get { return new Vector3(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity); } }
 
 		/// <summary> Vector component </summary>
 		public float x, y, z;
-		/// <summary> Create a vector with the given components </summary>
+		/// <summary> Create a <see cref="Vector3"/> with the given components </summary>
 		public Vector3(float x, float y, float z) { this.x = x; this.y = y; this.z = z; }
-		/// <summary> Create a vector with the given components, and zero for z </summary>
+		/// <summary> Create a <see cref="Vector3"/> with the given components, and zero for z </summary>
 		public Vector3(float x, float y) { this.x = x; this.y = y; z = 0; }
-		/// <summary> Index this vector as an array. Index must be [0, 2] </summary>
+		/// <summary> Index this <see cref="Vector3"/> as an array. Index must be [0, 2] </summary>
 		public float this[int i] {
 			get { if (i == 0) { return x; } if (i == 1) { return y; } if (i == 2) { return z; } throw new IndexOutOfRangeException($"Vector3 has length=3, {i} is out of range."); }
 			set { if (i == 0) { x = value; } if (i == 1) { y = value; } if (i == 2) { z = value; } throw new IndexOutOfRangeException($"Vector3 has length=3, {i} is out of range."); }
@@ -475,33 +487,34 @@ namespace PixelEngine.Utilities {
 
 		/// <inheritdoc />
 		public override bool Equals(object other) { return other is Vector3 && Equals((Vector3)other); }
-		/// <inheritdoc />
+		/// <summary> Compare this <see cref="Vector3"/> to an<paramref name="other"/> <see cref="Vector3"/> component-wise for equality. </summary>
 		public bool Equals(Vector3 other) { return x.Equals(other.x) && y.Equals(other.y) && z.Equals(other.z); }
 		/// <inheritdoc />
 		public override int GetHashCode() { return x.GetHashCode() ^ (y.GetHashCode() << 2) ^ (z.GetHashCode() >> 2); }
 		/// <inheritdoc />
 		public override string ToString() { return $"({x:F2}, {y:F2}, {z:F2})"; }
 
-		/// <summary> Get a Vector in the same direction as this one, but with a length of one. </summary>
+		/// <summary> Get a <see cref="Vector3"/> in the same direction as this one, but with a length of one. </summary>
 		public Vector3 normalized { get { float m = magnitude; if (m > EPSILON) { return this / m; } return zero; } }
-		/// <summary> Get the length of this vector by distance formula. </summary>
+		/// <summary> Get the length of this <see cref="Vector3"/> by distance formula. </summary>
 		public float magnitude { get { return Sqrt(x * x + y * y + z * z); } }
-		/// <summary> Get the sqr length of this vector by partial distance formula. Leaving off the Sqrt, is slightly faster for length comparisons. </summary>
+		/// <summary> Get the sqr length of this <see cref="Vector3"/> by partial distance formula. Leaving off the <see cref="Sqrt(float)"/>, is slightly faster for length comparisons. </summary>
 		public float sqrMagnitude { get { return x * x + y * y + z * z; } }
 
-		/// <summary> Set the x/y/z components of this vector. Modifies the vector it was called on. </summary>
+		/// <summary> Set the x/y/z components of this <see cref="Vector3"/>. Modifies the <see cref="Vector3"/> it was called on. </summary>
 		public void Set(float a, float b, float c) { x = a; y = b; z = c; }
-		/// <summary> Normalize this vector. Modifies the vector it was called on. </summary>
+		/// <summary> Normalize this <see cref="Vector3"/>. Modifies the <see cref="Vector3"/> it was called on. </summary>
 		public void Normalize() { float m = magnitude; if (m > EPSILON) { this /= m; } else { this = zero; } }
-		/// <summary> Scale this vector componentwise by another. Modifies the vector it was called on. </summary>
+		/// <summary> Scale this <see cref="Vector3"/> componentwise by another. Modifies the <see cref="Vector3"/> it was called on. </summary>
 		public void Scale(Vector3 s) { x *= s.x; y *= s.y; z *= s.z; }
-		/// <summary> Clamp this vector between two others. Modifies the vector it was called on. </summary>
+		/// <summary> Clamp this <see cref="Vector3"/> between two other <see cref="Vector3"/>s. Modifies the <see cref="Vector3"/> it was called on. </summary>
 		public void Clamp(Vector3 min, Vector3 max) {
 			x = Mathf.Clamp(x, min.x, max.x);
 			y = Mathf.Clamp(y, min.y, max.y);
 			z = Mathf.Clamp(z, min.z, max.z);
 		}
-		
+
+
 		/// <summary> <see cref="Mathf.FloorToInt(float)"/>'s each component in this <see cref="Vector3"/> to produce a <see cref="Vector3Int"/></summary>
 		public Vector3Int FloorToInt() { return new Vector3Int(Mathf.FloorToInt(x), Mathf.FloorToInt(y), Mathf.FloorToInt(z)); }
 		/// <summary> <see cref="Mathf.CeilToInt(float)"/>'s each component in this <see cref="Vector3"/> to produce a <see cref="Vector3Int"/></summary>
@@ -509,42 +522,48 @@ namespace PixelEngine.Utilities {
 		/// <summary> <see cref="Mathf.RoundToInt(float)"/>'s each component in this <see cref="Vector3"/> to produce a <see cref="Vector3Int"/></summary>
 		public Vector3Int RoundToInt() { return new Vector3Int(Mathf.RoundToInt(x), Mathf.RoundToInt(y), Mathf.RoundToInt(z)); }
 
-		/// <summary> Componentwise Minimum of two vectors </summary>
+		/// <summary> Get component-wise absolute value of this <see cref="Vector3"/>. </summary>
+		public Vector3 Abs() { return new Vector3(Mathf.Abs(x), Mathf.Abs(y), Mathf.Abs(z)); }
+
+		/// <summary> Get component-wise absolute value of given <see cref="Vector3"/>. </summary>
+		public static Vector3 Abs(Vector3 v) { return new Vector3(Mathf.Abs(v.x), Mathf.Abs(v.y), Mathf.Abs(v.z)); }
+
+		/// <summary> Componentwise Minimum of two <see cref="Vector3"/>s </summary>
 		public static Vector3 Min(Vector3 a, Vector3 b) { return new Vector3(Mathf.Min(a.x, b.x), Mathf.Min(a.y, b.y), Mathf.Min(a.z, b.z)); }
-		/// <summary> Componentwise Maximum of two vectors </summary>
+		/// <summary> Componentwise Maximum of two <see cref="Vector3"/>s </summary>
 		public static Vector3 Max(Vector3 a, Vector3 b) { return new Vector3(Mathf.Max(a.x, b.x), Mathf.Max(a.y, b.y), Mathf.Max(a.z, b.z)); }
 
-		/// <summary> Calculate Cross product, via left-hand rule. </summary>
+		/// <summary> Calculate <see cref="Vector3"/> Cross product, via left-hand rule. </summary>
 		public static Vector3 Cross(Vector3 a, Vector3 b) {
 			return new Vector3(a.y * b.z - a.z * b.y,
 								a.z * b.x - a.x * b.y,
 								a.x * b.y - a.y * b.x);
 		}
-		/// <summary> Calculate dot product of two vectors </summary>
+		/// <summary> Calculate dot product of two <see cref="Vector3"/>s </summary>
 		public static float Dot(Vector3 a, Vector3 b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
-		/// <summary> Reflect a <paramref name="dir"/>ection vector about the given <paramref name="normal"/></summary>
+		/// <summary> Reflect a <paramref name="dir"/>ection <see cref="Vector3"/> about the given <paramref name="normal"/></summary>
 		public static Vector3 Reflect(Vector3 dir, Vector3 normal) { return -2f * Dot(normal, dir) * normal + dir; }
-		/// <summary> Project a <paramref name="dir"/>ection vector along the given <paramref name="normal"/></summary>
+		/// <summary> Project a <paramref name="dir"/>ection <see cref="Vector3"/> along the given <paramref name="normal"/></summary>
 		public static Vector3 Project(Vector3 dir, Vector3 normal) {
 			float len = Dot(normal, normal);
 			return (len < SQR_EPSILON) ? zero : normal * Dot(dir, normal) / len;
 		}
 		/// <summary> Project the given <paramref name="v"/>ector onto a plane through the origin, defined by the given <paramref name="normal"/></summary>
 		public static Vector3 ProjectOnPlane(Vector3 v, Vector3 normal) { return v - Project(v, normal); }
-		/// <summary> Calculate the angle between two vectors. </summary>
+		/// <summary> Calculate the angle between two <see cref="Vector3"/>s. </summary>
 		public static float Angle(Vector3 from, Vector3 to) {
 			float e = Sqrt(from.sqrMagnitude * to.sqrMagnitude);
 			if (e < SQR_EPSILON) { return 0; }
 			float f = Mathf.Clamp(Dot(from, to) / e, -1f, 1f);
 			return Acos(f) * Rad2Deg;
 		}
-		/// <summary> Get the signed angle between two vectors, in regards to the given <paramref name="axis"/>. </summary>
+		/// <summary> Get the signed angle between two <see cref="Vector3"/>s, in regards to the given <paramref name="axis"/>. </summary>
 		public static float SignedAngle(Vector3 from, Vector3 to, Vector3 axis) {
 			float angle = Angle(from, to);
 			float sign = Sign(Dot(axis, Cross(from, to)));
 			return sign * angle;
 		}
-		/// <summary> Get the distance between two vectors </summary>
+		/// <summary> Get the distance between two <see cref="Vector3"/>s </summary>
 		public static float Distance(Vector3 a, Vector3 b) {
 			Vector3 v = new Vector3(a.x - b.x, a.y - b.y, a.z - b.z);
 			return Sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
@@ -553,37 +572,37 @@ namespace PixelEngine.Utilities {
 		public static Vector3 ClampMagnitude(Vector3 vector, float maxLength) {
 			return (vector.sqrMagnitude > maxLength * maxLength) ? vector.normalized * maxLength : vector;
 		}
-		/// <summary> Lineraly interpolate between vectors <paramref name="a"/> and <paramref name="b"/> by proportion <paramref name="f"/> </summary>
+		/// <summary> Lineraly interpolate between <see cref="Vector3"/>s <paramref name="a"/> and <paramref name="b"/> by proportion <paramref name="f"/> </summary>
 		public static Vector3 Lerp(Vector3 a, Vector3 b, float f) { f = Clamp01(f); return new Vector3(a.x + (b.x - a.x) * f, a.y + (b.y - a.y) * f, a.z + (b.z - a.z) * f); }
-		/// <summary> Lineraly interpolate between vectors <paramref name="a"/> and <paramref name="b"/> by proportion <paramref name="f"/>, without a <see cref="Mathf.Clamp01(float)"/>. </summary>
+		/// <summary> Lineraly interpolate between <see cref="Vector3"/>s <paramref name="a"/> and <paramref name="b"/> by proportion <paramref name="f"/>, without a <see cref="Mathf.Clamp01(float)"/>. </summary>
 		public static Vector3 LerpUnclamped(Vector3 a, Vector3 b, float f) { return new Vector3(a.x + (b.x - a.x) * f, a.y + (b.y - a.y) * f, a.z + (b.z - a.z) * f); }
-		/// <summary> Move <paramref name="current"/> vector towards <paramref name="target"/>, at most changing by <paramref name="maxDistanceDelta"/> units. </summary>
+		/// <summary> Move <paramref name="current"/> <see cref="Vector3"/> towards <paramref name="target"/>, at most changing by <paramref name="maxDistanceDelta"/> units. </summary>
 		public static Vector3 MoveTowards(Vector3 current, Vector3 target, float maxDistanceDelta) {
 			Vector3 a = target - current;
 			float m = a.magnitude;
 			return (m < maxDistanceDelta || m == 0f) ? target : (current + a / m * maxDistanceDelta);
 		}
-		/// <summary> Negate each component of the given vector </summary>
+		/// <summary> Negate each component of the given <see cref="Vector3"/> </summary>
 		public static Vector3 operator -(Vector3 a) { return new Vector3(-a.x, -a.y, -a.z); }
-		/// <summary> Add two vectors together </summary>
+		/// <summary> Add two <see cref="Vector3"/>s together </summary>
 		public static Vector3 operator +(Vector3 a, Vector3 b) { return new Vector3(a.x + b.x, a.y + b.y, a.z + b.z); }
-		/// <summary> Subtract one vector from another </summary>
+		/// <summary> Subtract one <see cref="Vector3"/> from another </summary>
 		public static Vector3 operator -(Vector3 a, Vector3 b) { return new Vector3(a.x - b.x, a.y - b.y, a.z - b.z); }
-		/// <summary> Multiply two vectors together  </summary>
+		/// <summary> Multiply two <see cref="Vector3"/>s together  </summary>
 		public static Vector3 operator *(Vector3 a, Vector3 b) { return new Vector3(a.x * b.x, a.y * b.y, a.z * b.z); }
-		/// <summary> Divide one vector from another  </summary>
+		/// <summary> Divide one <see cref="Vector3"/> from another  </summary>
 		public static Vector3 operator /(Vector3 a, Vector3 b) { return new Vector3(a.x / b.x, a.y / b.y, a.z / b.z); }
-		/// <summary> Multiply a vector by a scalar </summary>
+		/// <summary> Multiply a <see cref="Vector3"/> by a scalar </summary>
 		public static Vector3 operator *(Vector3 a, float f) { return new Vector3(a.x * f, a.y * f, a.z * f); }
-		/// <summary> Multiply a vector by a scalar </summary>
+		/// <summary> Multiply a <see cref="Vector3"/> by a scalar </summary>
 		public static Vector3 operator *(float f, Vector3 a) { return new Vector3(a.x * f, a.y * f, a.z * f); }
-		/// <summary> Divide a vector by a scalar </summary>
+		/// <summary> Divide a <see cref="Vector3"/> by a scalar </summary>
 		public static Vector3 operator /(Vector3 a, float f) { return new Vector3(a.x / f, a.y / f, a.z / f); }
-		/// <summary> Inverse divide a vector by a scalar </summary>
+		/// <summary> Inverse divide a <see cref="Vector3"/> by a scalar </summary>
 		public static Vector3 operator /(float f, Vector3 a) { return new Vector3(f / a.x, f / a.y, f / a.z); }
-		/// <summary> Compare two vectors by their square distance being below <see cref="COMPARE_EPSILON"/>. </summary>
+		/// <summary> Compare two <see cref="Vector3"/>s by their square distance being below <see cref="COMPARE_EPSILON"/>. </summary>
 		public static bool operator ==(Vector3 a, Vector3 b) { return (a - b).sqrMagnitude < COMPARE_EPSILON; }
-		/// <summary> Inverse compare two vectors by their square distance being below <see cref="COMPARE_EPSILON"/>. </summary>
+		/// <summary> Inverse compare two <see cref="Vector3"/>s by their square distance being below <see cref="COMPARE_EPSILON"/>. </summary>
 		public static bool operator !=(Vector3 a, Vector3 b) { return !(a == b); }
 
 	}
@@ -595,28 +614,28 @@ namespace PixelEngine.Utilities {
 	/// <summary> Surrogate class, similar to UnityEngine.Vector3Int. Stores three <see cref="int"/> components, and provides some math functions. </summary>
 	[System.Serializable]
 	public struct Vector3Int : IEquatable<Vector3Int> {
-		/// <summary> Zero vector (0,0,0) </summary>
+		/// <summary> Zero <see cref="Vector3Int"/> (0,0,0) </summary>
 		public static Vector3Int zero { get { return new Vector3Int(0, 0, 0); } }
-		/// <summary> One unit vector (1,1,1) </summary>
+		/// <summary> One unit <see cref="Vector3Int"/> (1,1,1) </summary>
 		public static Vector3Int one { get { return new Vector3Int(0, 0, 0); } }
-		/// <summary> Right unit vector (1,0,0) </summary>
+		/// <summary> Right unit <see cref="Vector3Int"/> (1,0,0) </summary>
 		public static Vector3Int right { get { return new Vector3Int(1, 0, 0); } }
-		/// <summary> Left unit vector (-1,0,0) </summary>
+		/// <summary> Left unit <see cref="Vector3Int"/> (-1,0,0) </summary>
 		public static Vector3Int left { get { return new Vector3Int(-1, 0, 0); } }
-		/// <summary> Up unit vector (0,1,0) </summary>
+		/// <summary> Up unit <see cref="Vector3Int"/> (0,1,0) </summary>
 		public static Vector3Int up { get { return new Vector3Int(0, 1, 0); } }
-		/// <summary> Down unit vector (0,-1,0) </summary>
+		/// <summary> Down unit <see cref="Vector3Int"/> (0,-1,0) </summary>
 		public static Vector3Int down { get { return new Vector3Int(0, -1, 0); } }
-		/// <summary> Forward unit vector (0,0,1) </summary>
+		/// <summary> Forward unit <see cref="Vector3Int"/> (0,0,1) </summary>
 		public static Vector3Int forward { get { return new Vector3Int(0, 0, 1); } }
-		/// <summary> Down unit vector (0,0,-1) </summary>
+		/// <summary> Down unit <see cref="Vector3Int"/> (0,0,-1) </summary>
 		public static Vector3Int back { get { return new Vector3Int(0, 0, -1); } }
 
 		/// <summary> Vector component </summary>
 		public int x, y, z;
-		/// <summary> Construct a vector with the given components </summary>
+		/// <summary> Construct a <see cref="Vector3Int"/> with the given components </summary>
 		public Vector3Int(int x, int y, int z) { this.x = x; this.y = y; this.z = z; }
-		/// <summary> Index this vector as an array. Index must be in range [0, 2] </summary>
+		/// <summary> Index this <see cref="Vector3Int"/> as an array. Index must be in range [0, 2] </summary>
 		public int this[int i] {
 			get { if (i == 0) { return x; } if (i == 1) { return y; } if (i == 2) { return z; } throw new IndexOutOfRangeException($"Vector3Int has length=3, {i} is out of range."); }
 			set { if (i == 0) { x = value; } if (i == 1) { y = value; } if (i == 2) { z = value; } throw new IndexOutOfRangeException($"Vector3Int has length=3, {i} is out of range."); }
@@ -624,7 +643,7 @@ namespace PixelEngine.Utilities {
 
 		/// <inheritdoc />
 		public override bool Equals(object other) { return other is Vector3Int && Equals((Vector3Int)other); }
-		/// <summary> Compare vectors by their components being equal. </summary>
+		/// <summary> Compare <see cref="Vector3Int"/>s by their components being equal. </summary>
 		public bool Equals(Vector3Int other) { return this == other; }
 		/// <inheritdoc />
 		public override int GetHashCode() {
@@ -634,53 +653,59 @@ namespace PixelEngine.Utilities {
 		/// <inheritdoc />
 		public override string ToString() { return $"({x}, {y}, {z})"; }
 
-		/// <summary> Vector length by distance formula </summary>
+		/// <summary> <see cref="Vector3Int"/> length by distance formula </summary>
 		public float magnitude { get { return Sqrt(x * x + y * y + z * z); } }
-		/// <summary> Square vector length by partial distance formula. Slightly faster for length comparisons due to skipping the Sqrt() </summary>
+		/// <summary> Square <see cref="Vector3Int"/> length by partial distance formula. Slightly faster for length comparisons due to skipping the <see cref="Sqrt(float)"/> </summary>
 		public int sqrMagnitude { get { return x * x + y * y + z * z; } }
 
-		/// <summary> Set each component of this vector. Changes the vector it is called on. </summary>
+		/// <summary> Set each component of this <see cref="Vector3Int"/>. Changes the <see cref="Vector3Int"/> it is called on. </summary>
 		public void Set(int a, int b, int c) { x = a; y = b; z = c; }
-		/// <summary> Scale this vector component-wise. Changes the vector it is called on. </summary>
+		/// <summary> Scale this <see cref="Vector3Int"/> component-wise. Changes the <see cref="Vector3Int"/> it is called on. </summary>
 		public void Scale(Vector3Int scale) { x *= scale.x; y *= scale.y; z *= scale.z; }
-		/// <summary> Clamp this vector between two other vectors. Changes the vector it is called on. </summary>
+		/// <summary> Clamp this <see cref="Vector3Int"/> between two other <see cref="Vector3Int"/>s. Changes the vector it is called on. </summary>
 		public void Clamp(Vector3 min, Vector3 max) {
 			x = (int)Mathf.Clamp(x, min.x, max.x);
 			y = (int)Mathf.Clamp(y, min.y, max.y);
 			z = (int)Mathf.Clamp(z, min.z, max.z);
 		}
 
-		/// <summary> Component-wise minimum of two vectors </summary>
-		public static Vector3 Min(Vector3 a, Vector3 b) { return new Vector3(Mathf.Min(a.x, b.x), Mathf.Min(a.y, b.y), Mathf.Min(a.z, b.z)); }
-		/// <summary> Component-wise maximum of two vectors </summary>
-		public static Vector3 Max(Vector3 a, Vector3 b) { return new Vector3(Mathf.Max(a.x, b.x), Mathf.Max(a.y, b.y), Mathf.Max(a.z, b.z)); }
-		/// <summary> Component-wise scale a vector by another </summary>
+		/// <summary> Get component-wise absolute value of this <see cref="Vector3Int"/>. </summary>
+		public Vector3Int Abs() { return new Vector3Int(Mathf.Abs(x), Mathf.Abs(y), Mathf.Abs(z)); }
+
+		/// <summary> Get component-wise absolute value of given <see cref="Vector3Int"/>. </summary>
+		public static Vector3Int Abs(Vector3Int v) { return new Vector3Int(Mathf.Abs(v.x), Mathf.Abs(v.y), Mathf.Abs(v.z)); }
+
+		/// <summary> Component-wise minimum of two <see cref="Vector3Int"/>s </summary>
+		public static Vector3Int Min(Vector3Int a, Vector3Int b) { return new Vector3Int(Mathf.Min(a.x, b.x), Mathf.Min(a.y, b.y), Mathf.Min(a.z, b.z)); }
+		/// <summary> Component-wise maximum of two <see cref="Vector3Int"/>s </summary>
+		public static Vector3Int Max(Vector3Int a, Vector3Int b) { return new Vector3Int(Mathf.Max(a.x, b.x), Mathf.Max(a.y, b.y), Mathf.Max(a.z, b.z)); }
+		/// <summary> Component-wise scale a <see cref="Vector3Int"/> by another </summary>
 		public static Vector3Int Scale(Vector3Int a, Vector3Int b) { return new Vector3Int(a.x * b.x, a.y * b.y, a.z * b.z); }
-		/// <summary> Get the distance between two vectors </summary>
+		/// <summary> Get the distance between two <see cref="Vector3Int"/>s </summary>
 		public static float Distance(Vector3Int a, Vector3Int b) { return (a - b).magnitude; }
 
 
-		/// <summary> Negate each component of the given vector </summary>
+		/// <summary> Negate each component of the given <see cref="Vector3Int"/> </summary>
 		public static Vector3Int operator -(Vector3Int a) { return new Vector3Int(-a.x, -a.y, -a.z); }
-		/// <summary> Add two vectors together </summary>
+		/// <summary> Add two <see cref="Vector3Int"/>s together </summary>
 		public static Vector3Int operator +(Vector3Int a, Vector3Int b) { return new Vector3Int(a.x + b.x, a.y + b.y, a.z + b.z); }
-		/// <summary> Subtract one vector from another </summary>
+		/// <summary> Subtract one <see cref="Vector3Int"/> from another </summary>
 		public static Vector3Int operator -(Vector3Int a, Vector3Int b) { return new Vector3Int(a.x - b.x, a.y - b.y, a.z - b.z); }
-		/// <summary> Multiply two vectors together  </summary>
+		/// <summary> Multiply two <see cref="Vector3Int"/>s together  </summary>
 		public static Vector3Int operator *(Vector3Int a, Vector3Int b) { return new Vector3Int(a.x * b.x, a.y * b.y, a.z * b.z); }
-		/// <summary> Divide one vector from another  </summary>
+		/// <summary> Divide one <see cref="Vector3Int"/> from another  </summary>
 		public static Vector3Int operator /(Vector3Int a, Vector3Int b) { return new Vector3Int(a.x / b.x, a.y / b.y, a.z / b.z); }
-		/// <summary> Multiply a vector by a scalar </summary>
+		/// <summary> Multiply a <see cref="Vector3Int"/> by a scalar </summary>
 		public static Vector3Int operator *(Vector3Int a, int i) { return new Vector3Int(a.x * i, a.y * i, a.z * i); }
-		/// <summary> Multiply a vector by a scalar </summary>
+		/// <summary> Multiply a <see cref="Vector3Int"/> by a scalar </summary>
 		public static Vector3Int operator *(int i, Vector3Int a) { return new Vector3Int(a.x * i, a.y * i, a.z * i); }
-		/// <summary> Divide a vector by a scalar </summary>
+		/// <summary> Divide a <see cref="Vector3Int"/> by a scalar </summary>
 		public static Vector3Int operator /(Vector3Int a, int i) { return new Vector3Int(a.x / i, a.y / i, a.z / i); }
-		/// <summary> Inverse divide a vector by a scalar </summary>
+		/// <summary> Inverse divide a <see cref="Vector3Int"/> by a scalar </summary>
 		public static Vector3Int operator /(int i, Vector3Int a) { return new Vector3Int(i / a.x, i / a.y, i / a.z); }
-		/// <summary> Compare two vectors by their square distance being below <see cref="COMPARE_EPSILON"/>. </summary>
+		/// <summary> Compare two <see cref="Vector3Int"/>s by their components for equality. </summary>
 		public static bool operator ==(Vector3Int a, Vector3Int b) { return a.x == b.x && a.y == b.y && a.z == b.z; }
-		/// <summary> Inverse compare two vectors by their square distance being below <see cref="COMPARE_EPSILON"/>. </summary>
+		/// <summary> Inverse compare two <see cref="Vector3Int"/>s by their components for equality. </summary>
 		public static bool operator !=(Vector3Int a, Vector3Int b) { return !(a == b); }
 
 		/// <summary> Automatically promote a <see cref="Vector3Int"/> into a <see cref="Vector3"/></summary>
@@ -698,20 +723,20 @@ namespace PixelEngine.Utilities {
 	/// <summary> Surrogate class, similar to UnityEngine.Vector4. Stores four <see cref="float"/> components, and provides some math functions. </summary>
 	[System.Serializable]
 	public struct Vector4 {
-		/// <summary> Zero vector (0,0,0,0) </summary>
+		/// <summary> Zero <see cref="Vector4"/> (0,0,0,0) </summary>
 		public static Vector4 zero { get { return new Vector4(0, 0, 0, 0); } }
-		/// <summary> One unit vector (1,1,1,1) </summary>
+		/// <summary> One unit <see cref="Vector4"/> (1,1,1,1) </summary>
 		public static Vector4 one { get { return new Vector4(1, 1, 1, 1); } }
-		/// <summary> Infinity vector (+inf, +inf, +inf, +inf) </summary>
+		/// <summary> Infinity <see cref="Vector4"/> (+inf, +inf, +inf, +inf) </summary>
 		public static Vector4 positiveInfinity { get { return new Vector4(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity); } }
-		/// <summary> Infinity vector (-inf, -inf, -inf, -inf) </summary>
+		/// <summary> Infinity <see cref="Vector4"/> (-inf, -inf, -inf, -inf) </summary>
 		public static Vector4 negativeInfinity { get { return new Vector4(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity); } }
 
 		/// <summary> Vector component </summary>
 		public float x, y, z, w;
-		/// <summary> Create a vector with the given components </summary>
+		/// <summary> Create a <see cref="Vector4"/> with the given components </summary>
 		public Vector4(float x, float y, float z, float w) { this.x = x; this.y = y; this.z = z; this.w = w; }
-		/// <summary> Index this vector as if it was an array. Index must be [0, 3] </summary>
+		/// <summary> Index this <see cref="Vector4"/> as if it was an array. Index must be [0, 3] </summary>
 		public float this[int i] {
 			get {
 				if (i == 0) { return x; } if (i == 1) { return y; } if (i == 2) { return z; } if (i == 3) { return w; }
@@ -725,7 +750,7 @@ namespace PixelEngine.Utilities {
 
 		/// <inheritdoc />
 		public override bool Equals(object other) { return other is Vector4 && Equals((Vector4)other); }
-		/// <summary> Compare two vectors componentwise for equality </summary>
+		/// <summary> Compare two <see cref="Vector4"/> componentwise for equality </summary>
 		public bool Equals(Vector4 other) { return x.Equals(other.x) && y.Equals(other.y) && z.Equals(other.z) && w.Equals(other.w); }
 		/// <inheritdoc />
 		public override int GetHashCode() {
@@ -735,21 +760,21 @@ namespace PixelEngine.Utilities {
 		/// <inheritdoc />
 		public override string ToString() { return $"({x}, {y}, {z}, {w})"; }
 
-		
-		/// <summary> Get a vector in the same direction, with a length of 1. </summary>
+
+		/// <summary> Get a <see cref="Vector4"/> in the same direction, with a length of 1. </summary>
 		public Vector4 normalized { get { float m = magnitude; if (m > EPSILON) { return this / m; } return zero; } }
 		/// <summary> Length by distance formula </summary>
 		public float magnitude { get { return Sqrt(x * x + y * y + z * z + w * w); } }
-		/// <summary> Squared length by partial distance formula. Slightly faster for comparisons due to skipping the Sqrt() </summary>
+		/// <summary> Squared length by partial distance formula. Slightly faster for comparisons due to skipping the <see cref="Sqrt(float)"/> </summary>
 		public float sqrMagnitude { get { return x * x + y * y + z * z + w * w; } }
 
-		/// <summary> Set each component of this vector. Modifies the vector this is called on. </summary>
+		/// <summary> Set each component of this <see cref="Vector4"/>. Modifies the <see cref="Vector4"/> this is called on. </summary>
 		public void Set(float a, float b, float c, float d) { x = a; y = b; z = c; w = d; }
-		/// <summary> Sets this vector's length to 1. Modifies the vector this is called on. </summary>
+		/// <summary> Sets this <see cref="Vector4"/>'s length to 1. Modifies the <see cref="Vector4"/> this is called on. </summary>
 		public void Normalize() { float m = magnitude; if (m > EPSILON) { this /= m; } else { this = zero; } }
-		/// <summary> Scales the vector componentwise by the given vector. Modifies the vector this is called on. </summary>
+		/// <summary> Scales the <see cref="Vector4"/> component-wise by the given vector. Modifies the <see cref="Vector4"/> this is called on. </summary>
 		public void Scale(Vector4 s) { x *= s.x; y *= s.y; z *= s.z; w *= s.w; }
-		/// <summary> Clamps the vector between two other vectors. Modifies the vector this is called on. </summary>
+		/// <summary> Clamps the <see cref="Vector4"/> between two other <see cref="Vector4"/>s. Modifies the <see cref="Vector4"/> this is called on. </summary>
 		public void Clamp(Vector4 min, Vector4 max) {
 			x = Mathf.Clamp(x, min.x, max.x);
 			y = Mathf.Clamp(y, min.y, max.y);
@@ -757,75 +782,82 @@ namespace PixelEngine.Utilities {
 			w = Mathf.Clamp(w, min.w, max.w);
 		}
 
-		/// <summary> Componentwise minimum of two vectors. </summary>
+		/// <summary> Get component-wise absolute value of this <see cref="Vector4"/>. </summary>
+		public Vector4 Abs() { return new Vector4(Mathf.Abs(x), Mathf.Abs(y), Mathf.Abs(z), Mathf.Abs(w)); }
+
+		/// <summary> Get component-wise absolute value of given <see cref="Vector4"/>. </summary>
+		public static Vector4 Abs(Vector4 v) { return new Vector4(Mathf.Abs(v.x), Mathf.Abs(v.y), Mathf.Abs(v.z), Mathf.Abs(v.w)); }
+
+		/// <summary> Componentwise minimum of two <see cref="Vector4"/>s. </summary>
 		public static Vector4 Min(Vector4 a, Vector4 b) { return new Vector4(Mathf.Min(a.x, b.x), Mathf.Min(a.y, b.y), Mathf.Min(a.z, b.z), Mathf.Min(a.w, b.w)); }
-		/// <summary> Componentwise maximum of two vectors. </summary>
+		/// <summary> Componentwise maximum of two <see cref="Vector4"/>s. </summary>
 		public static Vector4 Max(Vector4 a, Vector4 b) { return new Vector4(Mathf.Max(a.x, b.x), Mathf.Max(a.y, b.y), Mathf.Max(a.z, b.z), Mathf.Max(a.w, b.w)); }
 
-		/// <summary> Dot product between two vectors . </summary>
+		/// <summary> Dot product between two <see cref="Vector4"/>s . </summary>
 		public static float Dot(Vector4 a, Vector4 b) { return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w; }
-		/// <summary> Reflect a <paramref name="dir"/>ection vector over the given <paramref name="normal"/>. </summary>
+		/// <summary> Reflect a <paramref name="dir"/>ection <see cref="Vector4"/> over the given <paramref name="normal"/>. </summary>
 		public static Vector4 Reflect(Vector4 dir, Vector4 normal) { return -2f * Dot(normal, dir) * normal + dir; }
-		/// <summary> Project a <paramref name="dir"/>ection vector along the given <paramref name="normal"/>. </summary>
+		/// <summary> Project a <paramref name="dir"/>ection <see cref="Vector4"/> along the given <paramref name="normal"/>. </summary>
 		public static Vector4 Project(Vector4 dir, Vector4 normal) {
 			float len = Dot(normal, normal);
 			return (len < SQR_EPSILON) ? zero : normal * Dot(dir, normal) / len;
 		}
 
-		/// <summary> Get the distance between two vectors </summary>
+		/// <summary> Get the distance between two <see cref="Vector4"/>s </summary>
 		public static float Distance(Vector4 a, Vector4 b) {
 			Vector4 v = new Vector4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w);
 			return Sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
 		}
-		/// <summary> Get a vector in the same direction as the given <paramref name="vector"/>, but at maximum <paramref name="maxLength"/> units long. </summary>
+		/// <summary> Get a <see cref="Vector4"/> in the same direction as the given <paramref name="vector"/>, but at maximum <paramref name="maxLength"/> units long. </summary>
 		public static Vector4 ClampMagnitude(Vector4 vector, float maxLength) {
 			return (vector.sqrMagnitude > maxLength * maxLength) ? vector.normalized * maxLength : vector;
 		}
 
-		/// <summary> Linearly interpolate between two vectors by proportion <paramref name="f"/>. </summary>
+		/// <summary> Linearly interpolate between two <see cref="Vector4"/>s by proportion <paramref name="f"/>. </summary>
 		public static Vector4 Lerp(Vector4 a, Vector4 b, float f) {
 			f = Clamp01(f);
 			return new Vector4(a.x + (b.x - a.x) * f, a.y + (b.y - a.y) * f, a.z + (b.z - a.z) * f, a.w + (b.w - a.w) * f);
 		}
-		/// <summary> Linearly interpolate between two vectors by proportion <paramref name="f"/>, without a <see cref="Mathf.Clamp01(float)"/>. </summary>
+		/// <summary> Linearly interpolate between two <see cref="Vector4"/>s by proportion <paramref name="f"/>, without a <see cref="Mathf.Clamp01(float)"/>. </summary>
 		public static Vector4 LerpUnclamped(Vector4 a, Vector4 b, float f) {
 			return new Vector4(a.x + (b.x - a.x) * f, a.y + (b.y - a.y) * f, a.z + (b.z - a.z) * f, a.w + (b.w - a.w) * f);
 		}
-		/// <summary> Move <paramref name="current"/> towards <paramref name="target"/>, at most changing it by <paramref name="maxDistanceDelta"/> units. </summary>
+		/// <summary> Move <paramref name="current"/> towards <paramref name="target"/>, at most changing its length by <paramref name="maxDistanceDelta"/> units. </summary>
 		public static Vector4 MoveTowards(Vector4 current, Vector4 target, float maxDistanceDelta) {
 			Vector4 a = target - current;
 			float m = a.magnitude;
 			return (m < maxDistanceDelta || m == 0f) ? target : (current + a / m * maxDistanceDelta);
 		}
 
-		/// <summary> Negate each component of the given vector </summary>
+		/// <summary> Negate each component of the given <see cref="Vector4"/> </summary>
 		public static Vector4 operator -(Vector4 a) { return new Vector4(-a.x, -a.y, -a.z, -a.w); }
-		/// <summary> Add two vectors together </summary>
+		/// <summary> Add two <see cref="Vector4"/>s together </summary>
 		public static Vector4 operator +(Vector4 a, Vector4 b) { return new Vector4(a.x + b.x, a.y + b.y, a.z + b.z, a.w + b.w); }
-		/// <summary> Subtract one vector from another </summary>
+		/// <summary> Subtract one <see cref="Vector4"/> from another </summary>
 		public static Vector4 operator -(Vector4 a, Vector4 b) { return new Vector4(a.x - b.x, a.y - b.y, a.z - b.z, a.w - b.w); }
-		/// <summary> Multiply two vectors together  </summary>
+		/// <summary> Multiply two <see cref="Vector4"/>s together  </summary>
 		public static Vector4 operator *(Vector4 a, Vector4 b) { return new Vector4(a.x * b.x, a.y * b.y, a.z * b.z, a.w * b.w); }
-		/// <summary> Divide one vector from another  </summary>
+		/// <summary> Divide one <see cref="Vector4"/> from another  </summary>
 		public static Vector4 operator /(Vector4 a, Vector4 b) { return new Vector4(a.x / b.x, a.y / b.y, a.z / b.z, a.w / b.w); }
-		/// <summary> Multiply a vector by a scalar </summary>
+		/// <summary> Multiply a <see cref="Vector4"/> by a scalar </summary>
 		public static Vector4 operator *(Vector4 a, float f) { return new Vector4(a.x * f, a.y * f, a.z * f, a.w * f); }
-		/// <summary> Multiply a vector by a scalar </summary>
+		/// <summary> Multiply a <see cref="Vector4"/> by a scalar </summary>
 		public static Vector4 operator *(float f, Vector4 a) { return new Vector4(a.x * f, a.y * f, a.z * f, a.w * f); }
-		/// <summary> Divide a vector by a scalar </summary>
+		/// <summary> Divide a <see cref="Vector4"/> by a scalar </summary>
 		public static Vector4 operator /(Vector4 a, float f) { return new Vector4(a.x / f, a.y / f, a.z / f, a.w / f); }
-		/// <summary> Inverse divide a vector by a scalar </summary>
+		/// <summary> Inverse divide a <see cref="Vector4"/> by a scalar </summary>
 		public static Vector4 operator /(float f, Vector4 a) { return new Vector4(f / a.x, f / a.y, f / a.z, f / a.w); }
 
-		/// <summary> Compare two vectors by their square distance being below <see cref="COMPARE_EPSILON"/>. </summary>
+		/// <summary> Compare two <see cref="Vector4"/>s by their square distance being below <see cref="COMPARE_EPSILON"/>. </summary>
 		public static bool operator ==(Vector4 a, Vector4 b) { return (a - b).sqrMagnitude <= COMPARE_EPSILON; }
-		/// <summary> Inverse compare two vectors by their square distance being below <see cref="COMPARE_EPSILON"/>. </summary>
+		/// <summary> Inverse compare two <see cref="Vector4"/>s by their square distance being below <see cref="COMPARE_EPSILON"/>. </summary>
 		public static bool operator !=(Vector4 a, Vector4 b) { return !(a == b); }
 
 		/// <summary> Automatically promote a <see cref="Vector3"/> to a <see cref="Vector4"/> </summary>
 		public static implicit operator Vector4(Vector3 v) { return new Vector4(v.x, v.y, v.z, 0f); }
 		/// <summary> Explicitly demote a <see cref="Vector4"/> to a <see cref="Vector3"/> </summary>
 		public static explicit operator Vector3(Vector4 v) { return new Vector3(v.x, v.y, v.z); }
+
 		/// <summary> Automatically promote a <see cref="Vector2"/> to a <see cref="Vector4"/> </summary>
 		public static implicit operator Vector4(Vector2 v) { return new Vector4(v.x, v.y, 0f, 0f); }
 		/// <summary> Explicitly demote a <see cref="Vector4"/> to a <see cref="Vector2"/> </summary>
@@ -846,11 +878,11 @@ namespace PixelEngine.Utilities {
 		public float x, y;
 		/// <summary> Size information </summary>
 		public float width, height;
-		/// <summary> Construct a rect with the given location and size </summary>
+		/// <summary> Construct a <see cref="Rect"/> with the given location and size </summary>
 		public Rect(float x, float y, float width, float height) { this.x = x; this.y = y; this.width = width; this.height = height; }
-		/// <summary> Construct a rect with the given location and size </summary>
+		/// <summary> Construct a <see cref="Rect"/> with the given location and size </summary>
 		public Rect(Vector2 pos, Vector2 size) { x = pos.x; y = pos.y; width = size.x; height = size.y; }
-		/// <summary> Copy a rect into another. </summary>
+		/// <summary> Copy a <see cref="Rect"/> into another. </summary>
 		public Rect(Rect source) { x = source.x; y = source.y; width = source.width; height = source.height; }
 
 		/// <summary> get/set the top-left position of this <see cref="Rect"/> as a <see cref="Vector2"/>. </summary>
@@ -871,49 +903,50 @@ namespace PixelEngine.Utilities {
 		/// <summary> get/set  the maximum position of this <see cref="Rect"/> as a <see cref="Vector2"/> </summary>
 		public Vector2 max {
 			get { return new Vector2(x + width, y + height); }
-			set { x = value.x - width; y = value.y - height; }
+			set { Vector2 size = value - min; x = size.x; y = size.y; }
 		}
 		/// <summary> get/set the size of this <see cref="Rect"/> as a <see cref="Vector2"/> </summary>
 		public Vector2 size {
 			get { return new Vector2(width, height); }
 			set { width = value.x; height = value.y; }
 		}
-		/// <summary> get/set the lowest x-coord in this rect. </summary>
+		/// <summary> get/set the lowest x-coord in this <see cref="Rect"/>. </summary>
 		public float xMin { get { return x; } set { float xm = xMax; x = value; width = xm - x; } }
-		/// <summary> get/set the lowest y-coord in this rect. </summary>
+		/// <summary> get/set the lowest y-coord in this <see cref="Rect"/>. </summary>
 		public float yMin { get { return y; } set { float ym = yMax; y = value; height = ym - y; } }
-		/// <summary> get/set the highest x-coord in this rect. </summary>
+		/// <summary> get/set the highest x-coord in this <see cref="Rect"/>. </summary>
 		public float xMax { get { return x + width; } set { width = value - x; } }
-		/// <summary> get/set the highest y-coord in this rect. </summary>
+		/// <summary> get/set the highest y-coord in this <see cref="Rect"/>. </summary>
 		public float yMax { get { return y + height; } set { height = value - y; } }
 
-		/// <summary> get the left edge of this rect. </summary>
+		/// <summary> get the left edge of this <see cref="Rect"/>. </summary>
 		public float left { get { return x; } }
-		/// <summary> get the right edge of this rect. </summary>
+		/// <summary> get the right edge of this <see cref="Rect"/>. </summary>
 		public float right { get { return x + width; } }
-		/// <summary> get the top edge of this rect. </summary>
+		/// <summary> get the top edge of this <see cref="Rect"/>. </summary>
 		public float top { get { return y; } }
-		/// <summary> get the bottom edge of this rect. </summary>
+		/// <summary> get the bottom edge of this <see cref="Rect"/>. </summary>
 		public float bottom { get { return y + height; } }
+
 
 		/// <inheritdoc />
 		public override bool Equals(object other) { return other is Rect && this.Equals((Rect)other); }
-		/// <summary> Compare two rects by their position and size for equality. </summary>
+		/// <summary> Compare two <see cref="Rect"/>s by their position and size for equality. </summary>
 		public bool Equals(Rect other) { return x.Equals(other.x) && y.Equals(other.y) && width.Equals(other.width) && height.Equals(other.height); }
 		/// <inheritdoc />
 		public override string ToString() { return $"(x:{x:F2}, y:{y:F2}, width:{width:F2}, height:{height:F2})"; }
 		/// <inheritdoc />
 		public override int GetHashCode() { return x.GetHashCode() ^ (width.GetHashCode() << 2) ^ (y.GetHashCode() >> 2) ^ (height.GetHashCode() >> 1); }
 
-		/// <summary> Directly set the position and size of this rect. </summary>
+		/// <summary> Directly set the position and size of this <see cref="Rect"/>. </summary>
 		public void Set(float x, float y, float width, float height) {
 			this.x = x; this.y = y; this.width = width; this.height = height;
 		}
-		/// <summary> Does this Rect contain the given <paramref name="point"/>? </summary>
+		/// <summary> Does this <see cref="Rect"/> contain the given <paramref name="point"/>? </summary>
 		public bool Contains(Vector2 point) {
 			return point.x >= xMin && point.x <= xMax && point.y >= yMin && point.y <= yMax;
 		}
-		/// <summary> Does this Rect contain the given <paramref name="point"/>? </summary>
+		/// <summary> Does this <see cref="Rect"/> contain the given <paramref name="point"/>? </summary>
 		public bool Contains(Vector3 point) {
 			return point.x >= xMin && point.x <= xMax && point.y >= yMin && point.y <= yMax;
 		}
@@ -926,17 +959,49 @@ namespace PixelEngine.Utilities {
 		public bool Touches(Rect other) {
 			return other.xMax >= xMin && other.xMin <= xMax && other.yMax >= yMin && other.yMin <= yMax;
 		}
-		/// <summary> Get a point within the rect at <paramref name="coords"/>. (0,0) means top-left of rect, (1,1) means bottom-right </summary>
+		/// <summary> Get a point within the <see cref="Rect"/> at <paramref name="coords"/>. In normalized coords, (0,0) means top-left of rect, (1,1) means bottom-right </summary>
 		public Vector2 NormalizedToPoint(Vector2 coords) {
 			return new Vector2(Lerp(x, xMax, coords.x), Lerp(y, yMax, coords.y));
 		}
+		/// <summary> Get the normalized coords within the <see cref="Rect"/> at the given <paramref name="point"/>. In normalized coords, (0,0) means top-left of rect, (1,1) means bottom-right </summary>
 		public Vector2 PointToNormalized(Vector2 point) {
 			return new Vector2(InverseLerp(x, xMax, point.x), InverseLerp(y, yMax, point.y));
 		}
 
-		/// <summary> Compare the location and size of two rectangles for equality </summary>
+		/// <summary> Modifies this <see cref="Rect"/> so that it's <see cref="min"/> and <see cref="max"/> are <paramref name="min"/> and <paramref name="max"/>. </summary>
+		public void SetMinMax(Vector2 min, Vector2 max) {
+			Vector2 size = max - min;
+			x = min.x; y = min.y;
+			width = size.x; height = size.y;
+		}
+		/// <summary> Forces this <see cref="Rect"/> to fit within the given <paramref name="bounds"/>. </summary>
+		/// <param name="bounds"></param>
+		public void ClampToBounds(Rect bounds) {
+			Vector2 min = Vector2.Max(this.min, bounds.min);
+			Vector2 max = Vector2.Min(this.max, bounds.max);
+			SetMinMax(min, max);
+		}
+
+		/// <summary> Create a new <see cref="Rect"/> from the given min/max values. </summary>
+		/// <remarks> Has to be separated since it has the same signature as standard constructor. </remarks>
+		public static Rect MinMaxRect(float xmin, float ymin, float xmax, float ymax) {
+			float w = xmax - xmin;
+			float h = ymax - ymin;
+			return new Rect(xmin, ymin, w, h);
+		}
+
+		/// <summary> Get a point within the given <see cref="Rect"/> at <paramref name="coords"/>. In normalized coords, (0,0) means top-left of rect, (1,1) means bottom-right </summary>
+		public static Vector2 NormalizedToPoint(Rect rect, Vector2 coords) {
+			return new Vector2(Lerp(rect.x, rect.xMax, coords.x), Lerp(rect.y, rect.yMax, coords.y));
+		}
+		/// <summary> Get the normalized coords within the given <see cref="Rect"/> at the given <paramref name="point"/>. In normalized coords, (0,0) means top-left of rect, (1,1) means bottom-right </summary>
+		public static Vector2 PointToNormalized(Rect rect, Vector2 point) {
+			return new Vector2(InverseLerp(rect.x, rect.xMax, point.x), InverseLerp(rect.y, rect.yMax, point.y));
+		}
+		
+		/// <summary> Compare the location and size of two <see cref="Rect"/>s for equality </summary>
 		public static bool operator ==(Rect a, Rect b) { return a.x == b.x && a.y == b.y && a.width == b.width && a.height == b.height; }
-		/// <summary> Inverse compare the location and size of two rectangles for equality </summary>
+		/// <summary> Inverse compare the location and size of two <see cref="Rect"/>s for equality </summary>
 		public static bool operator !=(Rect a, Rect b) { return !(a == b); }
 	}
 	#endregion
@@ -949,11 +1014,11 @@ namespace PixelEngine.Utilities {
 		/// <summary> Size information </summary>
 		public int width, height;
 
-		/// <summary> Construct a RectInt with the given position/size </summary>
+		/// <summary> Construct a <see cref="RectInt"/> with the given position/size </summary>
 		public RectInt(int x, int y, int width, int height) { this.x = x; this.y = y; this.width = width; this.height = height; }
-		/// <summary> Construct a RectInt with the given position/size </summary>
+		/// <summary> Construct a <see cref="RectInt"/> with the given position/size </summary>
 		public RectInt(Vector2Int pos, Vector2Int size) { x = pos.x; y = pos.y; width = size.x; height = size.y; }
-		/// <summary> Construct a RectInt as a copy of another </summary>
+		/// <summary> Construct a <see cref="RectInt"/> as a copy of another </summary>
 		public RectInt(RectInt source) { x = source.x; y = source.y; width = source.width; height = source.height; }
 
 		/// <summary> get/set the top-left position of this <see cref="RectInt"/> as a <see cref="Vector2Int"/>. </summary>
@@ -962,8 +1027,10 @@ namespace PixelEngine.Utilities {
 			set { x = value.x; y = value.y; }
 		}
 		/// <summary> get/set the center position of this <see cref="RectInt"/> as a <see cref="Vector2Int"/>. </summary>
+		/// <remarks> set may be a bit imprecise due to float conversions. </remarks>
 		public Vector2 center {
 			get { return new Vector2(x + width / 2f, y + height / 2f); }
+			set { x = (int)(value.x - width/2f); y = (int)(value.y - height/2f); }
 		}
 		/// <summary> get/set the minimum position of this <see cref="RectInt"/> as a <see cref="Vector2Int"/>. </summary>
 		public Vector2Int min {
@@ -973,7 +1040,7 @@ namespace PixelEngine.Utilities {
 		/// <summary> get/set the maximum position of this <see cref="RectInt"/> as a <see cref="Vector2Int"/>. </summary>
 		public Vector2Int max {
 			get { return new Vector2Int(x + width, y + height); }
-			set { x = value.x - width; y = value.y - height; }
+			set { Vector2Int size = value - min; width = size.x; height = size.y; }
 		}
 		/// <summary> get/set the size of this <see cref="RectInt"/> as a <see cref="Vector2Int"/>. </summary>
 		public Vector2Int size {
@@ -999,6 +1066,29 @@ namespace PixelEngine.Utilities {
 		/// <summary> get the bottom edge of this <see cref="RectInt"/> </summary>
 		public int bottom { get { return y + height; } }
 
+		/// <summary> Modifies this <see cref="RectInt"/> so that it's <see cref="min"/> and <see cref="max"/> are <paramref name="min"/> and <paramref name="max"/>. </summary>
+		public void SetMinMax(Vector2Int min, Vector2Int max) {
+			Vector2Int size = max-min;
+			x = min.x; y = min.y;
+			width = size.x; height = size.y;
+		}
+		/// <summary> Forces this <see cref="RectInt"/> to fit within the given <paramref name="bounds"/>. </summary>
+		/// <param name="bounds"></param>
+		public void ClampToBounds(RectInt bounds) {
+			Vector2Int min = Vector2Int.Max(this.min, bounds.min);
+			Vector2Int max = Vector2Int.Min(this.max, bounds.max);
+			SetMinMax(min, max);
+		}
+
+		/// <summary> Iterate all positions within this <see cref="RectInt"/> </summary>
+		IEnumerator<Vector2Int> Points() {
+			for (int yy = y; yy < height; yy++) {
+				for (int xx = x; xx < width; xx++) {
+					yield return new Vector2Int(xx,yy);
+				}
+			}
+		}
+
 		/// <inheritdoc />
 		public override bool Equals(object other) { return other is RectInt && Equals((RectInt)other); }
 		/// <summary> Test two <see cref="RectInt"/>s position and size for equality. </summary>
@@ -1016,59 +1106,60 @@ namespace PixelEngine.Utilities {
 
 		/// <summary> Internal field backing <see cref="normal"/> property. </summary>
 		private Vector3 _normal;
-		/// <summary> Distance from origin to plane surface, along the given normal. </summary>
+		/// <summary> Distance from origin to <see cref="Plane"/> surface, along the given normal. </summary>
 		public float distance;
-		/// <summary> Signed normal direction of the plane. </summary>
+		/// <summary> Signed normal direction of the <see cref="Plane"/>. </summary>
 		public Vector3 normal { get { return _normal; } set { _normal = value.normalized; } }
 
-		/// <summary> Construct a Plane with the given normal, and a point in space. </summary>
+		/// <summary> Construct a <see cref="Plane"/> with the given normal, and a point in space. </summary>
 		public Plane(Vector3 normal, Vector3 point) {
 			this._normal = normal.normalized;
 			distance = -Vector3.Dot(normal, point);
 		}
-		/// <summary> Construct a Plane with the given normal, and a distance along the normal. </summary>
+		/// <summary> Construct a <see cref="Plane"/> with the given normal, and a distance along the normal. </summary>
 		public Plane(Vector3 normal, float distance) {
 			this._normal = normal.normalized;
 			this.distance = distance;
 		}
-		/// <summary> Construct a plane that contains the given verticies. </summary>
+		/// <summary> Construct a <see cref="Plane"/> that contains the given verticies. </summary>
 		public Plane(Vector3 a, Vector3 b, Vector3 c) {
 			_normal = Vector3.Cross(b - a, c - a).normalized;
 			distance = -Vector3.Dot(_normal, a);
 		}
-		/// <summary> Create a plane that is the 'flip' of this plane (same position, opposite facing direction) </summary>
+		/// <summary> Create a <see cref="Plane"/> that is the 'flip' of this <see cref="Plane"/> (same position, opposite facing direction) </summary>
 		public Plane flipped { get { return new Plane(-_normal, -distance); } }
 
-		public override string ToString() { return $"(Normal:{normal}, distance:{distance})"; }
+		/// <inheritdoc />
+		public override string ToString() { return $"(Normal: {normal}, Distance: {distance})"; }
 
-		/// <summary> Modify this plane so it intersects <paramref name="point"/> and faces along <paramref name="normal"/>. </summary>
+		/// <summary> Modify this <see cref="Plane"/> so it intersects <paramref name="point"/> and faces along <paramref name="normal"/>. </summary>
 		public void SetNormalAndPosition(Vector3 normal, Vector3 point) {
 			this._normal = normal.normalized;
 			distance = -Vector3.Dot(normal, point);
 		}
-		/// <summary> Modify this plane so it intersects all 3 given points. </summary>
+		/// <summary> Modify this <see cref="Plane"/> so it intersects all 3 given points. </summary>
 		public void Set3Points(Vector3 a, Vector3 b, Vector3 c) {
 			_normal = Vector3.Cross(b - a, c - a).normalized;
 			distance = -Vector3.Dot(_normal, a);
 		}
-		/// <summary> Modify this plane so it faces the opposite way. </summary>
+		/// <summary> Modify this <see cref="Plane"/> so it faces the opposite way. </summary>
 		public void Flip() { _normal = -_normal; distance = -distance; }
-		/// <summary> Translate this plane along the given <paramref name="translation"/>. </summary>
+		/// <summary> Translate this <see cref="Plane"/> along the given <paramref name="translation"/>. </summary>
 		public void Translate(Vector3 translation) { distance += Vector3.Dot(_normal, translation); }
 
-		/// <summary> Derive a plane from <paramref name="p"/> translated along <paramref name="translation"/>. </summary>
+		/// <summary> Derive a <see cref="Plane"/> from <paramref name="p"/> translated along <paramref name="translation"/>. </summary>
 		public static Plane Translate(Plane p, Vector3 translation) { return new Plane(p._normal, p.distance + Vector3.Dot(p._normal, translation)); }
 
-		/// <summary> Find the closest point on the plane from a given <paramref name="point"/>. </summary>
+		/// <summary> Find the closest point on the <see cref="Plane"/> from a given <paramref name="point"/>. </summary>
 		public Vector3 ClosestPointOnPlane(Vector3 point) {
 			float d = Vector3.Dot(_normal, point) + distance;
 			return point - _normal * d;
 		}
 		/// <summary> Find the distance to the given <paramref name="point"/>. </summary>
 		public float GetDistanceToPoint(Vector3 point) { return Vector3.Dot(_normal, point) + distance; }
-		/// <summary> Get if the given point is "above" the plane or "below" </summary>
+		/// <summary> Get if the given point is "above" (positive side, true) the <see cref="Plane"/> or "below" (negative side, false) </summary>
 		public bool GetSide(Vector3 point) { return Vector3.Dot(_normal, point) + distance > 0f; }
-		/// <summary> Get if two points are on the same side of the given plane </summary>
+		/// <summary> Get if two points are on the same side of the given <see cref="Plane"/> </summary>
 		public bool SameSide(Vector3 a, Vector3 b) {
 			float da = GetDistanceToPoint(a);
 			float db = GetDistanceToPoint(b);
@@ -1092,64 +1183,83 @@ namespace PixelEngine.Utilities {
 	}
 	#endregion
 	#region Ray
-	/// <summary> Similar to UnityEngine.Ray Represents a ray, <see cref="origin"/>ating at some point, and firing in some <see cref="dir"/>ection. </summary>
+	/// <summary> Similar to UnityEngine.Ray Represents a Ray in 3d Space, <see cref="origin"/>ating at some point, and firing in some <see cref="dir"/>ection. </summary>
 	[System.Serializable]
 	public struct Ray {
-		/// <summary> Origin point of ray </summary>
+		/// <summary> Origin point of <see cref="Ray"/> </summary>
 		public Vector3 origin;
-		/// <summary> Normalized direction of ray </summary>
+		/// <summary> Normalized direction of <see cref="Ray"/> </summary>
 		public Vector3 dir;
-		/// <summary> Constructs a ray with the given <paramref name="origin"/> and <paramref name="dir"/>ection. </summary>
+		/// <summary> Constructs a <see cref="Ray"/> with the given <paramref name="origin"/> and <paramref name="dir"/>ection. </summary>
 		public Ray(Vector3 origin, Vector3 dir) { this.origin = origin; this.dir = dir.normalized; }
-		/// <summary> Gets/sets the normalized direction of this Ray </summary>
+		/// <summary> Gets/sets the normalized direction of this <see cref="Ray"/> </summary>
 		public Vector3 direction { get { return dir; } set { dir = value.normalized; } }
 
 		/// <inheritdoc />
 		public override string ToString() { return $"(Origin: {origin} Direction: {dir})"; }
-		/// <summary> Calculate the point <paramref name="distance"/> along the <see cref="dir"/>ection of this ray from its <see cref="origin"/>. </summary>
+		/// <summary> Calculate the point <paramref name="distance"/> along the <see cref="dir"/>ection of this <see cref="Ray"/> from its <see cref="origin"/>. </summary>
 		public Vector3 GetPoint(float distance) { return origin + dir * distance; }
 	}
 	#endregion
 	#region Ray2D
-	/// <summary> Similar to UnityEngine.Ray2D Represents a ray, <see cref="origin"/>ating at some point, and firing in some <see cref="dir"/>ection. </summary>
+	/// <summary> Similar to UnityEngine.Ray2D Represents a Ray in 2d Space, <see cref="origin"/>ating at some point, and firing in some <see cref="dir"/>ection. </summary>
 	[System.Serializable]
 	public struct Ray2D {
-		/// <summary> Origin point of ray </summary>
+		/// <summary> Origin point of <see cref="Ray2D"/> </summary>
 		public Vector2 origin;
-		/// <summary> Normalized direction of ray </summary>
+		/// <summary> Normalized direction of <see cref="Ray2D"/> </summary>
 		public Vector2 dir;
-		/// <summary> Constructs a ray with the given <paramref name="origin"/> and <paramref name="dir"/>ection. </summary>
+		/// <summary> Constructs a <see cref="Ray2D"/> with the given <paramref name="origin"/> and <paramref name="dir"/>ection. </summary>
 		public Ray2D(Vector2 origin, Vector2 dir) { this.origin = origin; this.dir = dir.normalized; }
-		/// <summary> Gets/sets the normalized direction of this Ray </summary>
+		/// <summary> Gets/sets the normalized direction of this <see cref="Ray2D"/> </summary>
 		public Vector2 direction { get { return dir; } set { dir = value.normalized; } }
 
 		/// <inheritdoc />
 		public override string ToString() { return $"(Origin: {origin} Direction: {dir})"; }
-		/// <summary> Calculate the point <paramref name="distance"/> along the <see cref="dir"/>ection of this ray from its <see cref="origin"/>. </summary>
+		/// <summary> Calculate the point <paramref name="distance"/> along the <see cref="dir"/>ection of this <see cref="Ray2D"/> from its <see cref="origin"/>. </summary>
 		public Vector2 GetPoint(float distance) { return origin + dir * distance; }
 	}
 	#endregion
+
 	#region Bounds aka AABB
+	/// <summary> Similar to UnityEngine.Bounds, represents an Axis-Aligned-Bounding-Box. </summary>
 	[System.Serializable]
 	public struct Bounds : IEquatable<Bounds> {
-		public Vector3 center, extents;
+		/// <summary> Center of bounding box </summary>
+		public Vector3 center;
+		/// <summary> Half-size of bounding box. </summary>
+		public Vector3 extents;
 
-		public Bounds(Vector3 center, Vector3 size) { this.center = center; extents = size / 2f; }
-		public Vector3 size { get { return extents * 2f; } set { extents = value / 2f; } }
+		/// <summary> Create a new <see cref="Bounds"/>, centered at the given <paramref name="center"/>, and with the given total <paramref name="size"/>. </summary>
+		public Bounds(Vector3 center, Vector3 size) { this.center = center; extents = (size / 2f).Abs(); }
+		/// <summary> Get the full size of the <see cref="Bounds"/> </summary>
+		public Vector3 size { get { return extents * 2f; } set { extents = (value / 2f).Abs(); } }
+		/// <summary> Get the minimum point in the <see cref="Bounds"/> </summary>
 		public Vector3 min { get { return center - extents; } set { SetMinMax(value, max); } }
+		/// <summary> Get the maximum point in the <see cref="Bounds"/> </summary>
 		public Vector3 max { get { return center + extents; } set { SetMinMax(min, value); } }
 
+		/// <inheritdoc />
 		public override bool Equals(object other) { return other is Bounds && Equals((Bounds)other); }
+		/// <summary> Compare two <see cref="Bounds"/>'s <see cref="center"/> and <see cref="size"/> for equality </summary>
 		public bool Equals(Bounds other) { return center.Equals(other.center) && extents.Equals(other.extents); }
+		/// <inheritdoc />
 		public override int GetHashCode() { return center.GetHashCode() ^ extents.GetHashCode() << 2; }
+		/// <inheritdoc />
 		public override string ToString() { return $"(Center: {center}, Extents: {extents})"; }
 
-		public void SetMinMax(Vector3 min, Vector3 max) { extents = (max - min) * 0.5f; center = min + extents; }
+		/// <summary> Directly modify both the min and max points of this <see cref="Bounds"/>. </summary>
+		public void SetMinMax(Vector3 min, Vector3 max) { extents = ((max - min) * 0.5f).Abs(); center = min + extents; }
+		/// <summary> Grow the <see cref="Bounds"/> so it encapsulates the given <paramref name="point"/>. </summary>
 		public void Encapsulate(Vector3 point) { SetMinMax(Vector3.Min(min, point), Vector3.Max(max, point)); }
+		/// <summary> Grow the <see cref="Bounds"/> so it also encapsulates the entire given <paramref name="bounds"/>. </summary>
 		public void Encapsulate(Bounds bounds) { Encapsulate(bounds.center - bounds.extents); Encapsulate(bounds.center + bounds.extents); }
-		public void Expand(float amount) { var a = amount * .5f; extents += new Vector3(a, a, a); }
-		public void Expand(Vector3 amount) { extents += amount * .5f; }
+		/// <summary> Expand the <see cref="Bounds"/> in all directions by <paramref name="amount"/>. </summary>
+		public void Expand(float amount) { var a = Abs(amount * .5f); extents += new Vector3(a, a, a); }
+		/// <summary> Expand the <see cref="Bounds"/> in the directions given by <paramref name="amount"/>. </summary>
+		public void Expand(Vector3 amount) { extents += (amount * .5f).Abs(); }
 
+		/// <summary> Does this <see cref="Bounds"/> intersect the other <paramref name="bounds"/>? </summary>
 		public bool Intersects(Bounds bounds) {
 			Vector3 amin = min; Vector3 amax = max;
 			Vector3 bmin = bounds.min; Vector3 bmax = bounds.max;
@@ -1157,13 +1267,14 @@ namespace PixelEngine.Utilities {
 				&& amin.y <= bmax.y && amax.y >= bmin.y
 				&& amin.z <= bmax.z && amax.z >= bmin.z;
 		}
-		// Unfortunately some of the more useful stuff is hiddin in native code. R I P guess I'll have to code them myself.
+		/// <summary> Does this <see cref="Bounds"/> contain the given <paramref name="point"/>? </summary>
 		public bool Contains(Vector3 point) {
 			Vector3 min = this.min; Vector3 max = this.max;
 			return point.x <= max.x && point.x >= min.x
 				&& point.y <= max.y && point.y >= min.y
 				&& point.z <= max.z && point.z >= min.z;
 		}
+		/// <summary> Does the given <paramref name="r"/>ay intersect this <see cref="Bounds"/>? </summary>
 		public bool Intersects(Ray r) {
 			Vector3 min = this.min; Vector3 max = this.max;
 			Vector3 inv = 1f / r.dir;
@@ -1185,6 +1296,151 @@ namespace PixelEngine.Utilities {
 
 			return tmax >= tmin;
 		}
+		
+		/// <summary> Gets the point on this <see cref="Bounds"/> closest to the given <paramref name="point"/>. </summary>
+		public Vector3 ClosestPoint(Vector3 point) {
+			Vector3 relativePoint = point - center;
+			Vector3 mirroredPoint = relativePoint.Abs();
+			Vector3 distanceToSurface = Vector3.Max(Vector3.zero, mirroredPoint - extents);
+
+			if (relativePoint.x < 0) { distanceToSurface.x *= -1; }
+			if (relativePoint.y < 0) { distanceToSurface.y *= -1; }
+			if (relativePoint.z < 0) { distanceToSurface.z *= -1; }
+
+			return point - distanceToSurface;
+		}
+
+		/// <summary> Signed distance from the surface of this <see cref="Bounds"/> to the given <paramref name="point"/> </summary>
+		public float Distance(Vector3 point) {
+			Vector3 relativePoint = point - center;
+			Vector3 q = relativePoint.Abs() - extents;
+
+			return Vector3.Max(q, Vector3.zero).magnitude + Min(Max(q.x, Max(q.y, q.z)), 0.0f);
+		}
+
+	}
+	/// <summary> Similar to UnityEngine.Bounds, represents an Axis-Aligned-Bounding-Box. </summary>
+	[System.Serializable]
+	public struct BoundsInt : IEquatable<BoundsInt> {
+		/// <summary> Minimum position of this <see cref="BoundsInt"/> </summary>
+		public Vector3Int position;
+		/// <summary> Size of bounding box. </summary>
+		public Vector3Int size;
+
+		/// <summary> Directly get/set the x-position of this <see cref="BoundsInt"/> </summary>
+		public int x { get { return position.x; } set { position.x = value; } }
+		/// <summary> Directly get/set the y-position of this <see cref="BoundsInt"/> </summary>
+		public int y { get { return position.x; } set { position.y = value; } }
+		/// <summary> Directly get/set the z-position of this <see cref="BoundsInt"/> </summary>
+		public int z { get { return position.z; } set { position.z = value; } }
+
+		/// <summary> Create a new <see cref="BoundsInt"/>, placed at the given <paramref name="position"/>, and with the given total <paramref name="size"/>. </summary>
+		public BoundsInt(Vector3Int position, Vector3Int size) { this.position = position; this.size = size; }
+		/// <summary> Create a new <see cref="BoundsInt"/>, placed at the given position and with the given total size. </summary>
+		public BoundsInt(int xMin, int yMin, int zMin, int sizeX, int sizeY, int sizeZ) {
+			position = new Vector3Int(xMin, yMin, zMin);
+			size = new Vector3Int(sizeX, sizeY, sizeZ);
+		}
+		/// <summary> Calculate the center position of this <see cref="BoundsInt"/> </summary>
+		public Vector3 center { get { return position + ((Vector3)size) / 2f; } }
+
+		/// <summary> Minimum x-coordinate in the <see cref="BoundsInt"/>. </summary>
+		public int xMin { get { return Min(x, x+size.x); } set { int xmax = xMax; x = value; size.x = xmax - x; } }
+		/// <summary> Minimum y-coordinate in the <see cref="BoundsInt"/>. </summary>
+		public int yMin { get { return Min(y, y+size.y); } set { int ymax = yMax; y = value; size.y = ymax - y; } }
+		/// <summary> Minimum z-coordinate in the <see cref="BoundsInt"/>. </summary>
+		public int zMin { get { return Min(z, z+size.z); } set { int zmax = zMax; z = value; size.z = zmax - z; } }
+		/// <summary> Maximum x-coordinate in the <see cref="BoundsInt"/>. </summary>
+		public int xMax { get { return Max(x, x+size.x); } set { size.x = value - x; } }
+		/// <summary> Maximum y-coordinate in the <see cref="BoundsInt"/>. </summary>
+		public int yMax { get { return Max(y, y+size.y); } set { size.y = value - y; } }
+		/// <summary> Maximum z-coordinate in the <see cref="BoundsInt"/>. </summary>
+		public int zMax { get { return Max(z, z+size.z); } set { size.z = value - z; } }
+
+		/// <summary> Get the minimum point in the <see cref="BoundsInt"/> </summary>
+		public Vector3Int min { get { return new Vector3Int(xMin, yMin, zMin); } set { xMin = value.x; yMin = value.y; zMin = value.z; } }
+		/// <summary> Get the maximum point in the <see cref="BoundsInt"/> </summary>
+		public Vector3Int max { get { return new Vector3Int(xMax, yMax, zMax); } set { xMax = value.x; yMax = value.y; zMax = value.z; } }
+		
+		/// <inheritdoc />
+		public override bool Equals(object other) { return other is BoundsInt && Equals((BoundsInt)other); }
+		/// <summary> Compare two <see cref="BoundsInt"/>'s <see cref="position"/> and <see cref="size"/> for equality </summary>
+		public bool Equals(BoundsInt other) { return position.Equals(other.position) && size.Equals(other.size); }
+		/// <inheritdoc />
+		public override int GetHashCode() { return position.GetHashCode() ^ size.GetHashCode() << 2; }
+		/// <inheritdoc />
+		public override string ToString() { return $"(Center: {position}, Extents: {size})"; }
+
+		/// <summary> Directly modify both the min and max points of this <see cref="BoundsInt"/>. </summary>
+		public void SetMinMax(Vector3Int min, Vector3Int max) { size = ((max - min)/2).Abs(); position = min + size; }
+		/// <summary> Grow the <see cref="BoundsInt"/> so it encapsulates the given <paramref name="point"/>. </summary>
+		public void Encapsulate(Vector3Int point) { SetMinMax(Vector3Int.Min(min, point), Vector3Int.Max(max, point)); }
+		/// <summary> Grow the <see cref="BoundsInt"/> so it also encapsulates the entire given <paramref name="bounds"/>. </summary>
+		public void Encapsulate(BoundsInt bounds) { Encapsulate(bounds.position - bounds.size); Encapsulate(bounds.position + bounds.size); }
+		/// <summary> Expand the <see cref="BoundsInt"/> in all directions by <paramref name="amount"/>. </summary>
+		public void Expand(int amount) { size += new Vector3Int(amount, amount, amount); }
+		/// <summary> Expand the <see cref="BoundsInt"/> in the directions given by <paramref name="amount"/>. </summary>
+		public void Expand(Vector3Int amount) { size += amount.Abs(); }
+
+		/// <summary> Does this <see cref="BoundsInt"/> intersect the other <paramref name="bounds"/>? </summary>
+		public bool Intersects(BoundsInt bounds) {
+			Vector3Int amin = min; Vector3Int amax = max;
+			Vector3Int bmin = bounds.min; Vector3Int bmax = bounds.max;
+			return amin.x <= bmax.x && amax.x >= bmin.x
+				&& amin.y <= bmax.y && amax.y >= bmin.y
+				&& amin.z <= bmax.z && amax.z >= bmin.z;
+		}
+		/// <summary> Does this <see cref="BoundsInt"/> contain the given <paramref name="point"/>? </summary>
+		public bool Contains(Vector3Int point) {
+			Vector3Int min = this.min; Vector3Int max = this.max;
+			return point.x <= max.x && point.x >= min.x
+				&& point.y <= max.y && point.y >= min.y
+				&& point.z <= max.z && point.z >= min.z;
+		}
+		/// <summary> Does the given <paramref name="r"/>ay intersect this <see cref="BoundsInt"/>? </summary>
+		public bool Intersects(Ray r) {
+			Vector3 min = this.min; Vector3 max = this.max;
+			Vector3 inv = 1f / r.dir;
+			float tmin = -Infinity;
+			float tmax = Infinity;
+
+			float x1 = (min.x - r.origin.x) * inv.x;
+			float x2 = (max.x - r.origin.x) * inv.x;
+			tmin = Max(tmin, Min(x1, x2));
+			tmax = Min(tmax, Max(x1, x2));
+			float y1 = (min.y - r.origin.y) * inv.y;
+			float y2 = (max.y - r.origin.y) * inv.y;
+			tmin = Max(tmin, Min(y1, y2));
+			tmax = Min(tmax, Max(y1, y2));
+			float z1 = (min.z - r.origin.z) * inv.z;
+			float z2 = (max.z - r.origin.z) * inv.z;
+			tmin = Max(tmin, Min(z1, z2));
+			tmax = Min(tmax, Max(z1, z2));
+
+			return tmax >= tmin;
+		}
+
+		/// <summary> Gets the point on this <see cref="BoundsInt"/> closest to the given <paramref name="point"/>. </summary>
+		public Vector3 ClosestPoint(Vector3 point) {
+			Vector3 relativePoint = point - center;
+			Vector3 mirroredPoint = relativePoint.Abs();
+			Vector3 distanceToSurface = Vector3.Max(Vector3.zero, mirroredPoint - size);
+
+			if (relativePoint.x < 0) { distanceToSurface.x *= -1; }
+			if (relativePoint.y < 0) { distanceToSurface.y *= -1; }
+			if (relativePoint.z < 0) { distanceToSurface.z *= -1; }
+
+			return point - distanceToSurface;
+		}
+
+		/// <summary> Signed distance from the surface of this <see cref="BoundsInt"/> to the given <paramref name="point"/> </summary>
+		public float Distance(Vector3 point) {
+			Vector3 relativePoint = point - position;
+			Vector3 q = relativePoint.Abs() - size;
+
+			return Vector3.Max(q, Vector3.zero).magnitude + Min(Max(q.x, Max(q.y, q.z)), 0);
+		}
+
 	}
 	#endregion
 }
