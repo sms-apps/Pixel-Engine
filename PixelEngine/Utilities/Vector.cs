@@ -1010,54 +1010,75 @@ namespace PixelEngine.Utilities {
 	}
 	#endregion
 	#region Plane
+	/// <summary> Similar to UnityEngine.Plane, represents a 3d Plane object by a <see cref="normal"/> and <see cref="distance"/> along the normal from the origin. </summary>
 	[System.Serializable]
 	public struct Plane {
 
+		/// <summary> Internal field backing <see cref="normal"/> property. </summary>
 		private Vector3 _normal;
+		/// <summary> Distance from origin to plane surface, along the given normal. </summary>
 		public float distance;
+		/// <summary> Signed normal direction of the plane. </summary>
 		public Vector3 normal { get { return _normal; } set { _normal = value.normalized; } }
 
+		/// <summary> Construct a Plane with the given normal, and a point in space. </summary>
 		public Plane(Vector3 normal, Vector3 point) {
 			this._normal = normal.normalized;
 			distance = -Vector3.Dot(normal, point);
 		}
+		/// <summary> Construct a Plane with the given normal, and a distance along the normal. </summary>
 		public Plane(Vector3 normal, float distance) {
 			this._normal = normal.normalized;
 			this.distance = distance;
 		}
+		/// <summary> Construct a plane that contains the given verticies. </summary>
 		public Plane(Vector3 a, Vector3 b, Vector3 c) {
 			_normal = Vector3.Cross(b - a, c - a).normalized;
 			distance = -Vector3.Dot(_normal, a);
 		}
+		/// <summary> Create a plane that is the 'flip' of this plane (same position, opposite facing direction) </summary>
 		public Plane flipped { get { return new Plane(-_normal, -distance); } }
 
 		public override string ToString() { return $"(Normal:{normal}, distance:{distance})"; }
 
+		/// <summary> Modify this plane so it intersects <paramref name="point"/> and faces along <paramref name="normal"/>. </summary>
 		public void SetNormalAndPosition(Vector3 normal, Vector3 point) {
 			this._normal = normal.normalized;
 			distance = -Vector3.Dot(normal, point);
 		}
+		/// <summary> Modify this plane so it intersects all 3 given points. </summary>
 		public void Set3Points(Vector3 a, Vector3 b, Vector3 c) {
 			_normal = Vector3.Cross(b - a, c - a).normalized;
 			distance = -Vector3.Dot(_normal, a);
 		}
+		/// <summary> Modify this plane so it faces the opposite way. </summary>
 		public void Flip() { _normal = -_normal; distance = -distance; }
+		/// <summary> Translate this plane along the given <paramref name="translation"/>. </summary>
 		public void Translate(Vector3 translation) { distance += Vector3.Dot(_normal, translation); }
 
+		/// <summary> Derive a plane from <paramref name="p"/> translated along <paramref name="translation"/>. </summary>
 		public static Plane Translate(Plane p, Vector3 translation) { return new Plane(p._normal, p.distance + Vector3.Dot(p._normal, translation)); }
 
+		/// <summary> Find the closest point on the plane from a given <paramref name="point"/>. </summary>
 		public Vector3 ClosestPointOnPlane(Vector3 point) {
 			float d = Vector3.Dot(_normal, point) + distance;
 			return point - _normal * d;
 		}
+		/// <summary> Find the distance to the given <paramref name="point"/>. </summary>
 		public float GetDistanceToPoint(Vector3 point) { return Vector3.Dot(_normal, point) + distance; }
+		/// <summary> Get if the given point is "above" the plane or "below" </summary>
 		public bool GetSide(Vector3 point) { return Vector3.Dot(_normal, point) + distance > 0f; }
+		/// <summary> Get if two points are on the same side of the given plane </summary>
 		public bool SameSide(Vector3 a, Vector3 b) {
 			float da = GetDistanceToPoint(a);
 			float db = GetDistanceToPoint(b);
 			return (da > 0f && db > 0f) || (da <= 0f && db <= 0f);
 		}
 
+		/// <summary> Cast a <paramref name="ray"/> against this plane, and get the <paramref name="enter"/> if it intersects. </summary>
+		/// <param name="ray"> <see cref="Ray"/> to cast against plane </param>
+		/// <param name="enter"> Output distance along <paramref name="ray"/> where intersection occured, if it occurred. </param>
+		/// <returns> True, if <paramref name="ray"/> intersects this plane, false otherwise. </returns>
 		public bool Raycast(Ray ray, out float enter) {
 			float angle = Vector3.Dot(ray.direction, _normal);
 			if (Approximately(angle, 0f)) {
@@ -1071,24 +1092,40 @@ namespace PixelEngine.Utilities {
 	}
 	#endregion
 	#region Ray
+	/// <summary> Similar to UnityEngine.Ray Represents a ray, <see cref="origin"/>ating at some point, and firing in some <see cref="dir"/>ection. </summary>
 	[System.Serializable]
 	public struct Ray {
-		public Vector3 origin, dir;
+		/// <summary> Origin point of ray </summary>
+		public Vector3 origin;
+		/// <summary> Normalized direction of ray </summary>
+		public Vector3 dir;
+		/// <summary> Constructs a ray with the given <paramref name="origin"/> and <paramref name="dir"/>ection. </summary>
 		public Ray(Vector3 origin, Vector3 dir) { this.origin = origin; this.dir = dir.normalized; }
+		/// <summary> Gets/sets the normalized direction of this Ray </summary>
 		public Vector3 direction { get { return dir; } set { dir = value.normalized; } }
 
+		/// <inheritdoc />
 		public override string ToString() { return $"(Origin: {origin} Direction: {dir})"; }
+		/// <summary> Calculate the point <paramref name="distance"/> along the <see cref="dir"/>ection of this ray from its <see cref="origin"/>. </summary>
 		public Vector3 GetPoint(float distance) { return origin + dir * distance; }
 	}
 	#endregion
 	#region Ray2D
+	/// <summary> Similar to UnityEngine.Ray2D Represents a ray, <see cref="origin"/>ating at some point, and firing in some <see cref="dir"/>ection. </summary>
 	[System.Serializable]
 	public struct Ray2D {
-		public Vector2 origin, dir;
+		/// <summary> Origin point of ray </summary>
+		public Vector2 origin;
+		/// <summary> Normalized direction of ray </summary>
+		public Vector2 dir;
+		/// <summary> Constructs a ray with the given <paramref name="origin"/> and <paramref name="dir"/>ection. </summary>
 		public Ray2D(Vector2 origin, Vector2 dir) { this.origin = origin; this.dir = dir.normalized; }
+		/// <summary> Gets/sets the normalized direction of this Ray </summary>
 		public Vector2 direction { get { return dir; } set { dir = value.normalized; } }
 
+		/// <inheritdoc />
 		public override string ToString() { return $"(Origin: {origin} Direction: {dir})"; }
+		/// <summary> Calculate the point <paramref name="distance"/> along the <see cref="dir"/>ection of this ray from its <see cref="origin"/>. </summary>
 		public Vector2 GetPoint(float distance) { return origin + dir * distance; }
 	}
 	#endregion
