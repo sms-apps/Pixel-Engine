@@ -427,9 +427,9 @@ namespace PixelEngine.Utilities {
 		public static Vector2Int operator *(Vector2Int a, int i) { return new Vector2Int(a.x * i, a.y * i); }
 		/// <summary> Multiply <paramref name="a"/> and <paramref name="i"/> </summary>
 		public static Vector2Int operator *(int i, Vector2Int a) { return new Vector2Int(a.x * i, a.y * i); }
-		/// <summary> Divide<paramref name="a"/> by <paramref name="f"/> </summary>
+		/// <summary> Divide<paramref name="a"/> by <paramref name="i"/> </summary>
 		public static Vector2Int operator /(Vector2Int a, int i) { return new Vector2Int(a.x / i, a.y / i); }
-		/// <summary> Inverse divide<paramref name="a"/> by <paramref name="f"/> </summary>
+		/// <summary> Inverse divide<paramref name="a"/> by <paramref name="i"/> </summary>
 		public static Vector2Int operator /(int i, Vector2Int a) { return new Vector2Int(i / a.x, i / a.y); }
 		/// <summary> Compare components of <paramref name="a"/> and <paramref name="b"/> </summary>
 		public static bool operator ==(Vector2Int a, Vector2Int b) { return a.x == b.x && a.y == b.y; }
