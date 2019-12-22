@@ -1,17 +1,19 @@
 using PixelEngine;
 
-namespace Examples {
+namespace PixelEngine.Examples {
+
+	/// <summary> Draw a bunch of random colors to the screen every frame </summary>
 	public class RandomPixels : Game {
-		static void Run(string[] args) {
+
+		/// <summary> Entry point, formerly Main. </summary>
+		public static void Run(string[] args) {
 			// Create an instance
 			RandomPixels rp = new RandomPixels();
-			rp.Construct(); // Construct the game
+			rp.Construct(100, 100, 5, 5, 24); // Construct the game
 			rp.Start(); // Start and show a window
 		}
 
-		// Uncomment to make fullscreen
-		//public override void OnCreate() { Enable(Subsystem.Fullscreen); }
-
+		/// <inheritdoc />
 		public override void OnUpdate(float elapsed) {
 			// Loop through all the pixels
 			for (int i = 0; i < ScreenWidth; i++) {

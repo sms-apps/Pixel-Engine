@@ -5,19 +5,22 @@ Check out the original at https://www.youtube.com/watch?v=v8lm5XZ2V6M
 
 using PixelEngine;
 
-namespace Examples {
+namespace PixelEngine.Examples {
+	/// <summary> Example class that creates the Sierpinski triangle </summary>
 	public class ChaosGame : Game {
 		private Point[] vertices;
 		private Point current;
 
 		private Pixel[] colors;
 
-		static void Run(string[] args) {
+		/// <summary> Entry point, formerly Main. </summary>
+		public static void Run(string[] args) {
 			ChaosGame game = new ChaosGame();
 			game.Construct(250, 250, 2, 2);
 			game.Start();
 		}
 
+		/// <inheritdoc />
 		public override void OnCreate() { Reset(); }
 
 		private void Reset() {
@@ -38,6 +41,7 @@ namespace Examples {
 
 		}
 
+		/// <inheritdoc />
 		public override void OnUpdate(float elapsed) {
 			if (GetKey(Key.Enter).Pressed) {
 				Clear(Pixel.Presets.Black);

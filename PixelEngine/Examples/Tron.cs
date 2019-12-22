@@ -3,7 +3,8 @@ using System.Linq;
 
 using PixelEngine;
 
-namespace Examples {
+namespace PixelEngine.Examples {
+	/// <summary> Example for riding cycles of light, circa 1982</summary>
 	public class Tron : Game {
 		private LightCycle playerA;
 		private LightCycle playerB;
@@ -12,16 +13,19 @@ namespace Examples {
 
 		private const int Size = 2;
 
-		static void Run(string[] args) {
+		/// <summary> Entry point, formerly Main. </summary>
+		public static void Run(string[] args) {
 			Tron game = new Tron();
-			game.Construct();
+			game.Construct(100, 100, 5, 5, 30);
 			game.Start();
 		}
 
+		/// <inheritdoc />
 		public Tron() {
 			AppName = "TRON";
 		}
 
+		/// <inheritdoc />
 		public override void OnCreate() {
 			Enable(Subsystem.HrText);
 			Reset();
@@ -33,6 +37,7 @@ namespace Examples {
 			loser = null;
 		}
 
+		/// <inheritdoc />
 		public override void OnUpdate(float elapsed) {
 			Delay(0.025f);
 
@@ -114,6 +119,7 @@ namespace Examples {
 			return true;
 		}
 
+		/// <inheritdoc />
 		public override void OnKeyPress(Key k) {
 			int aDir = (int)playerA.Direction;
 			int bDir = (int)playerB.Direction;

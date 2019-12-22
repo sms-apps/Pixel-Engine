@@ -7,7 +7,8 @@ using System;
 using System.Collections.Generic;
 using PixelEngine;
 
-namespace Examples {
+namespace PixelEngine.Examples {
+	/// <summary> Example simple snake game </summary>
 	public class Snake : Game {
 		private List<SnakeSegment> snake; // Store all segments of snake
 
@@ -22,7 +23,8 @@ namespace Examples {
 		private bool dead; // Is the snake dead?
 		private bool started; // Has the game been started?
 
-		static void Run(string[] args) {
+		/// <summary> Entry point, formerly Main. </summary>
+		public static void Run(string[] args) {
 			// Create an instance
 			Snake s = new Snake();
 			// Construct the game
@@ -43,9 +45,11 @@ namespace Examples {
 		}
 
 		// Set the title of the window
+		/// <inheritdoc />
 		public Snake() { AppName = "SNAKE!"; }
 
 		// Start the game
+		/// <inheritdoc />
 		public override void OnCreate() {
 			// Uncomment to make the game fullscreen
 			//Enable(Subsystem.Fullscreen);
@@ -73,6 +77,7 @@ namespace Examples {
 			Seed();
 		}
 
+		/// <inheritdoc />
 		public override void OnUpdate(float elapsed) {
 			CheckStart();
 			UpdateSnake();

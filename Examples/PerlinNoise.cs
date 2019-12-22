@@ -1,17 +1,20 @@
 using PixelEngine;
 using PixelEngine.Utilities;
 
-namespace Examples {
+namespace PixelEngine.Examples {
+	/// <summary> Example that makes pretty colors using noise </summary>
 	public class PerlinNoise : Game {
 		private float time;
 		private bool dir = true;
 
-		static void Run(string[] args) {
+		/// <summary> Entry point, formerly Main. </summary>
+		public static void Run(string[] args) {
 			PerlinNoise pa = new PerlinNoise();
 			pa.Construct(150, 150, 2, 2);
 			pa.Start();
 		}
 
+		/// <inheritdoc />
 		public override void OnUpdate(float elapsed) {
 			if (GetKey(Key.Enter).Pressed) {
 				time = 0;
@@ -34,11 +37,12 @@ namespace Examples {
 					float noise = Noise.FBM(x, y, time);
 					noise = noise / 2 + 1;
 
-					Pixel p = Pixel.FromHsv(noise * time * 360, noise, noise * 0.8f);
+					Pixel p = Pixel.FromHsv(noise * Mathf.PingPong(time, 3), noise, noise * 0.8f);
 
 					Draw(i, j, p);
 				}
 			}
 		}
+
 	}
 }

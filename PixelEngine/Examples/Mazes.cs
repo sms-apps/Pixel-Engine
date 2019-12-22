@@ -8,7 +8,8 @@ using System.Collections.Generic;
 
 using PixelEngine;
 
-namespace Examples {
+namespace PixelEngine.Examples {
+	/// <summary> Example maze generator that uses a random walk to sculpt a maze out of a grid </summary>
 	public class Mazes : Game {
 		[Flags]
 		private enum Cells {
@@ -19,12 +20,13 @@ namespace Examples {
 			Visited = 1 << 4
 		}
 
-		static void Run(string[] args) {
+		/// <summary> Entry point, formerly Main. </summary>
+		public static void Run(string[] args) {
 			Mazes st = new Mazes();
-			st.Construct();
+			st.Construct(100, 100, 5, 5, 30);
 			st.Start();
 		}
-
+		/// <inheritdoc />
 		public Mazes() {
 			AppName = "MAZE!";
 		}
@@ -39,6 +41,7 @@ namespace Examples {
 
 		private Stack<Point> pointStack = new Stack<Point>();
 
+		/// <inheritdoc />
 		public override void OnCreate() { Reset(); }
 
 		private void Reset() {
@@ -54,11 +57,13 @@ namespace Examples {
 			visited = 1;
 		}
 
+		/// <inheritdoc />
 		public override void OnKeyPress(Key k) {
 			if (k == Key.R) { Reset(); }
 
 		}
 
+		/// <inheritdoc />
 		public override void OnUpdate(float elapsed) {
 			int GetOffsetCellIndex(int x, int y) { return (pointStack.Peek().Y + y) * MazeWidth + (pointStack.Peek().X + x); }
 

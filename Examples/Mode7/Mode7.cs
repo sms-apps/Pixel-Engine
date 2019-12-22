@@ -1,14 +1,20 @@
 using System;
 using PixelEngine;
 
-namespace Examples {
+namespace PixelEngine.Examples {
+	/// <summary> Example that simulates the SNES HDMA/Mode7 effect used to create a fake-3d horizon line in many games. 
+	/// Make sure there is are files 'Sky.png' and 'Ground.png' in the working directory of the program. 
+	/// Call <see cref="System.IO.Directory.GetCurrentDirectory"/> and <see cref="System.IO.Directory.SetCurrentDirectory(string)"/>
+	/// There is a <see cref="PixelEngine.WindowsInfo.SourceFileDirectory"/> Helper method. </summary>
 	public class Mode7 : Game {
-		static void Run(string[] args) {
+		/// <summary> Entry point, formerly Main. </summary>
+		public static void Run(string[] args) {
 			Mode7 spr = new Mode7();
-			spr.Construct(250, 250, 2, 2);
+			spr.Construct(250, 250, 2, 2, 60);
 			spr.Start();
 		}
 
+		/// <inheritdoc />
 		public Mode7() {
 			AppName = "Pseudo 3D Planes";
 		}
@@ -24,6 +30,7 @@ namespace Examples {
 		private Sprite sprGround;
 		private Sprite sprSky;
 
+		/// <inheritdoc />
 		public override void OnCreate() {
 			sprGround = Sprite.Load("Ground.png");
 			sprSky = Sprite.Load("Sky.png");
@@ -31,6 +38,7 @@ namespace Examples {
 			Reset();
 		}
 
+		/// <inheritdoc />
 		public override void OnUpdate(float elapsed) {
 			Clear(Pixel.Presets.Black);
 

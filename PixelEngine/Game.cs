@@ -191,17 +191,18 @@ namespace PixelEngine {
 			timeProc = MouseTimer;
 			IntPtr timerProc = Marshal.GetFunctionPointerForDelegate<TimerProcess>(timeProc);
 			SetTimer(Handle, TimerOne, 10, timerProc);
-
+			
 			while (active) {
 				while (active) {
-					float elapsed = (float)Clock.Elapsed.TotalSeconds;
+					float now = (float)Clock.Elapsed.TotalSeconds;
+					float delta = (float)Clock.Delta.TotalSeconds;
 
 					if (frameTimer != null && !frameTimer.Tick()) {
 						continue;
 					}
 					
 					if (delaying) {
-						delayTime -= elapsed;
+						delayTime -= delta;
 
 						if (delayTime <= 0) {
 							delayTime = 0;
@@ -213,7 +214,7 @@ namespace PixelEngine {
 
 					if (paused) { continue; }
 
-					OnUpdate(elapsed);
+					OnUpdate(delta);
 
 					HandleKeyboard();
 					HandleMouse();
@@ -221,6 +222,8 @@ namespace PixelEngine {
 					FrameCount++;
 
 					canvas.Draw(defDrawTarget, textTarget);
+
+					Clock.Tick();
 				}
 
 				OnDestroy();

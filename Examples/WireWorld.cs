@@ -1,7 +1,8 @@
 using PixelEngine;
 using System;
 
-namespace Examples {
+namespace PixelEngine.Examples {
+	/// <summary> Example running the 'Wire World' Cellular automata. </summary>
 	public class WireWorld : Game {
 		// Current cells state
 		private Cell[,] current;
@@ -14,12 +15,14 @@ namespace Examples {
 		// The last position of mouse
 		private Point lastMousePos;
 
-		static void Run(string[] args) {
+		/// <summary> Entry point, formerly Main. </summary>
+		public static void Run(string[] args) {
 			WireWorld ww = new WireWorld();
 			ww.Construct(75, 75, 10, 10, 30);
 			ww.Start();
 		}
 
+		/// <inheritdoc />
 		public override void OnCreate() {
 			Enable(Subsystem.HrText);
 
@@ -64,6 +67,7 @@ namespace Examples {
 			}
 		}
 
+		/// <inheritdoc />
 		public override void OnUpdate(float elapsed) {
 			if (!running && GetMouse(Mouse.Any).Down == true) {
 				Cell c = Cell.Empty;
@@ -202,6 +206,7 @@ namespace Examples {
 			}
 		}
 
+		/// <inheritdoc />
 		public override void OnKeyPress(Key k) {
 			// Pause game
 			if (k == Key.Enter) { running = !running; }

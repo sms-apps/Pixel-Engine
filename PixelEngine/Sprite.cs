@@ -7,20 +7,16 @@ using System.IO;
 namespace PixelEngine {
 	/// <summary> Core interface for a sprite to fufill to be drawable. </summary>
 	public interface ISprite {
-
 		/// <summary> Width of sprite </summary>
 		int Width { get; }
-
 		/// <summary> Height of sprite </summary>
 		int Height { get; }
-		
 		/// <summary> 2d Accessor to read <see cref="Pixel"/>s in sprite </summary>
 		/// <param name="x">x coord to read at </param>
 		/// <param name="y">y coord to read at </param>
 		/// <returns> <see cref="Pixel"/> color at x/y </returns>
 		Pixel this[int x, int y] { get; }
 	}
-
 	
 	/// <summary> Class containing extension methods common for any <see cref="ISprite"/> implementation. </summary>
 	public static class ISpriteExt {

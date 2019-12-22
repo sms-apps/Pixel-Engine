@@ -150,7 +150,15 @@ namespace PixelEngine.Utilities {
 			float pow = Pow(abs / absmax, gamma) * absmax;
 			return negative ? -pow : pow;
 		}
-
+		/// <summary> Smoothly dampen <paramref name="current"/> to <paramref name="target"/>. Uses and updates <paramref name="currentVelocity"/>, and steps over the given <paramref name="deltaTime"/>.
+		/// Current will reach the target in approximately <paramref name="smoothTime"/>, unless the <paramref name="maxSpeed"/> is used to clamp changes. </summary>
+		/// <param name="current"> Current position </param>
+		/// <param name="target"> Target to reach </param>
+		/// <param name="currentVelocity"> Current velocity reference. Modified by the function every time it is called. </param>
+		/// <param name="smoothTime"> Appxoimately the time to reach the target in seconds. Smaller time reaches the target faster. </param>
+		/// <param name="deltaTime"> Time since the last update. </param>
+		/// <param name="maxSpeed"> Optionally allows the change speed to be clamped. </param>
+		/// <returns> Position after timestep has been applied. </returns>
 		public static float Damp(float current, float target, ref float currentVelocity, float smoothTime, float deltaTime, float maxSpeed = Infinity) {
 			smoothTime = Max(.0001f, smoothTime);
 			float step = 2f / smoothTime;
@@ -171,11 +179,30 @@ namespace PixelEngine.Utilities {
 			}
 			return result;
 		}
+
+		/// <summary> Smoothly dampens the given <paramref name="current"/> angle towards the <paramref name="target"/> angle. 
+		/// Internally uses <see cref="Damp(float, float, ref float, float, float, float)"/> with values treated in angle space. </summary>
+		/// <param name="current"> Current angle </param>
+		/// <param name="target"> Target angle to reach </param>
+		/// <param name="currentVelocity"> Current angular velocity reference. Modified by the function every time it is called. </param>
+		/// <param name="smoothTime"> Appxoimately the time to reach the target in seconds. Smaller time reaches the target faster. </param>
+		/// <param name="deltaTime"> Time since the last update. </param>
+		/// <param name="maxSpeed"> Optionally allows the change speed to be clamped. </param>
+		/// <returns> Angle after timestep has been applied. </returns>
 		public static float DampAngle(float current, float target, ref float currentVelocity, float smoothTime, float deltaTime, float maxSpeed = Infinity) {
 			target = current + DeltaAngle(current, target);
 			return Damp(current, target, ref currentVelocity, smoothTime, deltaTime, maxSpeed);
 		}
-
+		/// <summary> Apply a spring function to the <paramref name="value"/>, stabilizing at <paramref name="target"/>. 
+		/// Uses the given <paramref name="velocity"/>, and applied over the given <paramref name="deltaTime"/>. 
+		/// optionally a speciifc <paramref name="strength"/> and <paramref name="dampening"/> value can be set. </summary>
+		/// <param name="value"> Current value </param>
+		/// <param name="target"> Stability target </param>
+		/// <param name="velocity"> Current motion </param>
+		/// <param name="deltaTime"> Last time step </param>
+		/// <param name="strength"> Spring force multiplier </param>
+		/// <param name="dampening"> Spring force removal base power (out of 10000) </param>
+		/// <returns> Updated value after timestep has been applied. </returns>
 		public static float Spring(float value, float target, ref float velocity, float deltaTime, float strength = 100, float dampening = 1) {
 			velocity += (target - value) * strength * deltaTime;
 			velocity *= Pow(dampening * .0001f, deltaTime);

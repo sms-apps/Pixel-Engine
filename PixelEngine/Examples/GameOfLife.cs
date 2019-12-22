@@ -1,7 +1,9 @@
 using System;
 using PixelEngine;
 
-namespace Examples {
+namespace PixelEngine.Examples {
+
+	/// <summary> Example that simulates Conway's Game of Life cellular automata. </summary>
 	public class GameOfLife : Game {
 		// Current instance
 		private bool[,] grid;
@@ -16,7 +18,8 @@ namespace Examples {
 		// Color of deas pixels
 		private Pixel dead = Pixel.Presets.Black;
 
-		static void Run(string[] args) {
+		/// <summary> Entry point, formerly Main. </summary>
+		public static void Run(string[] args) {
 			GameOfLife gol = new GameOfLife();
 			gol.Construct(frameRate: 45);
 			gol.Start();
@@ -32,6 +35,7 @@ namespace Examples {
 			}
 		}
 
+		/// <inheritdoc />
 		public override void OnCreate() {
 			// Init the grids 
 			// We need two buffers so that cells don't change due to looping in a fixed order
@@ -67,6 +71,7 @@ namespace Examples {
 			Set(x, y + 8, "............##.......................");
 		}
 
+		/// <inheritdoc />
 		public override void OnUpdate(float elapsed) {
 			// Clear field
 			Clear(dead);
@@ -120,9 +125,11 @@ namespace Examples {
 			}
 		}
 
+		/// <inheritdoc />
 		// Flip cell status
 		public override void OnMousePress(Mouse m) { grid[MouseX, MouseY] = !grid[MouseX, MouseY]; }
 
+		/// <inheritdoc />
 		// Pause the game
 		public override void OnKeyPress(Key k) {
 			if (k == Key.Enter) {

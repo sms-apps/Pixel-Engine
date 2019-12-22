@@ -2,18 +2,20 @@ using System.Collections.Generic;
 
 using PixelEngine;
 
-namespace Examples {
+namespace PixelEngine.Examples {
+	/// <summary> Example that lets you see the code, circa 1999. </summary>
 	public class Matrix : Game {
 		private const int MaxStreamers = 300;
 
 		private List<Streamer> streamers;
 
-		private static void Run(string[] args) {
+		/// <summary> Entry point, formerly Main. </summary>
+		public static void Run(string[] args) {
 			Matrix game = new Matrix();
-			game.Construct(500, 500, 1, 1);
+			game.Construct(500, 500, 1, 1, 60);
 			game.Start();
 		}
-
+		/// <inheritdoc />
 		public override void OnCreate() {
 			streamers = new List<Streamer>(MaxStreamers);
 			for (int n = 0; n < MaxStreamers; n++) {
@@ -22,7 +24,7 @@ namespace Examples {
 				streamers.Add(s);
 			}
 		}
-
+		/// <inheritdoc />
 		public override void OnUpdate(float elapsed) {
 			Clear(Pixel.Presets.Black);
 

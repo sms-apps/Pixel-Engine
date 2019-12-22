@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security;
 
@@ -10,6 +11,12 @@ namespace PixelEngine {
 		/// <summary> Temporary directory path </summary>
 		public static string TempPath { get { return Windows.TempPath; } }
 
+		/// <summary> Helper macro to get the directory from a given source file. </summary>
+		/// <param name="callerPath"> Autofilled by compiler. Is the path of the source file. </param>
+		/// <returns> Forward-slash version of the autofilled filepath. </returns>
+		public static string SourceFileDirectory([CallerFilePath] string callerPath = "[NO PATH]") {
+			return callerPath.Substring(0, callerPath.Replace('\\', '/').LastIndexOf('/'));
+		}
 
 	}
 

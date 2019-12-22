@@ -53,13 +53,14 @@ namespace PixelEngine {
 
 		/// <summary> Create a randomly colored, opaque pixel. </summary>
 		public static Pixel Random() {
-			byte[] vals = Randoms.RandomBytes(3);
-			return new Pixel(vals[0], vals[1], vals[2]);
+			uint val = (uint) Randoms.RandomInt(0, 0x00FFFFFF);
+
+			return ARGB(0xFF000000 | val);
 		}
 		/// <summary> Create a randomly colored, randomly transparent pixel. </summary>
 		public static Pixel RandomAlpha() {
-			byte[] vals = Randoms.RandomBytes(4);
-			return new Pixel(vals[0], vals[1], vals[2], vals[3]);
+			uint val = (uint) Randoms.RandomInt(-int.MaxValue, int.MaxValue);
+			return ARGB(val);
 		}
 
 		#region Presets

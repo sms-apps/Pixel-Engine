@@ -2,7 +2,8 @@ using System.Collections.Generic;
 
 using PixelEngine;
 
-namespace Examples {
+namespace PixelEngine.Examples {
+	/// <summary> Example simple box dodger game </summary>
 	public class Dodger : Game {
 		private Player player;
 		private List<Enemy> enemies;
@@ -14,14 +15,17 @@ namespace Examples {
 		private float enemyTimer;
 		private float enemyElapsed;
 
-		private static void Run(string[] args) {
+		/// <summary> Entry point, formerly Main. </summary>
+		public static void Run(string[] args) {
 			Dodger game = new Dodger();
-			game.Construct(250, 250, 2, 2);
+			game.Construct(250, 250, 2, 2, 60);
 			game.Start();
 		}
 
+		/// <inheritdoc />
 		public override void OnCreate() { Reset(); }
 
+		/// <inheritdoc />
 		public override void OnUpdate(float elapsed) {
 			Clear(Pixel.Presets.Black);
 
@@ -51,7 +55,7 @@ namespace Examples {
 				enemies.Add(new Enemy(Random(ScreenWidth), -50, Random(200f, 300f), Random(5, 30), Random(5, 30)));
 				enemyElapsed -= enemyTimer;
 
-				enemyTimer = 0.25f + Random(-0.125f, -0.125f);
+				enemyTimer = 0.25f + Random(-0.125f, 0.125f);
 			}
 
 			player.Render(this, gameOver ? Pixel.Presets.Red : Pixel.Presets.White);
@@ -63,6 +67,7 @@ namespace Examples {
 				enemy.Render(this);
 
 				if (Colliding(enemy)) { gameOver = true; }
+
 				if (enemy.Pos.Y >= ScreenHeight + enemy.Height) {
 					score += 10;
 					enemies.RemoveAt(i);

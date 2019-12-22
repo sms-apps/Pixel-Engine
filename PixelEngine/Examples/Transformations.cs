@@ -1,33 +1,40 @@
 using PixelEngine;
 using PixelEngine.Extensions.Transforms;
 
-namespace Examples {
+namespace PixelEngine.Examples {
+	/// <summary> Example showing matrix transformations. Make sure there is a file 'car.png' in the working directory of the program.
+	/// Call <see cref="System.IO.Directory.GetCurrentDirectory"/> and <see cref="System.IO.Directory.SetCurrentDirectory(string)"/>
+	/// There is a <see cref="PixelEngine.WindowsInfo.SourceFileDirectory"/> Helper method. </summary>
 	public class Transformations : Game {
 		private Sprite car;
 		private float angle;
 
-		static void Run(string[] args) {
+		/// <summary> Entry point, formerly Main. </summary>
+		public static void Run(string[] args) {
 			Transformations t = new Transformations();
-			t.Construct(250, 250, 1, 1);
+			t.Construct(250, 250, 1, 1, 60);
 			t.Start();
 		}
 
+		/// <inheritdoc />
 		public override void OnCreate() {
 			car = Sprite.Load("Car.png");
 			PixelMode = Pixel.Mode.Alpha;
 		}
 
+		/// <inheritdoc />
 		public override void OnKeyDown(Key k) {
 			switch (k) {
 				case Key.Left:
-					angle += (float)Clock.Elapsed.TotalSeconds * 2;
+					angle += (float)Clock.Delta.TotalSeconds * 12f;
 					break;
 				case Key.Right:
-					angle -= (float)Clock.Elapsed.TotalSeconds * 2;
+					angle -= (float)Clock.Delta.TotalSeconds * 12f;
 					break;
 			}
 		}
 
+		/// <inheritdoc />
 		public override void OnUpdate(float elapsed) {
 			Clear(Pixel.Presets.Cyan);
 
