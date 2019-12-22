@@ -834,68 +834,99 @@ namespace PixelEngine.Utilities {
 	}
 	#endregion
 	#region Rect
+	/// <summary> Class similar to UnityEngine.Rect. Stores four <see cref="float"/>s, like a <see cref="Vector4"/>, but interprets them as a Rectangle. (x,y) x (width, height) </summary>
 	[System.Serializable]
 	public struct Rect : IEquatable<Rect> {
+		/// <summary> Zero rectangle. (0,0) x (0,0) </summary>
 		public static Rect zero { get { return new Rect(0, 0, 0, 0); } }
+		/// <summary> Unit rectangle. (0,0) x (1,1) </summary>
 		public static Rect unit { get { return new Rect(0, 0, 1f, 1f); } }
 
-		public float x, y, width, height;
+		/// <summary> Position information </summary>
+		public float x, y;
+		/// <summary> Size information </summary>
+		public float width, height;
+		/// <summary> Construct a rect with the given location and size </summary>
 		public Rect(float x, float y, float width, float height) { this.x = x; this.y = y; this.width = width; this.height = height; }
+		/// <summary> Construct a rect with the given location and size </summary>
 		public Rect(Vector2 pos, Vector2 size) { x = pos.x; y = pos.y; width = size.x; height = size.y; }
+		/// <summary> Copy a rect into another. </summary>
 		public Rect(Rect source) { x = source.x; y = source.y; width = source.width; height = source.height; }
 
+		/// <summary> get/set the top-left position of this <see cref="Rect"/> as a <see cref="Vector2"/>. </summary>
 		public Vector2 position {
 			get { return new Vector2(x, y); }
 			set { x = value.x; y = value.y; }
 		}
+		/// <summary> get/set the center position of this <see cref="Rect"/> as a <see cref="Vector2"/>. </summary>
 		public Vector2 center {
 			get { return new Vector2(x + width / 2f, y + height / 2f); }
 			set { x = value.x - width / 2f; y = value.y - height / 2f; }
 		}
+		/// <summary> get/setthe minimum position of this <see cref="Rect"/> as a <see cref="Vector2"/> </summary>
 		public Vector2 min {
 			get { return new Vector2(x, y); }
 			set { x = value.x; y = value.y; }
 		}
+		/// <summary> get/set  the maximum position of this <see cref="Rect"/> as a <see cref="Vector2"/> </summary>
 		public Vector2 max {
 			get { return new Vector2(x + width, y + height); }
 			set { x = value.x - width; y = value.y - height; }
 		}
+		/// <summary> get/set the size of this <see cref="Rect"/> as a <see cref="Vector2"/> </summary>
 		public Vector2 size {
 			get { return new Vector2(width, height); }
 			set { width = value.x; height = value.y; }
 		}
+		/// <summary> get/set the lowest x-coord in this rect. </summary>
 		public float xMin { get { return x; } set { float xm = xMax; x = value; width = xm - x; } }
+		/// <summary> get/set the lowest y-coord in this rect. </summary>
 		public float yMin { get { return y; } set { float ym = yMax; y = value; height = ym - y; } }
+		/// <summary> get/set the highest x-coord in this rect. </summary>
 		public float xMax { get { return x + width; } set { width = value - x; } }
+		/// <summary> get/set the highest y-coord in this rect. </summary>
 		public float yMax { get { return y + height; } set { height = value - y; } }
 
+		/// <summary> get the left edge of this rect. </summary>
 		public float left { get { return x; } }
+		/// <summary> get the right edge of this rect. </summary>
 		public float right { get { return x + width; } }
+		/// <summary> get the top edge of this rect. </summary>
 		public float top { get { return y; } }
+		/// <summary> get the bottom edge of this rect. </summary>
 		public float bottom { get { return y + height; } }
 
+		/// <inheritdoc />
 		public override bool Equals(object other) { return other is Rect && this.Equals((Rect)other); }
+		/// <summary> Compare two rects by their position and size for equality. </summary>
 		public bool Equals(Rect other) { return x.Equals(other.x) && y.Equals(other.y) && width.Equals(other.width) && height.Equals(other.height); }
+		/// <inheritdoc />
 		public override string ToString() { return $"(x:{x:F2}, y:{y:F2}, width:{width:F2}, height:{height:F2})"; }
+		/// <inheritdoc />
 		public override int GetHashCode() { return x.GetHashCode() ^ (width.GetHashCode() << 2) ^ (y.GetHashCode() >> 2) ^ (height.GetHashCode() >> 1); }
 
+		/// <summary> Directly set the position and size of this rect. </summary>
 		public void Set(float x, float y, float width, float height) {
 			this.x = x; this.y = y; this.width = width; this.height = height;
 		}
+		/// <summary> Does this Rect contain the given <paramref name="point"/>? </summary>
 		public bool Contains(Vector2 point) {
 			return point.x >= xMin && point.x <= xMax && point.y >= yMin && point.y <= yMax;
 		}
+		/// <summary> Does this Rect contain the given <paramref name="point"/>? </summary>
 		public bool Contains(Vector3 point) {
 			return point.x >= xMin && point.x <= xMax && point.y >= yMin && point.y <= yMax;
 		}
 
+		/// <summary> Do two <see cref="Rect"/>s overlap, excluding cases where they just touch edges? </summary>
 		public bool Overlaps(Rect other) {
 			return other.xMax > xMin && other.xMin < xMax && other.yMax > yMin && other.yMin < yMax;
 		}
+		/// <summary> Do two <see cref="Rect"/>s overlap, including cases where they just touch edges? </summary>
 		public bool Touches(Rect other) {
 			return other.xMax >= xMin && other.xMin <= xMax && other.yMax >= yMin && other.yMin <= yMax;
 		}
-
+		/// <summary> Get a point within the rect at <paramref name="coords"/>. (0,0) means top-left of rect, (1,1) means bottom-right </summary>
 		public Vector2 NormalizedToPoint(Vector2 coords) {
 			return new Vector2(Lerp(x, xMax, coords.x), Lerp(y, yMax, coords.y));
 		}
@@ -903,51 +934,78 @@ namespace PixelEngine.Utilities {
 			return new Vector2(InverseLerp(x, xMax, point.x), InverseLerp(y, yMax, point.y));
 		}
 
-		public static bool operator !=(Rect a, Rect b) { return !(a == b); }
+		/// <summary> Compare the location and size of two rectangles for equality </summary>
 		public static bool operator ==(Rect a, Rect b) { return a.x == b.x && a.y == b.y && a.width == b.width && a.height == b.height; }
+		/// <summary> Inverse compare the location and size of two rectangles for equality </summary>
+		public static bool operator !=(Rect a, Rect b) { return !(a == b); }
 	}
 	#endregion
 	#region RectInt
+	/// <summary> Class similar to UnityEngine.RectInt. Stores four <see cref="int"/>s, like what would be Vector4Int, but interprets them as a Rectangle. (x,y) x (width, height) </summary>
 	[System.Serializable]
 	public struct RectInt : IEquatable<RectInt> {
-		public int x, y, width, height;
+		/// <summary> Position information </summary>
+		public int x, y;
+		/// <summary> Size information </summary>
+		public int width, height;
+
+		/// <summary> Construct a RectInt with the given position/size </summary>
 		public RectInt(int x, int y, int width, int height) { this.x = x; this.y = y; this.width = width; this.height = height; }
+		/// <summary> Construct a RectInt with the given position/size </summary>
 		public RectInt(Vector2Int pos, Vector2Int size) { x = pos.x; y = pos.y; width = size.x; height = size.y; }
+		/// <summary> Construct a RectInt as a copy of another </summary>
 		public RectInt(RectInt source) { x = source.x; y = source.y; width = source.width; height = source.height; }
 
+		/// <summary> get/set the top-left position of this <see cref="RectInt"/> as a <see cref="Vector2Int"/>. </summary>
 		public Vector2Int position {
 			get { return new Vector2Int(x, y); }
 			set { x = value.x; y = value.y; }
 		}
+		/// <summary> get/set the center position of this <see cref="RectInt"/> as a <see cref="Vector2Int"/>. </summary>
 		public Vector2 center {
 			get { return new Vector2(x + width / 2f, y + height / 2f); }
 		}
+		/// <summary> get/set the minimum position of this <see cref="RectInt"/> as a <see cref="Vector2Int"/>. </summary>
 		public Vector2Int min {
 			get { return new Vector2Int(x, y); }
 			set { x = value.x; y = value.y; }
 		}
+		/// <summary> get/set the maximum position of this <see cref="RectInt"/> as a <see cref="Vector2Int"/>. </summary>
 		public Vector2Int max {
 			get { return new Vector2Int(x + width, y + height); }
 			set { x = value.x - width; y = value.y - height; }
 		}
+		/// <summary> get/set the size of this <see cref="RectInt"/> as a <see cref="Vector2Int"/>. </summary>
 		public Vector2Int size {
 			get { return new Vector2Int(width, height); }
 			set { width = value.x; height = value.y; }
 		}
 
+		/// <summary> get the min x-coord of this <see cref="RectInt"/> </summary>
 		public int xMin { get { return x; } set { int xm = xMax; x = value; width = xm - x; } }
+		/// <summary> get the min y-coord of this <see cref="RectInt"/> </summary>
 		public int yMin { get { return y; } set { int ym = yMax; y = value; height = ym - y; } }
+		/// <summary> get the max x-coord of this <see cref="RectInt"/> </summary>
 		public int xMax { get { return x + width; } set { width = value - x; } }
+		/// <summary> get the max y-coord of this <see cref="RectInt"/> </summary>
 		public int yMax { get { return y + height; } set { height = value - y; } }
 
+		/// <summary> get the left edge of this <see cref="RectInt"/> </summary>
 		public int left { get { return x; } }
+		/// <summary> get the right edge of this <see cref="RectInt"/> </summary>
 		public int right { get { return x + width; } }
+		/// <summary> get the top edge of this <see cref="RectInt"/> </summary>
 		public int top { get { return y; } }
+		/// <summary> get the bottom edge of this <see cref="RectInt"/> </summary>
 		public int bottom { get { return y + height; } }
 
+		/// <inheritdoc />
 		public override bool Equals(object other) { return other is RectInt && Equals((RectInt)other); }
+		/// <summary> Test two <see cref="RectInt"/>s position and size for equality. </summary>
 		public bool Equals(RectInt other) { return x == other.x && y == other.y && width == other.width && height == other.height; }
+		/// <inheritdoc />
 		public override string ToString() { return $"(x:{x}, y:{y}, width:{width}, height:{height})"; }
+		/// <inheritdoc />
 		public override int GetHashCode() { return x.GetHashCode() ^ (width.GetHashCode() << 2) ^ (y.GetHashCode() >> 2) ^ (height.GetHashCode() >> 1); }
 	}
 	#endregion
