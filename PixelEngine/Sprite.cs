@@ -265,7 +265,7 @@ namespace PixelEngine {
 		public Pixel this[int x, int y] {
 			get {
 				int i = x + y * Width;
-				if (i < 0 || i >= palette.Length) { return new Pixel(); }
+				if (i < 0 || i >= colors.Length) { return new Pixel(); }
 				byte b = colors[i];
 				if (b == 0) { return new Pixel(); }
 				return palette[b];
@@ -273,7 +273,7 @@ namespace PixelEngine {
 			set {
 				int i = x + y * Width;
 				int ci = value.Equals(Pixel.Empty) ? 0 : Array.IndexOf(palette, value);
-				if (ci < 0) { throw new InvalidOperationException(); }
+				if (ci < 0) { throw new InvalidOperationException($"Color (ARGB) {value.ToHexARGB()} not found in palette."); }
 				colors[i] = (byte)ci;
 			}
 		}
@@ -284,17 +284,17 @@ namespace PixelEngine {
 		/// <returns> Palette index at given coordinate </returns>
 		public byte GetIndex(int x, int y) {
 			int i = x + y * Width;
-			if (i < 0 || i >= palette.Length) { return 0; }
+			if (i < 0 || i >= colors.Length) { return 0; }
 			return colors[i];
 		}
 		/// <summary> Sets a palette index at the given x/y coordinate </summary>
 		/// <param name="x"> x coord </param>
 		/// <param name="y"> y coord </param>
-		/// <param name="bi"> byte index into Palette to set. </param>
-		public void SetIndex(int x, int y, byte bi) {
+		/// <param name="ci"> color index into Palette to set. </param>
+		public void SetIndex(int x, int y, int ci) {
 			int i = x + y * Width;
-			if (i < 0 || i >= palette.Length) { return; }
-			colors[i] = bi;
+			if (i < 0 || i >= colors.Length) { return; }
+			colors[i] = (byte)(ci&0xFF);
 		}
 
 		/// <summary> Create a new, empty <see cref="PalettedSprite"/> with the given dimensions and <see cref="Pixel"/>[] palette </summary>
