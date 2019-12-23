@@ -133,6 +133,102 @@
         <member name="M:PixelEngine.Examples.RandomPixels.OnUpdate(System.Single)">
             <inheritdoc />
         </member>
+        <member name="T:PixelEngine.Examples.SaveFileExample">
+            <summary> Example class showing how to work with save files. </summary>
+        </member>
+        <member name="M:PixelEngine.Examples.SaveFileExample.Run(System.String[])">
+            <summary> Entry point </summary>
+        </member>
+        <member name="T:PixelEngine.Examples.SaveFileExample.GameData">
+            <summary> Class holding game data. This will get serialized out to the save file </summary>
+        </member>
+        <member name="F:PixelEngine.Examples.SaveFileExample.GameData.money">
+            <summary> Current money in pocket </summary>
+        </member>
+        <member name="F:PixelEngine.Examples.SaveFileExample.GameData.clicks">
+            <summary> Total clicks since game start </summary>
+        </member>
+        <member name="F:PixelEngine.Examples.SaveFileExample.GameData.things">
+            <summary> Things found by the player </summary>
+        </member>
+        <member name="F:PixelEngine.Examples.SaveFileExample.GameData.powerups">
+            <summary> Powerups bought by the player </summary>
+        </member>
+        <member name="T:PixelEngine.Examples.SaveFileExample.Thing">
+            <summary> Some Thing the player found. Structs can be saved/loaded as well. </summary>
+        </member>
+        <member name="F:PixelEngine.Examples.SaveFileExample.buttons">
+            <summary> Little UI system </summary>
+        </member>
+        <member name="F:PixelEngine.Examples.SaveFileExample.gameData">
+            <summary> Current game data </summary>
+        </member>
+        <member name="F:PixelEngine.Examples.SaveFileExample.best">
+            <summary> Current best thing </summary>
+        </member>
+        <member name="F:PixelEngine.Examples.SaveFileExample.totalThingPower">
+            <summary> Total power of all owned Things </summary>
+        </member>
+        <member name="F:PixelEngine.Examples.SaveFileExample.income">
+            <summary> Base click money earning ability </summary>
+        </member>
+        <member name="F:PixelEngine.Examples.SaveFileExample.dropChance">
+            <summary> Drop chance per click </summary>
+        </member>
+        <member name="F:PixelEngine.Examples.SaveFileExample.nextCost">
+            <summary> Cost of next powerup </summary>
+        </member>
+        <member name="M:PixelEngine.Examples.SaveFileExample.#ctor">
+            <inheritdoc />
+        </member>
+        <member name="P:PixelEngine.Examples.SaveFileExample.saveFile">
+            <summary> Place to save the file... </summary>
+        </member>
+        <member name="M:PixelEngine.Examples.SaveFileExample.OnCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:PixelEngine.Examples.SaveFileExample.OnDestroy">
+            <inheritdoc />
+        </member>
+        <member name="M:PixelEngine.Examples.SaveFileExample.OnUpdate(System.Single)">
+            <inheritdoc />
+        </member>
+        <member name="M:PixelEngine.Examples.SaveFileExample.Clicked">
+            <summary> Function to call when the main button is clicked. </summary>
+        </member>
+        <member name="M:PixelEngine.Examples.SaveFileExample.DropThing">
+            <summary> Called to give the player a new Thing </summary>
+        </member>
+        <member name="M:PixelEngine.Examples.SaveFileExample.TryBuyPowerup">
+            <summary> Called when the player clicks the buy powerup button </summary>
+        </member>
+        <member name="M:PixelEngine.Examples.SaveFileExample.Recalc">
+            <summary> Recalculates information derived from game state. </summary>
+        </member>
+        <member name="M:PixelEngine.Examples.SaveFileExample.CombineRatio(System.Single,System.Single)">
+            <summary> Combine ratios so they never reach 100% </summary>
+        </member>
+        <member name="M:PixelEngine.Examples.SaveFileExample.DropChance(System.Int32,System.Int32)">
+            <summary> Calculate current thing chance </summary>
+        </member>
+        <member name="M:PixelEngine.Examples.SaveFileExample.BestThing(System.Collections.Generic.List{PixelEngine.Examples.SaveFileExample.Thing})">
+            <summary> Find the user's best Thing, or null if they have none. </summary>
+        </member>
+        <member name="M:PixelEngine.Examples.SaveFileExample.TotalThingPower(System.Collections.Generic.List{PixelEngine.Examples.SaveFileExample.Thing})">
+            <summary> SUM ALL THE THINGS power. </summary>
+        </member>
+        <member name="M:PixelEngine.Examples.SaveFileExample.BaseIncome(System.Single,System.Int32)">
+            <summary> Calculate baseIncome from thing power. </summary>
+        </member>
+        <member name="M:PixelEngine.Examples.SaveFileExample.PowerUpCost(System.Int32)">
+            <summary> Get the cost of the next Power Up </summary>
+        </member>
+        <member name="M:PixelEngine.Examples.SaveFileExample.CenterText(PixelEngine.Utilities.Vector2,System.String,PixelEngine.Pixel)">
+            <summary> Draw some text centered on a position </summary>
+        </member>
+        <member name="T:PixelEngine.Examples.SaveFileExample.Button">
+            <summary> UI Helper class </summary>
+        </member>
         <member name="T:PixelEngine.Examples.Snake">
             <summary> Example simple snake game </summary>
         </member>
@@ -249,6 +345,9 @@
         </member>
         <member name="P:PixelEngine.Font.CharHeight">
             <summary> Height of a line of text rendered with this font </summary>
+        </member>
+        <member name="M:PixelEngine.Font.Measure(System.String)">
+            <summary> Measures total Width/Height of the given <paramref name="text"/> rendered with this <see cref="T:PixelEngine.Font"/>. </summary>
         </member>
         <member name="M:PixelEngine.Font.TextWidth(System.String)">
             <summary> Measures the width of a string of text when rendered with this font, if it was all on one line. </summary>
@@ -4838,6 +4937,12 @@
             <param name="callerPath"> Autofilled by compiler. Is the path of the source file. </param>
             <returns> Forward-slash version of the autofilled filepath. </returns>
         </member>
+        <member name="P:PixelEngine.WindowsInfo.AppDataPath">
+            <summary> Path for application data. This folder is unique to the logged in user. Good for stuff that should be slightly hidden. </summary>
+        </member>
+        <member name="P:PixelEngine.WindowsInfo.UserDataPath">
+            <summary> Path for user data. This folder is unique to the logged in user. Good for saves that are visible to the user. </summary>
+        </member>
         <member name="T:PixelEngine.Windows">
             <summary> Class holding external bindings and other information for interacting with the Windows operating system. </summary>
         </member>
@@ -4849,6 +4954,12 @@
         </member>
         <member name="P:PixelEngine.Windows.TempPath">
             <summary> Path for temporary directory. </summary>
+        </member>
+        <member name="P:PixelEngine.Windows.AppDataPath">
+            <summary> Path for application data, this folder is system wide. Good for stuff that should be slightly hidden. </summary>
+        </member>
+        <member name="P:PixelEngine.Windows.UserDataPath">
+            <summary> Path for user data, this folder is unique to the logged in user. Good for saves that are visible to the user. </summary>
         </member>
         <member name="M:PixelEngine.Windows.DestroyTempPath">
             <summary> Kill all files in temp path. </summary>

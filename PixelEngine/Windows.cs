@@ -18,6 +18,11 @@ namespace PixelEngine {
 			return callerPath.Substring(0, callerPath.Replace('\\', '/').LastIndexOf('/'));
 		}
 
+		/// <summary> Path for application data. This folder is unique to the logged in user. Good for stuff that should be slightly hidden. </summary>
+		public static string AppDataPath { get { return Windows.AppDataPath; } }
+		
+		/// <summary> Path for user data. This folder is unique to the logged in user. Good for saves that are visible to the user. </summary>
+		public static string UserDataPath { get { return Windows.UserDataPath; } }
 	}
 
 	/// <summary> Class holding external bindings and other information for interacting with the Windows operating system. </summary>
@@ -32,16 +37,24 @@ namespace PixelEngine {
 			string pixelEngine = nameof(PixelEngine);
 
 			TempPath = Path.Combine(Path.GetTempPath(), pixelEngine, $"{entryName}.{entryVersion}");
+			AppDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), entryName);
+			UserDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Documents", entryName);
 
-			if (!Directory.Exists(TempPath)) {
-				Directory.CreateDirectory(TempPath);
-			}
+			if (!Directory.Exists(TempPath)) { Directory.CreateDirectory(TempPath); }
+			if (!Directory.Exists(AppDataPath)) { Directory.CreateDirectory(AppDataPath); }
+			if (!Directory.Exists(UserDataPath)) { Directory.CreateDirectory(UserDataPath); }
 
 			ResxHelper.LoadDll();
 			return true;
 		}
 		/// <summary> Path for temporary directory. </summary>
-		public static string TempPath { get; private set; }
+		internal static string TempPath { get; private set; }
+
+		/// <summary> Path for application data, this folder is system wide. Good for stuff that should be slightly hidden. </summary>
+		internal static string AppDataPath { get; private set; }
+		/// <summary> Path for user data, this folder is unique to the logged in user. Good for saves that are visible to the user. </summary>
+		internal static string UserDataPath { get; private set; }
+
 		/// <summary> Kill all files in temp path. </summary>
 		public static void DestroyTempPath() {
 			ResxHelper.DestroyDll();
