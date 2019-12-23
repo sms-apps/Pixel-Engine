@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using PixelEngine;
@@ -5,16 +6,17 @@ using PixelEngine;
 namespace PixelEngine.Examples {
 	/// <summary> Example that lets you see the code, circa 1999. </summary>
 	public class Matrix : Game {
+		/// <summary> Entry point, formerly Main. </summary>
+		public static void Run(string[] args) {
+			Matrix game = new Matrix();
+			game.Construct(500, 500, 1, 1, -1);
+			game.Start();
+		}
+
 		private const int MaxStreamers = 300;
 
 		private List<Streamer> streamers;
 
-		/// <summary> Entry point, formerly Main. </summary>
-		public static void Run(string[] args) {
-			Matrix game = new Matrix();
-			game.Construct(500, 500, 1, 1, 60);
-			game.Start();
-		}
 		/// <inheritdoc />
 		public override void OnCreate() {
 			streamers = new List<Streamer>(MaxStreamers);
@@ -24,14 +26,15 @@ namespace PixelEngine.Examples {
 				streamers.Add(s);
 			}
 		}
+
 		/// <inheritdoc />
 		public override void OnUpdate(float delta) {
 			Clear(Pixel.Presets.Black);
 
 			for (int k = 0; k < streamers.Count; k++) {
 				Streamer s = streamers[k];
-
-				s.Position += delta * s.Speed * 10;
+				
+				s.Position += delta * s.Speed * 10.0f;
 
 				for (int i = 0; i < s.Text.Length; i++) {
 					Pixel col = s.Speed > 10 ? Pixel.Presets.Green : Pixel.Presets.DarkGreen;
@@ -46,13 +49,14 @@ namespace PixelEngine.Examples {
 
 				}
 
-				if (s.Position - s.Text.Length * 8 >= ScreenHeight) {
-					PrepareStreamer(ref s, 0);
+				if (s.Position - s.Text.Length * 8 > ScreenHeight) {
+					PrepareStreamer(ref s, -8);
 				}
 
 
 				streamers[k] = s;
 			}
+			
 		}
 
 		private char RandomChar() { return (char)Random(32, 128); }

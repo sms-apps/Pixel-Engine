@@ -47,6 +47,7 @@
     <Compile Include="Examples\Dodger.cs" />
     <Compile Include="Examples\GameOfLife.cs" />
     <Compile Include="Examples\Matrix.cs" />
+    <Compile Include="Examples\MatrixRedux.cs" />
     <Compile Include="Examples\Mazes.cs" />
     <Compile Include="Examples\PalettePanning.cs" />
     <Compile Include="Examples\PerlinNoise.cs" />
