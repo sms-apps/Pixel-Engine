@@ -73,6 +73,18 @@
         <member name="M:PixelEngine.Examples.Matrix.OnUpdate(System.Single)">
             <inheritdoc />
         </member>
+        <member name="T:PixelEngine.Examples.MatrixRedux">
+            <summary> Example that lets you see the code, circa 1999. </summary>
+        </member>
+        <member name="M:PixelEngine.Examples.MatrixRedux.Run(System.String[])">
+            <summary> Entry point, formerly Main. </summary>
+        </member>
+        <member name="M:PixelEngine.Examples.MatrixRedux.OnCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:PixelEngine.Examples.MatrixRedux.OnUpdate(System.Single)">
+            <inheritdoc />
+        </member>
         <member name="T:PixelEngine.Examples.Mazes">
             <summary> Example maze generator that uses a random walk to sculpt a maze out of a grid </summary>
         </member>
@@ -89,6 +101,18 @@
             <inheritdoc />
         </member>
         <member name="M:PixelEngine.Examples.Mazes.OnUpdate(System.Single)">
+            <inheritdoc />
+        </member>
+        <member name="T:PixelEngine.Examples.PalettePanning">
+            <summary> Example class containing Palette panning example </summary>
+        </member>
+        <member name="M:PixelEngine.Examples.PalettePanning.Run(System.String[])">
+            <summary> Entry point. </summary>
+        </member>
+        <member name="M:PixelEngine.Examples.PalettePanning.#ctor">
+            <inheritdoc />
+        </member>
+        <member name="M:PixelEngine.Examples.PalettePanning.OnUpdate(System.Single)">
             <inheritdoc />
         </member>
         <member name="T:PixelEngine.Examples.PerlinNoise">
@@ -4432,6 +4456,21 @@
         <member name="M:PixelEngine.Point.op_Division(PixelEngine.Point,System.Int32)">
             <summary> Divide a <see cref="T:PixelEngine.Point"/> by an <see cref="T:System.Int32"/> </summary>
         </member>
+        <member name="M:PixelEngine.Point.op_Implicit(PixelEngine.Utilities.Vector2)~PixelEngine.Point">
+            <summary> Implicitly coerce a <see cref="T:PixelEngine.Utilities.Vector2"/> into a <see cref="T:PixelEngine.Point"/> by casting its x,y components into <see cref="T:System.Int32"/>s. </summary>
+        </member>
+        <member name="M:PixelEngine.Point.op_Implicit(PixelEngine.Utilities.Vector2Int)~PixelEngine.Point">
+            <summary> Implicitly coerce a <see cref="T:PixelEngine.Utilities.Vector2Int"/> into a <see cref="T:PixelEngine.Point"/> by capturing its x,y components. </summary>
+        </member>
+        <member name="M:PixelEngine.Point.op_Implicit(PixelEngine.Utilities.Vector3)~PixelEngine.Point">
+            <summary> Implicitly coerce a <see cref="T:PixelEngine.Utilities.Vector3"/> into a <see cref="T:PixelEngine.Point"/> by casting its x,y components into <see cref="T:System.Int32"/>s. </summary>
+        </member>
+        <member name="M:PixelEngine.Point.op_Implicit(PixelEngine.Utilities.Vector3Int)~PixelEngine.Point">
+            <summary> Implicitly coerce a <see cref="T:PixelEngine.Utilities.Vector3Int"/> into a <see cref="T:PixelEngine.Point"/> by capturing its x,y components. </summary>
+        </member>
+        <member name="M:PixelEngine.Point.op_Implicit(PixelEngine.Utilities.Vector4)~PixelEngine.Point">
+            <summary> Implicitly coerce a <see cref="T:PixelEngine.Utilities.Vector4"/> into a <see cref="T:PixelEngine.Point"/> by casting its x,y components into <see cref="T:System.Int32"/>s. </summary>
+        </member>
         <member name="F:PixelEngine.Randoms.Initialized">
             <summary> Workaround to avoid static constructor penalty </summary>
         </member>
@@ -4731,11 +4770,11 @@
             <param name="y"> y coord </param>
             <returns> Palette index at given coordinate </returns>
         </member>
-        <member name="M:PixelEngine.PalettedSprite.SetIndex(System.Int32,System.Int32,System.Byte)">
+        <member name="M:PixelEngine.PalettedSprite.SetIndex(System.Int32,System.Int32,System.Int32)">
             <summary> Sets a palette index at the given x/y coordinate </summary>
             <param name="x"> x coord </param>
             <param name="y"> y coord </param>
-            <param name="bi"> byte index into Palette to set. </param>
+            <param name="ci"> color index into Palette to set. </param>
         </member>
         <member name="M:PixelEngine.PalettedSprite.#ctor(System.Int32,System.Int32,PixelEngine.Pixel[])">
             <summary> Create a new, empty <see cref="T:PixelEngine.PalettedSprite"/> with the given dimensions and <see cref="T:PixelEngine.Pixel"/>[] palette </summary>
