@@ -55,12 +55,12 @@ namespace PixelEngine.Examples {
 
 				long baseFrame = 0;
 				int size = Randoms.RandomInt(5, 11);
-				int numBits = size*size - (size * size/2);
+				int numBits = size*size - (size * (size/2));
 				long bitMask = (1L << (1+numBits)) - 1L;
 
 				// Make sure at least some bits are on.
 				Console.WriteLine($"Generating {seed} => {size}^2 ({numBits}) invader. Bitmask is 0x{bitMask:X16}.");
-				while (countBits(baseFrame) < 5) {
+				while (countBits(baseFrame) < 6) {
 					if (baseFrame != 0) {
 						Console.WriteLine($"{baseFrame} has too few bits!.");
 					}
@@ -73,11 +73,12 @@ namespace PixelEngine.Examples {
 					long bits = baseFrame;
 					if (i != 0) {
 						long mask = 0;
-						int numFlips = Randoms.RandomInt(1,6);
+						int numFlips = Randoms.RandomInt(1,8);
 						for (int k = 0; k < numFlips; k++) {
 							int attempt = Randoms.RandomInt(0, numBits);
 							bool alreadyDidIt = (mask & (1L << attempt)) != 0;
 							if (!alreadyDidIt) { mask |= 1L << attempt; }
+							else { k--; }
 						}
 						bits ^= mask;
 					}
