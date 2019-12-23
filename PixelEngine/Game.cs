@@ -195,11 +195,12 @@ namespace PixelEngine {
 			while (active) {
 				while (active) {
 					
-					float delta = Clock.Delta;
-
 					if (frameTimer != null && !frameTimer.Tick()) {
 						continue;
 					}
+
+					float delta = Clock.Delta;
+					Clock.Tick();
 					
 					if (delaying) {
 						delayTime -= delta;
@@ -223,7 +224,6 @@ namespace PixelEngine {
 
 					canvas.Draw(defDrawTarget, textTarget);
 
-					Clock.Tick();
 				}
 
 				OnDestroy();
@@ -256,6 +256,8 @@ namespace PixelEngine {
 				}
 
 				if (mouse[i].Down) { OnMouseDown((Mouse)i); }
+
+				oldMouse[i] = newMouse[i];
 			}
 
 			var swap = oldMouse;
@@ -472,7 +474,7 @@ namespace PixelEngine {
 		public bool Between(float val, float min, float max) { return val > min && val < max; }
 
 		/// <summary> Reseed the RNG with the current Tick count </summary>
-		public void Seed() { Randoms.Seed = Environment.TickCount % int.MaxValue; }
+		public void Seed() { Randoms.Seed = ((int)DateTime.UtcNow.Ticks) % int.MaxValue; }
 		/// <summary> Reseed the RNG with the given seed </summary>
 		public void Seed(int s) { Randoms.Seed = s; }
 		/// <summary> Get a random int from [0, <paramref name="max"/>) </summary>
