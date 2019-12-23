@@ -46,6 +46,7 @@
     <Compile Include="Examples\ChaosGame.cs" />
     <Compile Include="Examples\Dodger.cs" />
     <Compile Include="Examples\GameOfLife.cs" />
+    <Compile Include="Examples\Invaders.cs" />
     <Compile Include="Examples\Matrix.cs" />
     <Compile Include="Examples\MatrixRedux.cs" />
     <Compile Include="Examples\Mazes.cs" />
