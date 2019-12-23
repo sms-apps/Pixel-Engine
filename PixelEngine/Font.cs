@@ -57,6 +57,23 @@ namespace PixelEngine {
 			CharHeight = glyphs.Values.Max(g => g.Height);
 		}
 
+		/// <summary> Measures total Width/Height of the given <paramref name="text"/> rendered with this <see cref="Font"/>. </summary>
+		public Point Measure(string text) {
+			int rx = 0; int ry = CharHeight;
+			int x = 0;
+			for (int i = 0; i < text.Length; i++) {
+				char c = text[i];
+				if (c == '\n') {
+					x = 0; 
+					ry += CharHeight;
+				} else {
+					x += Glyphs[c].Width;
+					if (x > rx) { rx = x; }
+				}
+			}
+			return new Point(rx, ry);
+		}
+
 		/// <summary> Measures the width of a string of text when rendered with this font, if it was all on one line. </summary>
 		/// <param name="text"> Text to measure  </param>
 		/// <returns> Width, in pixels, of text </returns>

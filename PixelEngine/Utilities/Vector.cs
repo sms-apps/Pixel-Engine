@@ -930,8 +930,9 @@ namespace PixelEngine.Utilities {
 		/// <summary> get/set  the maximum position of this <see cref="Rect"/> as a <see cref="Vector2"/> </summary>
 		public Vector2 max {
 			get { return new Vector2(x + width, y + height); }
-			set { Vector2 size = value - min; x = size.x; y = size.y; }
+			set { Vector2 size = value - min; width = size.x; height = size.y; }
 		}
+		
 		/// <summary> get/set the size of this <see cref="Rect"/> as a <see cref="Vector2"/> </summary>
 		public Vector2 size {
 			get { return new Vector2(width, height); }
