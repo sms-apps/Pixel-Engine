@@ -1,5 +1,23 @@
 # Changelog
 
+### 2019/12/23
+- Adds Example of using `PalettedSprite`
+- Adds Example of creating a save file
+- Small bugfixes in Vector library (Examples make good test cases)
+- Fixed a timing issue that showed up in `Matrix` example, added `MatrixRedux`
+- Reorganize repo- now examples are not duplicated.
+- Adds `Font.Measure(string)` to measure both X and Y at the same time (and measure accurately!)
+- Adds `WindowsInfo.AppDataPath` and `WindowsInfo.UserDataPath` to store configs/saves if desired.
+
+### 2019/12/22
+- Adds the rest of comments to Vector classes
+- Adds some classes to Vector.cs
+- Verified all examples work as intended
+- `Clock` has its own `Tick()` method, time keeping logic other than calling `Tick()` was decoupled from `Game`.
+- Exposes `Windows.TempPath` in  `WindowsInfo`, as well as a helper macro to get the `SourceFileDirectory` of any source file that calls the macro.
+- Corrects `Vector2`'s `FloorToInt()`/`CeilToInt()`/`RoundToInt()` signatures.
+- Tweaked `Pixel.Random` and `Pixel.RandomAlpha`.
+
 ### 2019/12/20
 I've been thinking of doing this for a while, but I'm building on top of `DevChrome`'s work to add some features.
 Reading the source was pretty fun, and I think I've got a good handle on the PixelGameEngine's inner workings.
