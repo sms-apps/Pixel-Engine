@@ -11,7 +11,7 @@ namespace PixelEngine.Examples {
 		/// <summary> Entrypoint </summary>
 		public static void Run(string[] args) {
 			Invaders game = new Invaders();
-			game.Construct(100, 100, 5, 5, 60);
+			game.Construct(400, 400, 3, 3, 60);
 			game.Start();
 		}
 		Pixel bgColor;
@@ -27,17 +27,9 @@ namespace PixelEngine.Examples {
 					game.DrawSprite(position, sprite);
 				}
 			}
-
 		}
 
-		static int countBits(long data) {
-			int cnt = 0;
-			while (data != 0) {
-				data = data & (data - 1);
-				cnt++;
-			}
-			return cnt;
-		}
+
 		class Invader : Entity {
 			int speed;
 			int framesPerTick;
@@ -46,48 +38,16 @@ namespace PixelEngine.Examples {
 			ISprite[] poses;
 			int frame = 0;
 
-			public Invader(int seed) {
+			public Invader(int seed, InvaderRenderSettings sets = null) {
 				this.seed = seed;
-				Randoms.Seed = seed;
-				int numFrames = Randoms.RandomInt(2,7);
-				poses = new ISprite[numFrames];
-				Pixel color = Pixel.Random();
-
-				long baseFrame = 0;
-				int size = Randoms.RandomInt(5, 11);
-				int numBits = size*size - (size * (size/2));
-				long bitMask = (1L << (1+numBits)) - 1L;
-
-				// Make sure at least some bits are on.
-				Console.WriteLine($"Generating {seed} => {size}^2 ({numBits}) invader. Bitmask is 0x{bitMask:X16}.");
-				while (countBits(baseFrame) < 6) {
-					if (baseFrame != 0) {
-						Console.WriteLine($"{baseFrame} has too few bits!.");
-					}
-					baseFrame = 0;
-					baseFrame |= ((long)Randoms.RandomInt(int.MinValue, int.MaxValue));
-					baseFrame |= ((long)Randoms.RandomInt(int.MinValue, int.MaxValue)) << 32;
-					baseFrame &= bitMask;
-				}
-				for (int i = 0; i < numFrames; i++) {
-					long bits = baseFrame;
-					if (i != 0) {
-						long mask = 0;
-						int numFlips = Randoms.RandomInt(1,8);
-						for (int k = 0; k < numFlips; k++) {
-							int attempt = Randoms.RandomInt(0, numBits);
-							bool alreadyDidIt = (mask & (1L << attempt)) != 0;
-							if (!alreadyDidIt) { mask |= 1L << attempt; }
-							else { k--; }
-						}
-						bits ^= mask;
-					}
-
-					poses[i] = CreateInvaderSprite(size, bits, color);
-				}
+				poses = RenderInvaderPoses(seed, sets);
+				
 				sprite = poses[0];
-				speed = 1 + Randoms.RandomInt(0, 2);
-				framesPerTick = 3 + Randoms.RandomInt(0, 6);
+				speed = Randoms.RandomInt(1, 3);
+				if (Randoms.RandomFloat() < .5f) {
+					speed *= -1;
+				}
+				framesPerTick = Randoms.RandomInt(5, 10);
 				framesSinceTick = 0;
 				position = default;
 			}
@@ -133,8 +93,58 @@ namespace PixelEngine.Examples {
 
 		private void Reset() {
 			entities.Clear();
-			for (int i = 0; i < 14; i++) {
-				Invader invader = new Invader(Randoms.RandomInt(int.MinValue, int.MaxValue));
+			// Create some extra settings.
+			// These end up being very colurful.
+			InvaderRenderSettings vibrant = new InvaderRenderSettings();
+			vibrant.minFrames = 2; vibrant.maxFrames = 5;
+			vibrant.minLayers = 2; vibrant.maxLayers = 10;
+			vibrant.hueChange = .3f;
+			vibrant.minSatChange = 0; vibrant.maxSatChange = 1f;
+			vibrant.minValChange = 0; vibrant.maxSatChange = .5f;
+			vibrant.minDeco = 1; vibrant.maxDeco = 1;
+			vibrant.minAnim = 1; vibrant.maxAnim = 1;
+
+			// These are 'simple' designs with short animations
+			InvaderRenderSettings simple = new InvaderRenderSettings();
+			simple.minFrames = 2; simple.maxFrames = 4;
+			simple.minLayers = 1; simple.maxLayers = 2;
+			simple.minDeco = 1; simple.maxDeco = 2;
+			simple.minAnim = 1; simple.maxAnim = 4;
+
+			// These are default designs with long, not repeating animations.
+			InvaderRenderSettings spaz = new InvaderRenderSettings(); 
+			spaz.minFrames = 20; spaz.maxFrames = 40;
+			
+			InvaderRenderSettings vibrantSpaz = new InvaderRenderSettings(vibrant);
+			vibrantSpaz.minFrames = 20; vibrantSpaz.maxFrames = 40;
+			
+			InvaderRenderSettings simpleSpaz = new InvaderRenderSettings(simple);
+			simpleSpaz.minFrames = 20; simpleSpaz.maxFrames = 40;
+
+			InvaderRenderSettings[] setArr = new InvaderRenderSettings[] {
+				vibrant, 
+				simple,
+				spaz,
+				simpleSpaz,
+				 vibrantSpaz,
+				// Default settings generate decent 'invaders' with a few decoration layers
+				InvaderRenderSettings.DEFAULT
+			};
+
+			Randoms.Seed = (int)DateTime.UtcNow.Ticks;
+
+			int numInvaders = Randoms.RandomInt(40,60);
+			int[] seeds = new int[numInvaders];
+			int[] whichSets = new int[numInvaders];
+			for (int i = 0; i < numInvaders; i++) {
+				seeds[i] = Randoms.RandomInt(int.MinValue, int.MaxValue);
+				whichSets[i] = Randoms.RandomInt(0, setArr.Length);
+			}
+			for (int i = 0; i < numInvaders; i++) {
+				int seed = seeds[i];
+				InvaderRenderSettings sets = setArr[whichSets[i]];
+
+				Invader invader = new Invader(seed, sets);
 
 				invader.position.x = Random(0, ScreenWidth);
 				invader.position.y = Random(0, ScreenHeight / 2);
@@ -165,28 +175,186 @@ namespace PixelEngine.Examples {
 			}
 		}
 
-		static ISprite CreateInvaderSprite(int size, long bits, Pixel color) {
-			Sprite spr = new Sprite(size, size);
+		/// <summary> Quickly count the number of bits in a long. </summary>
+		static int countBits(long data) {
+			int cnt = 0;
+			while (data != 0) {
+				data = data & (data - 1);
+				cnt++;
+			}
+			return cnt;
+		}
 
-			bool odd = size % 2 == 1;
+		/// <summary> Pick up to <paramref name="numBits"/> bits from locations that are set to 1 in a <paramref name="mask"/>. </summary>
+		static long PickBits(long mask, int numBits) {
+			long bits = 0;
+			for (int i = 0; i < numBits; i++) {
+				int pos = Randoms.RandomInt(0, 63);
+				long next = 1L << pos;
+				// Not in requested mask, skip and retry.
+				bool inMask = (next & mask) != 0;
+				if (!inMask) { i--; continue; }
+				// Already set that bit, skip.
+				bool inBits = (next & bits) != 0;
+				if (inBits) { continue; }
+				bits |= next;
+			}
+			return bits;
+		}
 
-			for (int yy = 0; yy < size; yy++) {
-				for (int xx = 0; xx < (odd?1:0)+size/2; xx++) {
-					int i = yy * size + xx;
-					long mask = 1 << i;
+		/// <summary> Randomly splat bits and cut down with a <paramref name="mask"/>, and accept it when there are at least <paramref name="minBits"/> in the splat. </summary>
+		static long SplatBits(long mask, int minBits) {
+			long bits = 0;
+			// If we ask for more bits than are in the mask, just do one iteration and return 
+			if (minBits >= countBits(mask)) {
+				bits |= ((long)Randoms.RandomInt(int.MinValue, int.MaxValue));
+				bits |= ((long)Randoms.RandomInt(int.MinValue, int.MaxValue)) << 32;
+				return bits; 
+			}
+
+			while (countBits(bits) < minBits) {
+				bits = 0;
+				bits |= ((long)Randoms.RandomInt(int.MinValue, int.MaxValue));
+				bits |= ((long)Randoms.RandomInt(int.MinValue, int.MaxValue)) << 32;
+				bits &= mask;
+			}
+			return bits;
+		}
+
+		/// <summary> Render invader <paramref name="bits"/> into a <see cref="PalettedSprite"/> using the given palette <paramref name="index"/></summary>
+		static void RenderInvaderSprite(PalettedSprite spr, long bits, int index) {
+			int w = spr.Width;
+			int h = spr.Height;
+
+			bool oddW = w % 2 == 1;
+			int wbits = (oddW ? 1 : 0) + w / 2;
+			for (int yy = 0; yy < h; yy++) {
+				for (int xx = 0; xx < wbits; xx++) {
+					int i = yy * wbits + xx;
+					if (i >= 64) { Console.WriteLine("Early Return!"); return; }
+
+					long mask = 1L << i;
 					bool bit = (bits & mask) != 0;
 
 					if (bit) {
-						spr[xx,yy] = color;
+						spr.SetIndex(xx, yy, index);
 						//Mirroring
-						spr[size-1-xx,yy] = color;
+						spr.SetIndex(w - 1 - xx, yy, index);
 					}
 
 				}
 			}
-
-			return spr;
 		}
+
+		/// <summary> Parameterized settings for creating invader sprites. </summary>
+		class InvaderRenderSettings {
+			public static readonly InvaderRenderSettings DEFAULT = new InvaderRenderSettings();
+			public InvaderRenderSettings() { }
+			public InvaderRenderSettings(InvaderRenderSettings o) {
+				minFrames = o.minFrames; maxFrames = o.maxFrames;
+				minLayers = o.minLayers; maxLayers = o.maxLayers;
+				minSize = o.minSize; maxSize = o.maxSize;
+				hueChange = o.hueChange;
+				minSatChange = o.minSatChange; maxSatChange = o.maxSatChange;
+				minValChange = o.minValChange; maxValChange = o.maxValChange;
+				minDeco = o.minDeco; maxDeco = o.maxDeco;
+				minAnim = o.minAnim; maxAnim = o.maxAnim;
+			}
+
+			/// <summary> Control of number of pose frames to render</summary>
+			public int minFrames = 2, maxFrames = 7;
+			/// <summary> Get number of poses to render </summary>
+			public virtual int nextFrames { get { return Randoms.RandomInt(minFrames, maxFrames+1); } }
+			
+			/// <summary> Control of number of layers to create. Any after 1 are considered 'decoration' layers </summary>
+			public int minLayers = 2, maxLayers = 3;
+			/// <summary> Get number of layers to render </summary>
+			public virtual int nextLayers { get { return Randoms.RandomInt(minLayers, maxLayers+1); } }
+
+			/// <summary> Control of sprite dimension for both width and height </summary>
+			public int minSize = 4, maxSize = 10;
+			/// <summary> Get a dimension </summary>
+			public virtual int nextSize { get { return Randoms.RandomInt(minSize, maxSize+1); } }
+
+			/// <summary> Control of how much 'decoration' colors may vary from base color </summary>
+			public float hueChange = .2f, 
+				minSatChange = -.2f, maxSatChange = .2f, 
+				minValChange = -.2f, maxValChange = .2f;
+			/// <summary> Get the change to 'decoration' color for one layer. </summary>
+			public virtual Vector4 nextHsvChange { get {
+				float h = Randoms.RandomFloat(-hueChange, hueChange);
+				float s = Randoms.RandomFloat(minSatChange, maxSatChange);
+				float v = Randoms.RandomFloat(minValChange, maxValChange);
+				return new Vector4(h,s,v,0);
+			}}
+
+			/// <summary> Control of 'decoration' pixels per layer</summary>
+			public int minDeco = 1, maxDeco = 5;
+			/// <summary> Get the number of 'deco' pixels on a 'decoration' layer </summary>
+			public virtual int nextDeco { get { return Randoms.RandomInt(minDeco, maxDeco+1); } }
+
+			/// <summary> Control of 'animation' changes per layer per pose </summary>
+			public int minAnim = 1, maxAnim = 5;
+			/// <summary> Get the number of pixels to change on a pose </summary>
+			public virtual int nextAnim { get { return Randoms.RandomInt(minAnim, maxAnim+1); } }
+
+
+		}
+
+		/// <summary> Create an invader from a <paramref name="seed"/>, rendering a set of sprites for all of its 'poses' </summary>
+		static ISprite[] RenderInvaderPoses(int seed, InvaderRenderSettings sets = null) {
+			if (sets == null) { sets = InvaderRenderSettings.DEFAULT; }
+
+			Randoms.Seed = seed;
+			int numFrames = sets.nextFrames;
+			ISprite[] poses = new ISprite[numFrames];
+
+			// Sprite spr = new Sprite();
+			int numLayers = sets.nextLayers;
+			long[] baseFrame = new long[numLayers];
+			Pixel[] colors = new Pixel[numLayers + 1];
+
+			int width = sets.nextSize;
+			int height = sets.nextSize;
+
+			int fill = (int)Mathf.Sqrt(width * height);
+
+			int maxBits = height * width - (height * (width / 2));
+			long bitMask = (1L << (1 + maxBits)) - 1L;
+			Console.WriteLine($"Invader {width:D2}x{height:D2} has {maxBits:D2} bits and mask 0x{bitMask:X16}");
+
+			Vector4 baseColor = Pixel.Random().ToHSVA();
+			baseFrame[0] = PickBits(bitMask, fill);
+			colors[1] = Pixel.HSVA(baseColor);
+
+			for (int i = 1; i < numLayers; i++) {
+
+				int numDeco = sets.nextDeco;
+				baseFrame[i] = PickBits(bitMask, numDeco);
+				
+				Vector4 colorMod = sets.nextHsvChange;
+
+				colors[i + 1] = Pixel.HSVA(baseColor + colorMod);
+			}
+
+			for (int k = 0; k < numFrames; k++) {
+				PalettedSprite spr = new PalettedSprite(width, height, colors);
+				for (int i = 0; i < numLayers; i++) {
+					long bits = baseFrame[i];
+
+					if (k != 0) {
+						int numFlips = sets.nextAnim;
+						long mask = PickBits(bitMask, numFlips);
+						bits ^= mask;
+					}
+
+					RenderInvaderSprite(spr, bits, i + 1);
+				}
+				poses[k] = spr;
+			}
+			return poses;
+		}
+
 
 
 
