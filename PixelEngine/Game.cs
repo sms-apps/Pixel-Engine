@@ -1282,6 +1282,81 @@ namespace PixelEngine {
 			}
 
 		}
+
+		/// <summary> Draws outlined text to the screen. </summary>
+		/// <param name="p"> Screen <see cref="Point"/> to draw text to </param>
+		/// <param name="text"> Text to draw </param>
+		/// <param name="col"> <see cref="Pixel"/> color to draw text with </param>
+		/// <param name="outlineCol"> <see cref="Pixel"/> color to draw text outline with </param>
+		/// <param name="scale"> Scale to apply to resize text </param>
+		public void DrawTextOutline(Point p, string text, Pixel col, Pixel outlineCol, int scale = 1) {
+			if (string.IsNullOrWhiteSpace(text)) {
+				return;
+			}
+			Pixel.Mode prev = PixelMode;
+			if (PixelMode != Pixel.Mode.Custom) {
+				if (col.A != 255 || outlineCol.A != 255) { PixelMode = Pixel.Mode.Alpha; } 
+				else { PixelMode = Pixel.Mode.Mask; }
+			}
+
+			int sx = 0;
+			int sy = 0;
+
+			foreach (char c in text) {
+				if (c == '\n') {
+					sx = 0;
+					sy += Font.CharHeight * scale;
+				} else {
+					if (Font.Glyphs.TryGetValue(c, out Sprite cur)) {
+						if (scale > 1) {
+							for (int i = 0; i < cur.Width; i++) {
+								for (int j = 0; j < cur.Height; j++) {
+									if (cur[i, j].R > 0) {
+										bool outlineLeft = i == 0 || cur[i - 1, j].R <= 0;
+										bool outlineUp = j == 0 || cur[i, j - 1].R <= 0;
+										bool outlineRight = i == cur.Width - 1 || cur[i + 1, j].R <= 0;
+										bool outlineDown = j == cur.Height - 1 || cur[i, j + 1].R <= 0;
+
+										for (int ax = 0; ax < scale; ax++) {
+											for (int ay = 0; ay < scale; ay++) {
+												Draw(p.X + sx + (i * scale) + ax, p.Y + sy + (j * scale) + ay, col);
+												if (outlineLeft) { Draw(p.X + sx + ((i - 1) * scale) + ax, p.Y + sy + (j * scale) + ay, outlineCol); }
+												if (outlineUp) { Draw(p.X + sx + (i * scale) + ax, p.Y + sy + ((j-1) * scale) + ay, outlineCol); }
+												if (outlineRight) { Draw(p.X + sx + ((i + 1) * scale) + ax, p.Y + sy + (j * scale) + ay, outlineCol); }
+												if (outlineDown) { Draw(p.X + sx + (i * scale) + ax, p.Y + sy + ((j+1) * scale) + ay, outlineCol); }
+											}
+										}
+									}
+								}
+							}
+						} else {
+							for (int i = 0; i < cur.Width; i++) {
+								for (int j = 0; j < cur.Height; j++) {
+									if (cur[i, j].R > 0) {
+										Draw(p.X + sx + i, p.Y + sy + j, col);
+										if (i == 0 || cur[i-1, j].R <= 0) { Draw(p.X + sx + i - 1, p.Y + sy + j, outlineCol); }
+										if (j == 0 || cur[i, j-1].R <= 0) { Draw(p.X + sx + i, p.Y + sy + j - 1, outlineCol); }
+										if (i == cur.Width-1 || cur[i+1, j].R <= 0) { Draw(p.X + sx + i + 1, p.Y + sy + j, outlineCol); }
+										if (j == cur.Height-1 || cur[i, j+1].R <= 0) { Draw(p.X + sx + i , p.Y + sy + j + 1, outlineCol); }
+									}
+								}
+							}
+						}
+
+						sx += cur.Width * scale;
+					} else {
+						sx += scale * 8;
+					}
+				}
+			}
+
+			if (PixelMode != Pixel.Mode.Custom) { PixelMode = prev; }
+
+		}
+
+
+
+
 		/// <summary> Draws High-res text to the screen. Requires the <see cref="Subsystem.HrText"/> to be <see cref="Enable(Subsystem)"/>'d </summary>
 		/// <param name="p"> Screen <see cref="Point"/> to draw text to </param>
 		/// <param name="text"> Text to draw </param>
