@@ -50,6 +50,7 @@
     <Compile Include="Examples\Matrix.cs" />
     <Compile Include="Examples\MatrixRedux.cs" />
     <Compile Include="Examples\Mazes.cs" />
+    <Compile Include="Examples\OutlinedText.cs" />
     <Compile Include="Examples\PalettePanning.cs" />
     <Compile Include="Examples\PerlinNoise.cs" />
     <Compile Include="Examples\RandomPixels.cs" />
