@@ -190,33 +190,30 @@ namespace PixelEngine {
 			s = Mathf.Clamp01(s);
 			v = Mathf.Clamp01(v);
 
-			h *= 360;
-			float c = v * s;
-			float nh = (h / 60) % 6;
-			float x = c * (1 - Math.Abs(nh % 2 - 1));
-			float m = v - c;
+			int i; 
+			float f,p,q,t;
 
-			float r, g, b;
-
-			if (0 <= nh && nh < 1) {
-				r = c; g = x; b = 0;
-			} else if (1 <= nh && nh < 2) {
-				r = x; g = c; b = 0;
-			} else if (2 <= nh && nh < 3) {
-				r = 0; g = c; b = x;
-			} else if (3 <= nh && nh < 4) {
-				r = 0; g = x; b = c;
-			} else if (4 <= nh && nh < 5) {
-				r = x; g = 0; b = c;
-			} else if (5 <= nh && nh < 6) {
-				r = c; g = 0; b = x;
-			} else {
-				r = 0; g = 0; b = 0;
+			if (s == 0) { 
+				return new Pixel((byte)(v * 255), (byte)(v * 255), (byte)(v * 255)); 
 			}
 
-			r += m; g += m; b += m;
 
-			return new Pixel((byte)Math.Floor(r * 255), (byte)Math.Floor(g * 255), (byte)Math.Floor(b * 255));
+			h *= 6.0f;
+			i = (int)h;
+			f = h - i;
+			p = v * (1 - s);
+			q = v * (1 - s * f);
+			t = v * (1 - s * (1 - f) );
+
+			float r = 0, g = 0, b = 0;
+			if (i == 0) { r = v; g = t; b = p; }
+			if (i == 1) { r = q; g = v; b = p; }
+			if (i == 2) { r = p; g = v; b = t; }
+			if (i == 3) { r = p; g = q; b = v; }
+			if (i == 4) { r = t; g = p; b = v; }
+			if (i == 5) { r = v; g = p; b = q; }
+
+			return new Pixel((byte)(r * 255), (byte)(g * 255), (byte)(b * 255));
 		}
 
 		
