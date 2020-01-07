@@ -11,11 +11,12 @@ namespace PixelEngine.Examples {
 		/// <summary> Entrypoint </summary>
 		public static void Run(string[] args) {
 			Invaders game = new Invaders();
-			game.Construct(400, 400, 3, 3, 60);
+			game.Construct(400, 300, 3, 3, 60);
 			game.Start();
 		}
 		Pixel bgColor;
 		List<Entity> entities;
+		Entity player;
 
 		/// <summary> Simple entity class </summary>
 		abstract class Entity {
@@ -29,6 +30,14 @@ namespace PixelEngine.Examples {
 			}
 		}
 
+		class Player : Entity {
+			public Player(int seed) {
+				sprite = RenderPlayer(seed);	
+			}
+			public override void Update(Game game, float delta) {
+				
+			}
+		}
 
 		class Invader : Entity {
 			int speed;
@@ -136,6 +145,7 @@ namespace PixelEngine.Examples {
 			int numInvaders = Randoms.RandomInt(40,60);
 			int[] seeds = new int[numInvaders];
 			int[] whichSets = new int[numInvaders];
+			int playerSeed = Randoms.RandomInt(int.MinValue, int.MaxValue);
 			for (int i = 0; i < numInvaders; i++) {
 				seeds[i] = Randoms.RandomInt(int.MinValue, int.MaxValue);
 				whichSets[i] = Randoms.RandomInt(0, setArr.Length);
@@ -150,6 +160,9 @@ namespace PixelEngine.Examples {
 				invader.position.y = Random(0, ScreenHeight / 2);
 				entities.Add(invader);
 			}
+
+			player = new Player(playerSeed);
+			entities.Add(player);
 		}
 
 		/// <inheritdoc />
@@ -324,11 +337,11 @@ namespace PixelEngine.Examples {
 			Console.WriteLine($"Invader {width:D2}x{height:D2} has {maxBits:D2} bits and mask 0x{bitMask:X16}");
 
 			Vector4 baseColor = Pixel.Random().ToHSVA();
+			baseColor.w = 1.0f;
 			baseFrame[0] = PickBits(bitMask, fill);
 			colors[1] = Pixel.HSVA(baseColor);
 
 			for (int i = 1; i < numLayers; i++) {
-
 				int numDeco = sets.nextDeco;
 				baseFrame[i] = PickBits(bitMask, numDeco);
 				
@@ -355,6 +368,50 @@ namespace PixelEngine.Examples {
 			return poses;
 		}
 
+		
+		static ISprite RenderPlayer(int seed) {
+			Randoms.Seed = seed;
+			Pixel[] palette = new Pixel[4];
+			float hue,sat,val;
+			hue = Randoms.RandomFloat();
+			sat = .2f + .3f * Randoms.RandomFloat();
+			val = .2f + .3f * Randoms.RandomFloat();
+			Vector4 baseColor = new Vector4(hue, sat, val, 1.0f);
+			palette[1] = Pixel.HSVA(baseColor);
+			hue = -.1f + .2f * Randoms.RandomFloat();
+			sat = .3f + .2f * Randoms.RandomFloat();
+			val = .3f + .2f * Randoms.RandomFloat();
+			Vector4 cockpitColor = baseColor + new Vector4(hue,sat,val,0f);
+			palette[2] = Pixel.HSVA(cockpitColor);
+			hue = -.05f + .1f * Randoms.RandomFloat();
+			sat = -.1f - .1f * Randoms.RandomFloat();
+			val = -.1f - .1f * Randoms.RandomFloat();
+			Vector4 outlineColor = baseColor + new Vector4(hue,sat,val,0f);
+			palette[3] = Pixel.HSVA(outlineColor);
+			int spriteSize = 15;
+			PalettedSprite spr = new PalettedSprite(spriteSize, spriteSize, palette);
+			
+			Vector2Int b = new Vector2Int(7,0);
+			// Begin with outline
+			spr.SetIndex(b.x, b.y, 3);
+			// Draw Triangle
+			int cockpitSize = Randoms.RandomInt(3,5);
+			int invCockpitSize = (1+spriteSize) /2 - cockpitSize;
+			for (int y = 1; y < spriteSize; y++) {
+				int maxOff = (1 + y)/2;
+				for (int i = 0; i < maxOff; i++) {
+					byte v = 1;
+					if ( (i < spriteSize-2) && (i-1 < maxOff-invCockpitSize)) { v = 2; }
+					if (i == maxOff - 1 || y == (spriteSize - 1)) { v = 3; }
+
+					
+					spr.SetIndex(b.x + i, b.y + y, v);
+					spr.SetIndex(b.x - i, b.y + y, v);
+				}
+			}
+			
+			return spr;
+		}
 
 
 
